@@ -1,0 +1,10 @@
+.svc-creator__banner{display: none;}
+
+.sv_qstn table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.sv_qstn td, .sv_qstn th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
