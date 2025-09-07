@@ -13,7 +13,7 @@ export const getToken = (): string | null => {
 // Function to make a GET request
 export const getRequest = async (endpoint: string) => {
   try {
-    const token = getToken();
+    // const token = getToken();
 
     // if (!token) {
     //   console.error("Token is missing. Please log in.");
@@ -21,12 +21,12 @@ export const getRequest = async (endpoint: string) => {
     // }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response: AxiosResponse<any, any> = await axios.get(
-      `${BASE_URL}${endpoint}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass the token in the header
-        },
-      }
+      `${BASE_URL}${endpoint}`
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`, // Pass the token in the header
+      //   },
+      // }
     );
     return response.data;
   } catch (error) {
@@ -37,11 +37,11 @@ export const getRequest = async (endpoint: string) => {
 // Function to make a POST request
 export const postRequest = async (endpoint: string, data: any) => {
   try {
-    const token = getToken();
+    // const token = getToken();
     const response = await axios.post(`${BASE_URL}${endpoint}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Pass the token in the header
-      },
+      // headers: {
+      //   Authorization: `Bearer ${token}`, // Pass the token in the header
+      // },
     });
     return response.data;
   } catch (error) {

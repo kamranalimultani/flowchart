@@ -1,21 +1,38 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createMxGraphData(xml: string): any {
-  return {
-    xml,
-    edit: null,
-    lightbox: false,
-    noExitBtn: 1,
-    nav: true, // ✅ Adds mini-map navigation
-    zoom: true, // ✅ Enables zoom buttons
-    resize: true,
-    "auto-fit": true,
-    "allow-zoom-in": true,
-    tooltips: true,
-    center: true,
-    toolbar: "zoom layers", // ✅ Toolbar with zoom + layer controls
-    "toolbar-position": "top",
-    "toolbar-nohide": false,
-  };
+function createMxGraphData(xml: string, preview: boolean): any {
+  if (preview) {
+    return {
+      xml,
+      edit: null,
+      lightbox: false,
+      noExitBtn: 1,
+      nav: false, // ❌ disable mini-map
+      zoom: false, // ❌ disable zoom buttons
+      resize: false, // ❌ prevent resizing
+      "auto-fit": true, // ✅ still auto-fit to container
+      "allow-zoom-in": false,
+      tooltips: true, // ✅ keep tooltips on hover
+      center: true,
+      toolbar: null, // ❌ no toolbar
+    };
+  } else {
+    return {
+      xml,
+      edit: null,
+      lightbox: false,
+      noExitBtn: 1,
+      nav: true, // 🚨 mini-map enabled
+      zoom: true, // 🚨 zoom buttons enabled
+      resize: true,
+      "auto-fit": true,
+      "allow-zoom-in": true,
+      tooltips: true,
+      center: true,
+      toolbar: "zoom layers", // 🚨 toolbar with zoom/layers
+      "toolbar-position": "top",
+      "toolbar-nohide": false,
+    };
+  }
 }
 
 const chatMap: { [key: string]: string } = {
@@ -51,10 +68,11 @@ function renderMxGraphHTML(mxGraphHTML: string, targetElementId: string): void {
 }
 export async function drawioConverterAsync(
   url: string,
-  targetElementId: string
+  targetElementId: string,
+  preview: boolean
 ) {
   try {
-    const mxGraphData = createMxGraphData(url);
+    const mxGraphData = createMxGraphData(url, preview);
     const json = JSON.stringify(mxGraphData);
     const mxGraphHTML = createMxGraphHTML(json);
     // console.log("this", mxGraphData);
