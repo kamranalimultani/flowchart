@@ -1,8 +1,11 @@
+/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { drawioConverterAsync } from "@/utils/test";
 import { useEffect, useRef, useState } from "react";
 import panzoom from "@panzoom/panzoom";
 import { useLocation } from "react-router-dom";
+import { FloatSidebar } from "@/components/customComponents/FloatOverlay";
+import { getRequest, putRequest } from "@/utils/apiUtils";
 
 export const FlowDetails = () => {
   const location = useLocation();
@@ -11,52 +14,13 @@ export const FlowDetails = () => {
     title: string;
     description: string;
     xml: string;
+    node_data: any[];
   };
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [forms, setForms] = useState<any[]>([]);
+
   const [idAttribute, setIdAttribute] = useState<string>("");
   console.log(idAttribute);
-  //   const svg = `<?xml version="1.0" encoding="UTF-8"?>
-  // <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.2.0">
-  //   <diagram id="prtHgNgQTEPvFCAcTncT" name="Page-1">
-  //     <mxGraphModel dx="1183" dy="556" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
-  //       <root>
-  //         <mxCell id="0" />
-  //         <mxCell id="1" parent="0" />
-  //         <mxCell id="dNxyNK7c78bLwvsdeMH5-11" value="Orgchart" style="swimlane;html=1;startSize=20;horizontal=1;containerType=tree;glass=0;" parent="1" vertex="1">
-  //           <mxGeometry x="40" y="80" width="710" height="290" as="geometry" />
-  //         </mxCell>
-  //         <UserObject label="%name%&lt;br&gt;&lt;i style=&quot;color: gray&quot;&gt;%position%&lt;/i&gt;&lt;br&gt;&lt;a href=&quot;mailto:%email%&quot;&gt;Email&lt;/a&gt;" name="Tessa Miller" position="CFO" location="Office 1" email="me@example.com" placeholders="1" id="dNxyNK7c78bLwvsdeMH5-12">
-  //           <mxCell style="label;image=https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-3-128.png;whiteSpace=wrap;html=1;rounded=0;glass=0;treeMoving=1;treeFolding=1;" parent="dNxyNK7c78bLwvsdeMH5-11" vertex="1">
-  //             <mxGeometry x="260" y="50" width="180" height="70" as="geometry" />
-  //           </mxCell>
-  //         </UserObject>
-  //         <mxCell id="dNxyNK7c78bLwvsdeMH5-13" value="" style="endArrow=blockThin;endFill=1;fontSize=11;edgeStyle=elbowEdgeStyle;elbow=vertical;rounded=0;" parent="dNxyNK7c78bLwvsdeMH5-11" source="dNxyNK7c78bLwvsdeMH5-12" target="dNxyNK7c78bLwvsdeMH5-14" edge="1">
-  //           <mxGeometry relative="1" as="geometry" />
-  //         </mxCell>
-  //         <UserObject label="%name%&lt;br&gt;&lt;i style=&quot;color: gray&quot;&gt;%position%&lt;/i&gt;&lt;br&gt;&lt;a href=&quot;mailto:%email%&quot;&gt;Email&lt;/a&gt;" name="Edward Morrison" position="Brand Manager" location="Office 2" email="me@example.com" placeholders="1" link="https://www.draw.io" id="dNxyNK7c78bLwvsdeMH5-14">
-  //           <mxCell style="label;image=https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-10-3-128.png;whiteSpace=wrap;html=1;rounded=0;glass=0;treeFolding=1;treeMoving=1;" parent="dNxyNK7c78bLwvsdeMH5-11" vertex="1">
-  //             <mxGeometry x="40" y="180" width="180" height="80" as="geometry" />
-  //           </mxCell>
-  //         </UserObject>
-  //         <mxCell id="dNxyNK7c78bLwvsdeMH5-15" value="" style="endArrow=blockThin;endFill=1;fontSize=11;edgeStyle=elbowEdgeStyle;elbow=vertical;rounded=0;" parent="dNxyNK7c78bLwvsdeMH5-11" source="dNxyNK7c78bLwvsdeMH5-12" target="dNxyNK7c78bLwvsdeMH5-16" edge="1">
-  //           <mxGeometry relative="1" as="geometry" />
-  //         </mxCell>
-  //         <UserObject label="%name%&lt;br&gt;&lt;i style=&quot;color: gray&quot;&gt;%position%&lt;/i&gt;&lt;br&gt;&lt;a href=&quot;mailto:%email%&quot;&gt;Email&lt;/a&gt;" name="Evan Valet" position="HR Director" location="Office 4" email="me@example.com" placeholders="1" link="https://www.draw.io" id="dNxyNK7c78bLwvsdeMH5-16">
-  //           <mxCell style="label;image=https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-9-2-128.png;whiteSpace=wrap;html=1;rounded=0;glass=0;treeFolding=1;treeMoving=1;" parent="dNxyNK7c78bLwvsdeMH5-11" vertex="1">
-  //             <mxGeometry x="260" y="180" width="180" height="80" as="geometry" />
-  //           </mxCell>
-  //         </UserObject>
-  //         <mxCell id="dNxyNK7c78bLwvsdeMH5-17" value="" style="endArrow=blockThin;endFill=1;fontSize=11;edgeStyle=elbowEdgeStyle;elbow=vertical;rounded=0;" parent="dNxyNK7c78bLwvsdeMH5-11" source="dNxyNK7c78bLwvsdeMH5-12" target="dNxyNK7c78bLwvsdeMH5-18" edge="1">
-  //           <mxGeometry relative="1" as="geometry" />
-  //         </mxCell>
-  //         <UserObject label="%name%&lt;br&gt;&lt;i style=&quot;color: gray&quot;&gt;%position%&lt;/i&gt;&lt;br&gt;&lt;a href=&quot;mailto:%email%&quot;&gt;Email&lt;/a&gt;" name="Alison Donovan" position="System Admin" location="Office 3" email="me@example.com" placeholders="1" link="https://www.draw.io" id="dNxyNK7c78bLwvsdeMH5-18">
-  //           <mxCell style="label;image=https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-2-128.png;whiteSpace=wrap;html=1;rounded=0;glass=0;" parent="dNxyNK7c78bLwvsdeMH5-11" vertex="1">
-  //             <mxGeometry x="490" y="180" width="180" height="80" as="geometry" />
-  //           </mxCell>
-  //         </UserObject>
-  //       </root>
-  //     </mxGraphModel>
-  //   </diagram>
-  // </mxfile>`;
 
   const zoomableComponentRef = useRef<HTMLDivElement | null>(null);
   const extractAttributes = (namedNodeMap: NamedNodeMap) => {
@@ -95,7 +59,7 @@ export const FlowDetails = () => {
                 setIdAttribute(attributes[1].value);
               }
               console.log(attributes[1].value);
-              // setIsSidebarOpen((prev) => !prev);
+              openSidebar(attributes[1].value);
             },
             false
           );
@@ -119,13 +83,90 @@ export const FlowDetails = () => {
     });
     setupClickableEvents();
   }, [flowData.xml]);
+  const fetchAlTemplates = async () => {
+    const res = await getRequest("/api/forms/all");
+    setForms(res ?? []);
+  };
+  const [checkedForms, setCheckedForms] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+
+  const openSidebar = async (nodeId: string) => {
+    await fetchAlTemplates();
+    setIdAttribute(nodeId);
+    setShowSidebar(true);
+
+    // Always parse if string
+    let nodeDataArr: any[] = [];
+    if (typeof flowData.node_data === "string") {
+      try {
+        nodeDataArr = JSON.parse(flowData.node_data);
+      } catch {
+        nodeDataArr = [];
+      }
+    } else if (Array.isArray(flowData.node_data)) {
+      nodeDataArr = flowData.node_data;
+    } else {
+      nodeDataArr = [];
+    }
+
+    const assigned =
+      nodeDataArr.find((n: any) => n.node_id === nodeId)?.form_templates || [];
+    setCheckedForms(
+      forms.reduce(
+        (acc, f) => ({ ...acc, [f.id]: assigned.includes(f.id) }),
+        {}
+      )
+    );
+  };
+
+  const handleCheck = async (formId: string, checked: boolean) => {
+    setCheckedForms((x) => ({ ...x, [formId]: checked }));
+
+    let nodeData = [...(flowData.node_data || [])];
+    let node = nodeData.find((n: any) => n.node_id === idAttribute);
+
+    if (node) {
+      node.form_templates = checked
+        ? [...node.form_templates, formId]
+        : node.form_templates.filter((id: string) => id !== formId);
+    } else if (checked) {
+      nodeData.push({ node_id: idAttribute, form_templates: [formId] });
+    }
+
+    await putRequest(
+      `/api/flow/form-assign/${flowData.id}`,
+      {
+        node_data: nodeData,
+      },
+      true
+    );
+  };
 
   return (
-    <div
-      ref={zoomableComponentRef}
-      id="drawio-diagram"
-      className="w-full h-screen overflow-auto border rounded relative"
-      style={{ cursor: "grab" }}
-    ></div>
+    <>
+      <div
+        ref={zoomableComponentRef}
+        id="drawio-diagram"
+        className="w-full h-screen overflow-auto border rounded relative"
+        style={{ cursor: "grab" }}
+      ></div>
+      {showSidebar && (
+        <FloatSidebar
+          open={showSidebar}
+          setOpen={setShowSidebar}
+          items={forms.map((f) => ({
+            id: f.id,
+            title: f.title,
+            checked: checkedForms[f.id],
+          }))}
+          loading={false} // Add this prop!
+          viewForm={false} // Add this prop!
+          setViewForm={() => {}} // Add this prop!
+          selectedTitle="Form Assignment" // This is optional, but recommended
+          onCheck={handleCheck}
+        />
+      )}
+    </>
   );
 };

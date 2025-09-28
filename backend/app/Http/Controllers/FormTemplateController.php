@@ -11,7 +11,8 @@ class FormTemplateController extends Controller
     public function index(Request $request)
     {
         $perPage = (int) $request->integer('per_page', 10);
-        $query = FormTemplate::query()->select(['id', 'title', 'form_data', 'created_at']);
+        $query = FormTemplate::query()->select(['id', 'title', 'form_data', 'created_at'])->where('user_id', $request->user()->id); // only user's templates
+
 
         // optional search ?q=login
         if ($q = $request->string('q')->toString()) {
@@ -20,10 +21,19 @@ class FormTemplateController extends Controller
 
         return response()->json($query->paginate($perPage));
     }
+    public function fetchAll(Request $request)
+    {
+        $query = FormTemplate::query()->select(['id', 'title', 'form_data', 'created_at'])->where('user_id', $request->user()->id); // only user's templates;
 
+        return response()->json($query->get());
+    }
     // POST /api/form-templates
     public function store(Request $request)
     {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $data = $request->input('form_data');
 
         // if it comes as JSON string, decode it
@@ -40,6 +50,7 @@ class FormTemplateController extends Controller
         $template = FormTemplate::create([
             'title' => $title,
             'form_data' => $data,
+            'user_id' => $user->id, // 🆕 assign authenticated user
         ]);
 
         return response()->json($template, 201);
@@ -47,14 +58,20 @@ class FormTemplateController extends Controller
 
 
     // GET /api/form-templates/{formTemplate}
-    public function show(FormTemplate $formTemplate)
+    public function show(Request $request, FormTemplate $formTemplate)
     {
+        if ($formTemplate->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
         return response()->json($formTemplate);
     }
 
     // PUT /api/form-templates/{formTemplate}
     public function update(Request $request, FormTemplate $formTemplate)
     {
+        if ($formTemplate->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
         $validated = $request->validate([
             'form_data' => 'required|array',
         ]);
@@ -70,8 +87,11 @@ class FormTemplateController extends Controller
     }
 
     // DELETE /api/form-templates/{formTemplate}
-    public function destroy(FormTemplate $formTemplate)
+    public function destroy(Request $request, FormTemplate $formTemplate)
     {
+        if ($formTemplate->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
         $formTemplate->delete();
         return response()->json(null, 204);
     }

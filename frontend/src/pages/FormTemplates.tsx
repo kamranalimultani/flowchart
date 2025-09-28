@@ -41,7 +41,8 @@ export const FormTemplates: React.FC = () => {
     setLoading(true);
     try {
       const res = await getRequest(
-        `/api/form-templates?page=${pageNum}&per_page=${perPage}`
+        `/api/form-templates?page=${pageNum}&per_page=${perPage}`,
+        true
       );
       setItems(res.data);
       setTotalPages(res.last_page);
@@ -60,7 +61,7 @@ export const FormTemplates: React.FC = () => {
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this template?")) return;
     try {
-      await deleteRequest(`/api/form-templates/${id}`);
+      await deleteRequest(`/api/form-templates/${id}`, true);
       fetchTemplates(page); // reload current page
     } catch (error) {
       console.error("Delete failed:", error);
@@ -120,7 +121,6 @@ export const FormTemplates: React.FC = () => {
                         className="cursor-pointer"
                         aria-label="Edit"
                         onClick={() => [
-                          console.log(item),
                           navigate("/add-form-template", {
                             state: { form: item },
                           }),
@@ -128,15 +128,7 @@ export const FormTemplates: React.FC = () => {
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button
-                        size="icon"
-                        className="cursor-pointer"
-                        variant="ghost"
-                        aria-label="View"
-                        onClick={() => navigate(`/form-template/${item.id}`)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+
                       <Button
                         className="cursor-pointer"
                         size="icon"

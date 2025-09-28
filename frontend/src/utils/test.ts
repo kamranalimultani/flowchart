@@ -21,15 +21,15 @@ function createMxGraphData(xml: string, preview: boolean): any {
       edit: null,
       lightbox: false,
       noExitBtn: 1,
-      nav: true, // 🚨 mini-map enabled
-      zoom: true, // 🚨 zoom buttons enabled
-      resize: true,
-      "auto-fit": true,
-      "allow-zoom-in": true,
+      nav: !preview, // mini-map only in non-preview
+      zoom: !preview, // zoom buttons only if not preview
+      resize: true, // allow resizing to parent
+      "auto-fit": false, // always false for fluid layout
+      "allow-zoom-in": !preview,
       tooltips: true,
-      center: true,
-      toolbar: "zoom layers", // 🚨 toolbar with zoom/layers
-      "toolbar-position": "top",
+      center: false, // don't center
+      toolbar: preview ? null : "zoom layers",
+      "toolbar-position": preview ? null : "top",
       "toolbar-nohide": false,
     };
   }

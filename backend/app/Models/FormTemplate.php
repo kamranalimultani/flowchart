@@ -12,9 +12,16 @@ class FormTemplate extends Model
     protected $fillable = [
         'title',
         'form_data',
+        'user_id', // 🆕 add user_id to fillable
+
     ];
 
     protected $casts = [
         'form_data' => 'array', // JSON <-> array automatically
     ];
+    // Optional: relation to user
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

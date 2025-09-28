@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('title'); // flow name
             $table->string('file_name'); // stored filename of the .drawio/xml
             $table->text('description')->nullable(); // ✅ new column
+            $table->json('node_data')->nullable();   // ✅ node->form mappings
 
             $table->timestamps();
         });

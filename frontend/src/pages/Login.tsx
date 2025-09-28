@@ -15,12 +15,17 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { LoaderIcon } from "lucide-react";
 import bgImage from "../assets/pexels-elijahsad-5418830.jpg"; // Replace with your image URL
-import { useSelector } from "react-redux";
-import type { RootState } from "store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "store";
+import { postRequest } from "@/utils/apiUtils";
+import { setUser } from "@/slice/userSlice";
 function Login() {
   const navigate = useNavigate();
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (user) {
@@ -28,14 +33,34 @@ function Login() {
     }
   }, []);
   // const backgroundImageUrl = "src/assets/182428240217.jpg"; // Replace with your image URL
-  const handleSubmit = (e: any) => {
-    setloading(true);
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
 
-    // API call to login
+    try {
+      const data = await postRequest("/api/login", {
+        email,
+        password,
+      });
 
-    setloading(false); // Ensure the variable name matches your code convention
+      // Example response: { token: "...", user: { id: 1, name: "Kamran", ... } }
+      const { token, user } = data;
+
+      // Save minimal data in localStorage
+      localStorage.setItem("auth", JSON.stringify({ token, userId: user.id }));
+
+      // Save full user in store
+      dispatch(setUser(user));
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("Login failed, please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <div
       className="min-h-screen bg-cover bg-center flex items-center justify-center"
@@ -59,11 +84,22 @@ function Login() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">E-mail</Label>
-                <Input id="name" placeholder="example@gmail.com" />
+                <Input
+                  id="name"
+                  placeholder="example@gmail.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input type="password" id="password" placeholder="******" />
+                <Input
+                  type="password"
+                  id="password"
+                  placeholder="******"
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </div>
             </div>
           </form>

@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->string('title')->index();
             $table->json('form_data'); // <-- your full JSON goes here
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // 🆕 associate with users
+
             $table->timestamps();
         });
     }

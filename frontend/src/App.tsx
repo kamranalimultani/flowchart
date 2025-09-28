@@ -1,3 +1,4 @@
+import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import ComingSoon from "./pages/comingsoon";
 import { Routes, Route } from "react-router-dom";
@@ -8,51 +9,72 @@ import { FlowList } from "./pages/FlowList";
 import { FlowDetails } from "./pages/FlowDetails";
 import { FormTemplates } from "./pages/FormTemplates";
 import AddFormTemplate from "./pages/AddFormTemplate";
+import PrivateRoute from "./utils/ProtectedRoutes";
 
 function App() {
   return (
-    <>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <Routes>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          <Route path="/" element={<ComingSoon />} />
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <Routes>
+        {/* Public routes */}
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="/" element={<ComingSoon />} />
 
-          <Route
-            path="/flow"
-            element={
-              <DefaultLayout>
-                <FlowList />
-              </DefaultLayout>
-            }
-          />
-          <Route
-            path="/flow/:id"
-            element={
-              <DefaultLayout>
-                <FlowDetails />
-              </DefaultLayout>
-            }
-          />
-          <Route
-            path="/forms-templates"
-            element={
-              <DefaultLayout>
-                <FormTemplates />
-              </DefaultLayout>
-            }
-          />
-          <Route
-            path="/add-form-template"
-            element={
-              <DefaultLayout>
-                <AddFormTemplate />
-              </DefaultLayout>
-            }
-          />
-        </Routes>
-      </ThemeProvider>
-    </>
+        {/* Protected routes with PrivateRoute per route */}
+        <Route
+          path="/flow"
+          element={
+            <PrivateRoute
+              bypass={false}
+              element={
+                <DefaultLayout>
+                  <FlowList />
+                </DefaultLayout>
+              }
+            />
+          }
+        />
+        <Route
+          path="/flow/:id"
+          element={
+            <PrivateRoute
+              bypass={false}
+              element={
+                <DefaultLayout>
+                  <FlowDetails />
+                </DefaultLayout>
+              }
+            />
+          }
+        />
+        <Route
+          path="/forms-templates"
+          element={
+            <PrivateRoute
+              bypass={false}
+              element={
+                <DefaultLayout>
+                  <FormTemplates />
+                </DefaultLayout>
+              }
+            />
+          }
+        />
+        <Route
+          path="/add-form-template"
+          element={
+            <PrivateRoute
+              bypass={false}
+              element={
+                <DefaultLayout>
+                  <AddFormTemplate />
+                </DefaultLayout>
+              }
+            />
+          }
+        />
+      </Routes>
+    </ThemeProvider>
   );
 }
 

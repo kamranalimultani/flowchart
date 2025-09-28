@@ -21,7 +21,8 @@ class FlowController extends Controller
 
     ]);
 
-    // $user = Auth::user();
+    $user = $request->user(); // 🆕 get authenticated user
+
 
     // Generate unique file name
     $uniqueName = Str::uuid()->toString() . '.drawio';
@@ -36,7 +37,7 @@ class FlowController extends Controller
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="vK2hjZ5TibX_pdshGdGS-42" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;&lt;b&gt;Welcom to Survey Flow&amp;nbsp;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="vK2hjZ5TibX_pdshGdGS-42" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;&lt;b&gt;Welcome to Survey Flow&amp;nbsp;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-750" y="-230" width="420" height="30" as="geometry" />
         </mxCell>
         <mxCell id="vK2hjZ5TibX_pdshGdGS-43" value="Powered By Melvok.com" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
@@ -58,10 +59,11 @@ XML;
 
     // Save record
     $flow = Flow::create([
-      'user_id' => 1,
+      'user_id' => $user->id, // 🆕 use authenticated user
       'title' => $request->title,
       'file_name' => $uniqueName,
       'description' => $request->description,
+      'node_data' => null, // 🆕 by default, node_data is null
 
     ]);
 
@@ -72,28 +74,36 @@ XML;
     ]);
   }
   // Get all flows with xml content
-  public function index()
+  public function index(Request $request)
   {
-    $flows = Flow::latest()->get()->map(function ($flow) {
-      $filePath = "flows/{$flow->file_name}";
-      $xmlContent = null;
+    $user = $request->user(); // get authenticated user
 
-      if (Storage::disk('public')->exists($filePath)) {
-        $xmlContent = Storage::disk('public')->get($filePath);
-      }
+    if (!$user) {
+      return response()->json(['error' => 'Unauthorized'], 401);
+    }
 
-      return [
-        'id' => $flow->id,
-        'title' => $flow->title,
-        'file_name' => $flow->file_name,
-        'file_url' => Storage::url($filePath),
-        'xml' => $xmlContent,
-        'description' => $flow->description,
+    $flows = Flow::where('user_id', $user->id) // only flows of this user
+      ->latest()
+      ->get()->map(function ($flow) {
+        $filePath = "flows/{$flow->file_name}";
+        $xmlContent = null;
 
-        'created_at' => $flow->created_at,
-        'updated_at' => $flow->updated_at,
-      ];
-    });
+        if (Storage::disk('public')->exists($filePath)) {
+          $xmlContent = Storage::disk('public')->get($filePath);
+        }
+
+        return [
+          'id' => $flow->id,
+          'title' => $flow->title,
+          'file_name' => $flow->file_name,
+          'file_url' => Storage::url($filePath),
+          'xml' => $xmlContent,
+          'description' => $flow->description,
+          'node_data' => $flow->node_data, // 🆕 include node_data
+          'created_at' => $flow->created_at,
+          'updated_at' => $flow->updated_at,
+        ];
+      });
 
     return response()->json($flows);
   }
@@ -103,10 +113,15 @@ XML;
       'title' => 'sometimes|string|max:255',
       'description' => 'sometimes|string|max:1000',
       'xml' => 'required|string', // updated XML content
+      'node_data' => 'nullable|json', // 🆕 allow node_data update
+
     ]);
 
     $flow = Flow::findOrFail($id);
-
+    $user = $request->user(); // get authenticated user
+    if (!$user) {
+      return response()->json(['error' => 'Unauthorized'], 401);
+    }
     // Update title/description if present
     if ($request->has('title')) {
       $flow->title = $request->title;
@@ -114,6 +129,8 @@ XML;
     if ($request->has('description')) {
       $flow->description = $request->description;
     }
+    if ($request->has('node_data'))
+      $flow->node_data = $request->node_data; // 🆕
 
     // Find the file and overwrite its content
     $filePath = "flows/{$flow->file_name}";
@@ -129,6 +146,29 @@ XML;
       'message' => 'Flow updated successfully',
       'flow' => $flow,
       'file_url' => Storage::url($filePath),
+    ]);
+  }
+  public function assignForm(Request $request, $id)
+  {
+    $user = $request->user(); // get authenticated user
+
+    if (!$user) {
+      return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    $flow = Flow::findOrFail($id);
+
+    // Check if the authenticated user owns this flow
+    if ($flow->user_id !== $user->id) {
+      return response()->json(['error' => 'Forbidden'], 403);
+    }
+    if ($request->has('node_data'))
+      $flow->node_data = $request->node_data; // 🆕
+    $flow->save();
+
+    return response()->json([
+      'message' => 'Flow updated successfully',
+      'flow' => $flow,
     ]);
   }
   public function destroy($id)

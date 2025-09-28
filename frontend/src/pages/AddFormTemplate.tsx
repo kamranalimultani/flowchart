@@ -109,12 +109,10 @@ const AddFormTemplate: React.FC = () => {
 
       if (location.state) {
         reqBody = {
-          _id:
-            location.state?.from === "history"
-              ? location.state?.form?.form_id
-              : location.state.form._id,
+          id: location.state.form.id, // use `id` instead of _id or form_id
           form_data: data,
         };
+        console.log(reqBody);
       } else {
         reqBody = {
           form_data: data,
@@ -125,9 +123,9 @@ const AddFormTemplate: React.FC = () => {
         await delay(1000);
 
         if (location.state && location.state?.form) {
-          await putRequest(`/api/form-templates`, reqBody);
+          await putRequest(`/api/form-templates/${reqBody.id}`, reqBody, true);
         } else {
-          await postRequest(`/api/form-templates/`, reqBody);
+          await postRequest(`/api/form-templates/`, reqBody, true);
         }
 
         setLoading(false);

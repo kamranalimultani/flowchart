@@ -40,6 +40,7 @@ type Flow = {
   title: string;
   xml?: string; // backend returns this
   description?: string;
+  node_data: any;
 };
 type FlowCardProps = Flow & {
   refreshFlows: () => void; // added
@@ -50,6 +51,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
   title,
   xml,
   description,
+  node_data,
   refreshFlows,
 }) => {
   const [svgContent, setSvgContent] = useState<string>("");
@@ -69,7 +71,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   const updateFlowXml = async (id: number, xml: string) => {
     try {
-      const response = await putRequest(`/api/flows/${id}`, { xml });
+      const response = await putRequest(`/api/flows/${id}`, { xml }, true);
       return response;
     } catch (err) {
       console.error("Error updating flow XML:", err);
@@ -161,7 +163,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/flow/${id}`, {
-                state: { id, title, description, xml },
+                state: { id, title, description, xml, node_data },
               });
             }}
             className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
@@ -174,7 +176,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleEditDiagram(e, { id, title, description, xml });
+              handleEditDiagram(e, { id, title, description, xml, node_data });
             }}
             className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
           >
@@ -231,7 +233,7 @@ export const FlowList: React.FC = () => {
   const [tab, setTab] = useState("custom");
   const fetchFlows = async () => {
     try {
-      const res = await getRequest("/api/flows"); // Laravel: GET /api/flows
+      const res = await getRequest("/api/flows", true); // Laravel: GET /api/flows
       setFlows(res || []);
     } catch (err) {
       console.error("Error fetching flows:", err);
@@ -254,13 +256,13 @@ export const FlowList: React.FC = () => {
         formData.append("file", file);
       }
 
-      await postRequest("/api/flows", formData);
+      await postRequest("/api/flows", formData, true);
       setOpenModal(false);
       setTitle("");
       setFile(null);
 
       // Refresh flows
-      const res = await getRequest("/api/flows");
+      const res = await getRequest("/api/flows", true);
       setFlows(res || []);
     } catch (err) {
       console.error("Error creating flow:", err);
