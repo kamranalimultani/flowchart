@@ -70,7 +70,7 @@ export const FlowDetails = () => {
   useEffect(() => {
     drawioConverterAsync(flowData.xml, "drawio-diagram", false).then(() => {
       const container = document.querySelector(
-        "#drawio-diagram svg"
+        "#drawio-diagram"
       ) as HTMLElement;
       if (container) {
         const panZoomInstance = panzoom(container, {
@@ -84,7 +84,7 @@ export const FlowDetails = () => {
     setupClickableEvents();
   }, [flowData.xml]);
   const fetchAlTemplates = async () => {
-    const res = await getRequest("/api/forms/all");
+    const res = await getRequest("/api/forms/all", true);
     setForms(res ?? []);
   };
   const [checkedForms, setCheckedForms] = useState<{ [key: string]: boolean }>(
