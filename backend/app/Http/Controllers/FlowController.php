@@ -31,17 +31,17 @@ class FlowController extends Controller
       // Default XML content for custom flows
       $defaultXml = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.2.0">
-  <diagram name="Page-1" id="L2mQjL2qGCYD0AGXEXjz">
-    <mxGraphModel dx="1983" dy="956" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" version="28.2.5">
+  <diagram name="Page-1" id="WBuj-LygvqKu2Qh9Ulfa">
+    <mxGraphModel dx="1240" dy="717" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="413" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="vK2hjZ5TibX_pdshGdGS-42" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;&lt;b&gt;Welcome to Survey Flow&amp;nbsp;&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-750" y="-230" width="420" height="30" as="geometry" />
+        <mxCell id="SGhFhDsp4yGYNef1wRKp-1" value="&lt;b&gt;&lt;font style=&quot;font-size: 29px;&quot;&gt;Welcome To FlowAnalytics&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="140" width="410" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="vK2hjZ5TibX_pdshGdGS-43" value="Powered By Melvok.com" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-650" y="-200" width="200" height="30" as="geometry" />
+        <mxCell id="SGhFhDsp4yGYNef1wRKp-2" value="Powered By Melvok.cok" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="147" y="177" width="290" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

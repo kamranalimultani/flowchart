@@ -1,17 +1,14 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { drawioConverterAsync } from "@/utils/test";
 import { useEffect, useRef, useState } from "react";
-import panzoom from "@panzoom/panzoom";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FloatSidebar } from "@/components/customComponents/FloatOverlay";
-import { getRequest, putRequest } from "@/utils/apiUtils";
 import { ArrowLeft } from "lucide-react";
 
 export const FlowDetails = () => {
   const location = useLocation();
   const navigate = useNavigate(); // ✅ hook for navigation
-
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const graphRef = useRef(null);
   const flowData = location.state as {
     id: number;
     title: string;
@@ -20,137 +17,86 @@ export const FlowDetails = () => {
     node_data: any[];
   };
   const [showSidebar, setShowSidebar] = useState(false);
-  const [forms, setForms] = useState<any[]>([]);
 
-  const [idAttribute, setIdAttribute] = useState<string>("");
+  const extractGraphModel = (xmlString: any) => {
+    // Find the start and end of mxGraphModel tag
+    const startTag = "<mxGraphModel";
+    const endTag = "</mxGraphModel>";
 
-  const zoomableComponentRef = useRef<HTMLDivElement | null>(null);
-  const extractAttributes = (namedNodeMap: NamedNodeMap) => {
-    const attributesArray = [];
-    for (let i = 0; i < namedNodeMap.length; i++) {
-      const attribute = namedNodeMap[i];
-      attributesArray.push({
-        name: attribute.name,
-        value: attribute.value,
-      });
+    const startIndex = xmlString.indexOf(startTag);
+    const endIndex = xmlString.indexOf(endTag);
+
+    if (startIndex !== -1 && endIndex !== -1) {
+      // Extract everything from <mxGraphModel to </mxGraphModel>
+      return xmlString.substring(startIndex, endIndex + endTag.length);
     }
-    return attributesArray;
+
+    // If no mxGraphModel found, return original string
+    return xmlString;
   };
-  const setupClickableEvents = () => {
-    const graphViewer = (window as any).newGraphViewer;
-    if (!graphViewer || !graphViewer.graph) {
-      console.error("Graph viewer is not initialized.");
+
+  useEffect(() => {
+    // Access mxGraph from the CDN in public/index.html
+    const { mxGraph, mxRubberband, mxEvent, mxUtils, mxCodec } = window as any;
+
+    if (!mxGraph && !flowData.xml) {
+      console.error("mxGraph not loaded! Add CDN in public/index.html");
       return;
     }
 
-    const view = graphViewer.graph.getView();
-    const states = view.states;
+    const container = containerRef.current;
+    const graph = new mxGraph(container);
+    graphRef.current = graph;
+    graph.getStylesheet().getDefaultVertexStyle().fillColor = "none";
+    graph.getStylesheet().getDefaultEdgeStyle().strokeColor = "none";
 
-    states.visit((key: any, state: any) => {
-      const cellValue = state.cell.value;
-      if (cellValue) {
-        const shapeNode = state.shape.node;
-        shapeNode.style.cursor = "pointer";
+    // --- Graph options ---
+    graph.setCellsMovable(false);
+    graph.setConnectable(false);
+    graph.setPanning(true);
+    graph.panningHandler.useLeftButtonForPanning = true;
+    graph.setHtmlLabels(true);
 
-        if (cellValue.attributes && cellValue.attributes.length > 0) {
-          shapeNode.addEventListener(
-            "click",
-            () => {
-              const attributes = extractAttributes(cellValue.attributes);
-              if (attributes && attributes.length > 0) {
-                setIdAttribute(attributes[1].value);
-              }
-              console.log(attributes[1].value);
-              openSidebar(attributes[1].value);
-            },
-            false
-          );
-        }
+    graph.getCursorForCell = function (cell: any) {
+      if (cell && cell.isVertex()) {
+        return "pointer";
+      }
+      return mxGraph.prototype.getCursorForCell.apply(this, arguments);
+    };
+    // Rubberband selection
+    new mxRubberband(graph);
+    const parsed = extractGraphModel(flowData.xml);
+    // Parse XML and decode into the graph
+    const doc = mxUtils.parseXml(parsed);
+    const codec = new mxCodec(doc);
+    codec.decode(doc.documentElement, graph.getModel());
+
+    graph.view.setScale(1); // 50% zoom
+    const bounds = graph.getGraphBounds();
+    if (!container) return;
+    const dx = container.clientWidth / 2 - (bounds.x + bounds.width / 2) * 0.5;
+    const dy =
+      container.clientHeight / 2 - (bounds.y + bounds.height / 2) * 0.5;
+    graph.view.setTranslate(dx, dy);
+
+    // Node click listener
+    graph.addListener(mxEvent.CLICK, (sender: any, evt: any) => {
+      const cell = evt.getProperty("cell");
+      if (cell && cell.isVertex()) {
+        alert(
+          "Clicked Node ID: " + cell.getId() + "\nValue: " + cell.getValue()
+        );
       }
     });
-  };
-  useEffect(() => {
-    drawioConverterAsync(flowData.xml, "drawio-diagram", false).then(() => {
-      const container = document.querySelector(
-        "#drawio-diagram"
-      ) as HTMLElement;
-      if (container) {
-        const panZoomInstance = panzoom(container, {
-          maxZoom: 5,
-          minZoom: 0.5,
-        });
-        // ✅ Allow zoom with mouse wheel at cursor
-        container.addEventListener("wheel", (e) => {
-          if (!e.ctrlKey) {
-            e.preventDefault();
-            panZoomInstance.zoomWithWheel(e); // zooms where cursor is
-          }
-        });
-        // Optional: reset on double-click
-        container.addEventListener("dblclick", () => panZoomInstance.reset());
-      }
+
+    container.addEventListener("wheel", (e) => {
+      if (!e.ctrlKey) return; // Only zoom when Ctrl is pressed
+      e.preventDefault();
+
+      if (e.deltaY < 0) graph.zoomIn();
+      else graph.zoomOut();
     });
-    setupClickableEvents();
-  }, [flowData.xml]);
-  const fetchAlTemplates = async () => {
-    const res = await getRequest("/api/forms/all", true);
-    setForms(res ?? []);
-  };
-  const [checkedForms, setCheckedForms] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-
-  const openSidebar = async (nodeId: string) => {
-    await fetchAlTemplates();
-    setIdAttribute(nodeId);
-    setShowSidebar(true);
-
-    // Always parse if string
-    let nodeDataArr: any[] = [];
-    if (typeof flowData.node_data === "string") {
-      try {
-        nodeDataArr = JSON.parse(flowData.node_data);
-      } catch {
-        nodeDataArr = [];
-      }
-    } else if (Array.isArray(flowData.node_data)) {
-      nodeDataArr = flowData.node_data;
-    } else {
-      nodeDataArr = [];
-    }
-
-    const assigned =
-      nodeDataArr.find((n: any) => n.node_id === nodeId)?.form_templates || [];
-    setCheckedForms(
-      forms.reduce(
-        (acc, f) => ({ ...acc, [f.id]: assigned.includes(f.id) }),
-        {}
-      )
-    );
-  };
-
-  const handleCheck = async (formId: string, checked: boolean) => {
-    setCheckedForms((x) => ({ ...x, [formId]: checked }));
-
-    let nodeData = [...(flowData.node_data || [])];
-    let node = nodeData.find((n: any) => n.node_id === idAttribute);
-
-    if (node) {
-      node.form_templates = checked
-        ? [...node.form_templates, formId]
-        : node.form_templates.filter((id: string) => id !== formId);
-    } else if (checked) {
-      nodeData.push({ node_id: idAttribute, form_templates: [formId] });
-    }
-
-    await putRequest(
-      `/api/flow/form-assign/${flowData.id}`,
-      {
-        node_data: nodeData,
-      },
-      true
-    );
-  };
+  }, []);
 
   return (
     <>
@@ -170,26 +116,31 @@ export const FlowDetails = () => {
         <h2 className="text-lg font-semibold">{flowData.title}</h2>
       </div>
       <div
-        ref={zoomableComponentRef}
-        id="drawio-diagram"
-        className="z-50 w-full h-screen overflow-auto  rounded relative flex justify-center items-center"
-        style={{ cursor: "grab" }}
-      ></div>
+        ref={containerRef}
+        style={{
+          width: "100%",
+          height: "100vh",
+          border: "1px solid #ccc",
+          cursor: "grab",
+          overflow: "hidden",
+        }}
+      />
       {showSidebar && (
-        <FloatSidebar
-          open={showSidebar}
-          setOpen={setShowSidebar}
-          items={forms.map((f) => ({
-            id: f.id,
-            title: f.title,
-            checked: checkedForms[f.id],
-          }))}
-          loading={false} // Add this prop!
-          viewForm={false} // Add this prop!
-          setViewForm={() => {}} // Add this prop!
-          selectedTitle="Form Assignment" // This is optional, but recommended
-          onCheck={handleCheck}
-        />
+        <></>
+        // <FloatSidebar
+        //   open={showSidebar}
+        //   setOpen={setShowSidebar}
+        //   items={forms.map((f) => ({
+        //     id: f.id,
+        //     title: f.title,
+        //     checked: checkedForms[f.id],
+        //   }))}
+        //   loading={false} // Add this prop!
+        //   viewForm={false} // Add this prop!
+        //   setViewForm={() => {}} // Add this prop!
+        //   selectedTitle="Form Assignment" // This is optional, but recommended
+        //   onCheck={handleCheck}
+        // />
       )}
     </>
   );
