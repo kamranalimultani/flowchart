@@ -10,6 +10,7 @@ import { FlowDetails } from "./pages/FlowDetails";
 import { FormTemplates } from "./pages/FormTemplates";
 import AddFormTemplate from "./pages/AddFormTemplate";
 import PrivateRoute from "./utils/ProtectedRoutes";
+import { Dashboard } from "./pages/Dashboard";
 
 function App() {
   return (
@@ -29,6 +30,19 @@ function App() {
               element={
                 <DefaultLayout>
                   <FlowList />
+                </DefaultLayout>
+              }
+            />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute
+              bypass={false}
+              element={
+                <DefaultLayout>
+                  <Dashboard />
                 </DefaultLayout>
               }
             />

@@ -4,6 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Eye } from "lucide-react"; // Or any icon set
 import { X, ArrowLeft, Maximize2 } from "lucide-react"; // Example buttons
+import { getRequest } from "@/utils/apiUtils";
+import { FormViewDetailPage } from "./FormViewDetailPage";
 
 interface Props {
   open: boolean;
@@ -11,8 +13,7 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   items: any[];
   loading: boolean;
-  viewForm: boolean;
-  setViewForm: (open: boolean) => void;
+
   selectedTitle?: string;
   onCheck: (id: string, checked: boolean) => void;
 }
@@ -22,18 +23,24 @@ export const FloatSidebar = ({
   setOpen,
   items,
   loading,
-  viewForm,
-  setViewForm,
+
   selectedTitle,
   onCheck,
 }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [search, setSearch] = useState("");
+  const [formViewData, setFormViewData] = useState<any>(null);
+  const [viewForm, setviewForm] = useState<boolean>(false);
 
   // Filter items by search
   const filteredItems = items.filter((i) =>
     i.title?.toLowerCase().includes(search.toLowerCase())
   );
+  const viewTemplate = async (id: number) => {
+    const res = await getRequest(`/api/form-templates/${id}`, true);
+    setFormViewData(res);
+    setviewForm(true);
+  };
 
   return open ? (
     <div
@@ -52,7 +59,7 @@ export const FloatSidebar = ({
               size="icon"
               variant="ghost"
               className="rounded"
-              onClick={() => setViewForm(false)}
+              onClick={() => setviewForm(false)}
             >
               <ArrowLeft size={20} />
             </Button>
@@ -123,7 +130,12 @@ export const FloatSidebar = ({
                 />
                 <span className="flex-1">{item.title}</span>
                 {item.checked && (
-                  <Button size="icon" variant="ghost" className="rounded-full">
+                  <Button
+                    size="icon"
+                    onClick={() => viewTemplate(item.id)}
+                    variant="ghost"
+                    className="rounded-full"
+                  >
                     <Eye size={20} />
                   </Button>
                 )}
@@ -136,8 +148,7 @@ export const FloatSidebar = ({
           )
         ) : (
           <div className="p-4">
-            {/* Render form details or history tab here */}
-            {selectedTitle || "Form Details"}
+            <FormViewDetailPage formData={formViewData} />
           </div>
         )}
       </div>

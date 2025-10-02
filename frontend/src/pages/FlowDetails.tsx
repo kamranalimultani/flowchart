@@ -171,8 +171,6 @@ export const FlowDetails = () => {
             checked: checkedForms[f.id],
           }))}
           loading={false} // Add this prop!
-          viewForm={false} // Add this prop!
-          setViewForm={() => {}} // Add this prop!
           selectedTitle="Form Assignment" // This is optional, but recommended
           onCheck={handleCheck}
         />
