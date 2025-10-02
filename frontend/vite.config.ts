@@ -10,4 +10,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    allowedHosts: ["osmvd-223-233-75-221.a.free.pinggy.link"],
+  },
+  // vite.config.js
 });

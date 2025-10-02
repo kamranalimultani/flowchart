@@ -79,6 +79,13 @@ export const FlowDetails = () => {
           maxZoom: 5,
           minZoom: 0.5,
         });
+        // ✅ Allow zoom with mouse wheel at cursor
+        container.addEventListener("wheel", (e) => {
+          if (!e.ctrlKey) {
+            e.preventDefault();
+            panZoomInstance.zoomWithWheel(e); // zooms where cursor is
+          }
+        });
         // Optional: reset on double-click
         container.addEventListener("dblclick", () => panZoomInstance.reset());
       }
