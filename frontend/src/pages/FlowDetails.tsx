@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { getRequest, putRequest } from "@/utils/apiUtils";
+import { FloatSidebar } from "@/components/customComponents/FloatOverlay";
 
 export const FlowDetails = () => {
   const location = useLocation();
@@ -17,6 +19,34 @@ export const FlowDetails = () => {
     node_data: any[];
   };
   const [showSidebar, setShowSidebar] = useState(false);
+  const [forms, setForms] = useState<any[]>([]);
+  const [checkedForms, setCheckedForms] = useState<{ [key: string]: boolean }>(
+    {}
+  );
+  const [idAttribute, setIdAttribute] = useState<string>("");
+
+  const handleCheck = async (formId: string, checked: boolean) => {
+    setCheckedForms((x) => ({ ...x, [formId]: checked }));
+
+    let nodeData = [...(flowData.node_data || [])];
+    let node = nodeData.find((n: any) => n.node_id === idAttribute);
+
+    if (node) {
+      node.form_templates = checked
+        ? [...node.form_templates, formId]
+        : node.form_templates.filter((id: string) => id !== formId);
+    } else if (checked) {
+      nodeData.push({ node_id: idAttribute, form_templates: [formId] });
+    }
+
+    await putRequest(
+      `/api/flow/form-assign/${flowData.id}`,
+      {
+        node_data: nodeData,
+      },
+      true
+    );
+  };
 
   const extractGraphModel = (xmlString: any) => {
     // Find the start and end of mxGraphModel tag
@@ -34,8 +64,13 @@ export const FlowDetails = () => {
     // If no mxGraphModel found, return original string
     return xmlString;
   };
-
+  const fetchTemplates = async () => {
+    const res = await getRequest("/api/forms/all", true);
+    setForms(res);
+    console.log(res);
+  };
   useEffect(() => {
+    fetchTemplates();
     // Access mxGraph from the CDN in public/index.html
     const { mxGraph, mxRubberband, mxEvent, mxUtils, mxCodec } = window as any;
 
@@ -48,7 +83,9 @@ export const FlowDetails = () => {
     const graph = new mxGraph(container);
     graphRef.current = graph;
     graph.getStylesheet().getDefaultVertexStyle().fillColor = "none";
+    graph.getStylesheet().getDefaultVertexStyle().strokeColor = "none"; // Add this
     graph.getStylesheet().getDefaultEdgeStyle().strokeColor = "none";
+    graph.getStylesheet().getDefaultEdgeStyle().stroke = "none";
 
     // --- Graph options ---
     graph.setCellsMovable(false);
@@ -83,9 +120,8 @@ export const FlowDetails = () => {
     graph.addListener(mxEvent.CLICK, (sender: any, evt: any) => {
       const cell = evt.getProperty("cell");
       if (cell && cell.isVertex()) {
-        alert(
-          "Clicked Node ID: " + cell.getId() + "\nValue: " + cell.getValue()
-        );
+        setIdAttribute(cell.getId());
+        setShowSidebar(true);
       }
     });
 
@@ -126,21 +162,20 @@ export const FlowDetails = () => {
         }}
       />
       {showSidebar && (
-        <></>
-        // <FloatSidebar
-        //   open={showSidebar}
-        //   setOpen={setShowSidebar}
-        //   items={forms.map((f) => ({
-        //     id: f.id,
-        //     title: f.title,
-        //     checked: checkedForms[f.id],
-        //   }))}
-        //   loading={false} // Add this prop!
-        //   viewForm={false} // Add this prop!
-        //   setViewForm={() => {}} // Add this prop!
-        //   selectedTitle="Form Assignment" // This is optional, but recommended
-        //   onCheck={handleCheck}
-        // />
+        <FloatSidebar
+          open={showSidebar}
+          setOpen={setShowSidebar}
+          items={forms.map((f) => ({
+            id: f.id,
+            title: f.title,
+            checked: checkedForms[f.id],
+          }))}
+          loading={false} // Add this prop!
+          viewForm={false} // Add this prop!
+          setViewForm={() => {}} // Add this prop!
+          selectedTitle="Form Assignment" // This is optional, but recommended
+          onCheck={handleCheck}
+        />
       )}
     </>
   );
