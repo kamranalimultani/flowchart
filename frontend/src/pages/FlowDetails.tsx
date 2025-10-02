@@ -3,12 +3,15 @@
 import { drawioConverterAsync } from "@/utils/test";
 import { useEffect, useRef, useState } from "react";
 import panzoom from "@panzoom/panzoom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FloatSidebar } from "@/components/customComponents/FloatOverlay";
 import { getRequest, putRequest } from "@/utils/apiUtils";
+import { ArrowLeft } from "lucide-react";
 
 export const FlowDetails = () => {
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ hook for navigation
+
   const flowData = location.state as {
     id: number;
     title: string;
@@ -20,7 +23,6 @@ export const FlowDetails = () => {
   const [forms, setForms] = useState<any[]>([]);
 
   const [idAttribute, setIdAttribute] = useState<string>("");
-  console.log(idAttribute);
 
   const zoomableComponentRef = useRef<HTMLDivElement | null>(null);
   const extractAttributes = (namedNodeMap: NamedNodeMap) => {
@@ -145,10 +147,25 @@ export const FlowDetails = () => {
 
   return (
     <>
+      <div className="my-4 flex justify-between items-center mx-4 z-0">
+        {/* Left side - glass card back button */}
+        <div
+          onClick={() => navigate(-1)} // ✅ navigate back
+          className="flex items-center space-x-2 cursor-pointer rounded-xl px-3 py-2
+                      bg-white/20 backdrop-blur-md border border-white/30 shadow-md
+                      hover:bg-white/30 transition"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">Back</span>
+        </div>
+
+        {/* Right side - graph title */}
+        <h2 className="text-lg font-semibold">{flowData.title}</h2>
+      </div>
       <div
         ref={zoomableComponentRef}
         id="drawio-diagram"
-        className="w-full h-screen overflow-auto border rounded relative"
+        className="z-50 w-full h-screen overflow-auto  rounded relative flex justify-center items-center"
         style={{ cursor: "grab" }}
       ></div>
       {showSidebar && (

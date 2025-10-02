@@ -61,7 +61,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   const deleteFlow = async (id: number) => {
     try {
-      await deleteRequest(`/api/flows/${id}`);
+      await deleteRequest(`/api/flows/${id}`, true);
       // Remove deleted flow from state
       refreshFlows();
     } catch (err) {
