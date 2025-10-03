@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/flows', [FlowController::class, 'store']);
     Route::get('/flows', [FlowController::class, 'index']);
     Route::put('/flows/{id}', [FlowController::class, 'update']);
+    Route::get('/flows/{fileName}', [FlowController::class, 'getFlowByFileName']);
     Route::put('/flow/form-assign/{id}', [FlowController::class, 'assignForm']);
     Route::delete('/flows/{id}', [FlowController::class, 'destroy']);
     Route::get('/auth/me', [AuthController::class, 'me']);

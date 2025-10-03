@@ -171,6 +171,26 @@ XML;
       'flow' => $flow,
     ]);
   }
+
+  public function getFlowByFileName(Request $request, $fileName)
+  {
+    $user = $request->user();
+
+    if (!$user) {
+      return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    $flow = Flow::where('file_name', $fileName)->firstOrFail();
+
+    if ($flow->user_id !== $user->id) {
+      return response()->json(['error' => 'Forbidden'], 403);
+    }
+
+    return response()->json([
+      'flow' => $flow
+    ]);
+  }
+
   public function destroy($id)
   {
     $flow = Flow::findOrFail($id);

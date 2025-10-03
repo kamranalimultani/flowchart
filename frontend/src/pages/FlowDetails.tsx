@@ -16,6 +16,7 @@ export const FlowDetails = () => {
     title: string;
     description: string;
     xml: string;
+    file_name: string;
     node_data: any[];
   };
   const [showSidebar, setShowSidebar] = useState(false);
@@ -67,10 +68,38 @@ export const FlowDetails = () => {
   const fetchTemplates = async () => {
     const res = await getRequest("/api/forms/all", true);
     setForms(res);
-    console.log(res);
   };
+  const [flowDetails, setFlowDetails] = useState<any>(null);
+
+  const fetchFlowDetails = async () => {
+    try {
+      const res = await getRequest(`/api/flows/${flowData.file_name}`, true);
+      let flow = res.flow;
+
+      // Ensure node_data is parsed
+      if (typeof flow.node_data === "string") {
+        try {
+          flow.node_data = JSON.parse(flow.node_data);
+        } catch (e) {
+          console.error("Failed to parse node_data:", e);
+          flow.node_data = [];
+        }
+      }
+
+      setFlowDetails(flow);
+    } catch (err) {
+      console.error("Error fetching flow:", err);
+    }
+  };
+
   useEffect(() => {
     fetchTemplates();
+    fetchFlowDetails(); // ✅ fetch fresh flow by file_name
+  }, []);
+
+  useEffect(() => {
+    if (!flowDetails) return; // wait until flowDetails is fetched
+
     // Access mxGraph from the CDN in public/index.html
     const { mxGraph, mxRubberband, mxEvent, mxUtils, mxCodec } = window as any;
 
@@ -119,9 +148,22 @@ export const FlowDetails = () => {
     // Node click listener
     graph.addListener(mxEvent.CLICK, (sender: any, evt: any) => {
       const cell = evt.getProperty("cell");
-      if (cell && cell.isVertex()) {
-        setIdAttribute(cell.getId());
+      if (cell && cell.isVertex() && flowDetails) {
+        const nodeId = cell.getId();
+        setIdAttribute(nodeId);
+        const node = (flowDetails.node_data || []).find(
+          (n: any) => n.node_id === nodeId
+        );
+        console.log(node);
+        const updatedChecked: { [key: string]: boolean } = {};
+        forms.forEach((f) => {
+          updatedChecked[f.id] = node
+            ? node.form_templates.includes(f.id)
+            : false;
+        });
+        console.log(forms);
         setShowSidebar(true);
+        setCheckedForms(updatedChecked);
       }
     });
 
@@ -132,7 +174,7 @@ export const FlowDetails = () => {
       if (e.deltaY < 0) graph.zoomIn();
       else graph.zoomOut();
     });
-  }, []);
+  }, [flowData.xml, flowDetails]);
 
   return (
     <>

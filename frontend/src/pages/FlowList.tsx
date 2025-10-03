@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom";
 type Flow = {
   id?: number;
   title: string;
+  file_name: string;
   xml?: string; // backend returns this
   description?: string;
   node_data: any;
@@ -50,6 +51,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
   id,
   title,
   xml,
+  file_name,
   description,
   node_data,
   refreshFlows,
@@ -163,7 +165,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/flow/${id}`, {
-                state: { id, title, description, xml, node_data },
+                state: { id, title, description, xml, node_data, file_name },
               });
             }}
             className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
@@ -176,7 +178,14 @@ const FlowCard: React.FC<FlowCardProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleEditDiagram(e, { id, title, description, xml, node_data });
+              handleEditDiagram(e, {
+                id,
+                title,
+                description,
+                xml,
+                node_data,
+                file_name,
+              });
             }}
             className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
           >
