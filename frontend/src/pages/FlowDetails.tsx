@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { getRequest, putRequest } from "@/utils/apiUtils";
 import { FloatSidebar } from "@/components/customComponents/FloatOverlay";
+import { extractGraphModel } from "@/utils/commonUtils";
 
 export const FlowDetails = () => {
   const location = useLocation();
@@ -29,42 +30,28 @@ export const FlowDetails = () => {
   const handleCheck = async (formId: string, checked: boolean) => {
     setCheckedForms((x) => ({ ...x, [formId]: checked }));
 
-    let nodeData = [...(flowData.node_data || [])];
+    // ✅ Work with flowDetails not flowData
+    let nodeData = [...(flowDetails?.node_data || [])];
     let node = nodeData.find((n: any) => n.node_id === idAttribute);
 
     if (node) {
       node.form_templates = checked
-        ? [...node.form_templates, formId]
+        ? [...new Set([...node.form_templates, formId])]
         : node.form_templates.filter((id: string) => id !== formId);
     } else if (checked) {
       nodeData.push({ node_id: idAttribute, form_templates: [formId] });
     }
 
+    // ✅ update state so UI stays in sync
+    setFlowDetails((prev: any) => ({ ...prev, node_data: nodeData }));
+
     await putRequest(
-      `/api/flow/form-assign/${flowData.id}`,
-      {
-        node_data: nodeData,
-      },
+      `/api/flow/form-assign/${flowDetails.id}`,
+      { node_data: nodeData },
       true
     );
   };
 
-  const extractGraphModel = (xmlString: any) => {
-    // Find the start and end of mxGraphModel tag
-    const startTag = "<mxGraphModel";
-    const endTag = "</mxGraphModel>";
-
-    const startIndex = xmlString.indexOf(startTag);
-    const endIndex = xmlString.indexOf(endTag);
-
-    if (startIndex !== -1 && endIndex !== -1) {
-      // Extract everything from <mxGraphModel to </mxGraphModel>
-      return xmlString.substring(startIndex, endIndex + endTag.length);
-    }
-
-    // If no mxGraphModel found, return original string
-    return xmlString;
-  };
   const fetchTemplates = async () => {
     const res = await getRequest("/api/forms/all", true);
     setForms(res);
@@ -111,11 +98,26 @@ export const FlowDetails = () => {
     const container = containerRef.current;
     const graph = new mxGraph(container);
     graphRef.current = graph;
+    // // graph.getStylesheet().getDefaultVertexStyle().strokeColor = "none";
+    // graph.getStylesheet().getDefaultEdgeStyle().strokeColor = "none";
+    // graph.getStylesheet().getDefaultEdgeStyle().stroke = "none";
+    const originalGetCellStyle = graph.getCellStyle;
     graph.getStylesheet().getDefaultVertexStyle().fillColor = "none";
-    graph.getStylesheet().getDefaultVertexStyle().strokeColor = "none"; // Add this
-    graph.getStylesheet().getDefaultEdgeStyle().strokeColor = "none";
-    graph.getStylesheet().getDefaultEdgeStyle().stroke = "none";
+    graph.getCellStyle = function (cell: any) {
+      let style = originalGetCellStyle.apply(this, arguments);
 
+      // If it's a text-only vertex (style contains "text;html=1")
+      if (
+        cell &&
+        cell.isVertex() &&
+        cell.style &&
+        cell.style.includes("text;html=1")
+      ) {
+        style = { ...style, strokeColor: "none", fillColor: "none" }; // no border, no fill
+      }
+
+      return style;
+    };
     // --- Graph options ---
     graph.setCellsMovable(false);
     graph.setConnectable(false);
@@ -154,14 +156,12 @@ export const FlowDetails = () => {
         const node = (flowDetails.node_data || []).find(
           (n: any) => n.node_id === nodeId
         );
-        console.log(node);
         const updatedChecked: { [key: string]: boolean } = {};
         forms.forEach((f) => {
           updatedChecked[f.id] = node
             ? node.form_templates.includes(f.id)
             : false;
         });
-        console.log(forms);
         setShowSidebar(true);
         setCheckedForms(updatedChecked);
       }
@@ -212,6 +212,8 @@ export const FlowDetails = () => {
             title: f.title,
             checked: checkedForms[f.id],
           }))}
+          idAttribute={idAttribute}
+          flow_id={flowData.id}
           loading={false} // Add this prop!
           selectedTitle="Form Assignment" // This is optional, but recommended
           onCheck={handleCheck}

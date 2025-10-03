@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FlowController;
+use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\FormTemplateController;
 use App\Http\Controllers\MockApiController;
 use Illuminate\Http\Request;
@@ -26,5 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/flow/form-assign/{id}', [FlowController::class, 'assignForm']);
     Route::delete('/flows/{id}', [FlowController::class, 'destroy']);
     Route::get('/auth/me', [AuthController::class, 'me']);
-
+    Route::post('/form-responses', [FormResponseController::class, 'store']);
+    Route::get('/form-responses/{flowId}/{formTemplateId}/{nodeId}', [FormResponseController::class, 'index']);
 });

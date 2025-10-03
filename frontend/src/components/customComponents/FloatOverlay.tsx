@@ -10,10 +10,11 @@ import { FormViewDetailPage } from "./FormViewDetailPage";
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
+  flow_id: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   items: any[];
   loading: boolean;
-
+  idAttribute: string;
   selectedTitle?: string;
   onCheck: (id: string, checked: boolean) => void;
 }
@@ -23,7 +24,8 @@ export const FloatSidebar = ({
   setOpen,
   items,
   loading,
-
+  idAttribute,
+  flow_id,
   selectedTitle,
   onCheck,
 }: Props) => {
@@ -148,7 +150,11 @@ export const FloatSidebar = ({
           )
         ) : (
           <div className="p-4">
-            <FormViewDetailPage formData={formViewData} />
+            <FormViewDetailPage
+              formData={formViewData}
+              idAttribute={idAttribute}
+              flow_id={flow_id}
+            />
           </div>
         )}
       </div>

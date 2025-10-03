@@ -11,6 +11,7 @@ import { FormTemplates } from "./pages/FormTemplates";
 import AddFormTemplate from "./pages/AddFormTemplate";
 import PrivateRoute from "./utils/ProtectedRoutes";
 import { Dashboard } from "./pages/Dashboard";
+import { LandingPage } from "./pages/LandingPage";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         {/* Public routes */}
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="/" element={<ComingSoon />} />
+        <Route path="/" element={<LandingPage />} />
 
         {/* Protected routes with PrivateRoute per route */}
         <Route

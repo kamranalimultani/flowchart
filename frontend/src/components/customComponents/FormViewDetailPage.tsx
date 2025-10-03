@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { postRequest } from "@/utils/apiUtils";
 import React, { useEffect, useState } from "react";
 import { Model } from "survey-core";
 import { Survey } from "survey-react-ui"; // ✅ Import Survey renderer
@@ -6,26 +7,21 @@ import { Survey } from "survey-react-ui"; // ✅ Import Survey renderer
 
 interface Props {
   formData: any;
-  selectedOrganisation?: { _id: string };
-  selectedFormId?: string;
-  idAttribute?: string;
-  getFormResHistory?: (obj: any) => void;
+  idAttribute: string;
+  flow_id: number;
 }
 
 export const FormViewDetailPage: React.FC<Props> = ({
   formData,
-  selectedOrganisation,
-  selectedFormId,
   idAttribute,
-  getFormResHistory,
+  flow_id,
 }) => {
   const [surveyModel, setSurveyModel] = useState<Model | null>(null);
 
   useEffect(() => {
-    if (formData) {
-      console.log(formData);
+    if (formData && idAttribute !== "") {
       const newSurvey = new Model(formData.form_data);
-      newSurvey.showCompletedPage = false;
+      newSurvey.showCompletedPage = true;
 
       // ✅ Apply your custom theme
       newSurvey.applyTheme({
@@ -61,31 +57,32 @@ export const FormViewDetailPage: React.FC<Props> = ({
         colorPalette: "dark",
         isPanelless: true,
       });
+      newSurvey.completedHtml = `<div class="text-center p-4">
+        <h3 class="text-xl font-semibold">Thank you!</h3>
+        <p>Your response has been submitted successfully.</p>
+      </div>`;
+      newSurvey.onComplete.add(async (sender) => {
+        const payload = {
+          flow_id: flow_id, // from props / API
+          form_template_id: formData.id,
+          node_id: idAttribute,
+          response: sender.data, // all form responses
+          user_id: null, // optional
+        };
+
+        try {
+          await postRequest("/api/form-responses", payload, true);
+        } catch (err) {
+          console.log(err);
+          alert("Failed to submit form.");
+        }
+      });
 
       setSurveyModel(newSurvey);
 
       // Example call to getFormResHistory
-      if (
-        selectedOrganisation &&
-        selectedFormId &&
-        idAttribute &&
-        getFormResHistory
-      ) {
-        getFormResHistory({
-          org_id: selectedOrganisation._id,
-          year: 2024,
-          form_id: selectedFormId,
-          node_id: idAttribute,
-        });
-      }
     }
-  }, [
-    formData,
-    selectedFormId,
-    idAttribute,
-    selectedOrganisation,
-    getFormResHistory,
-  ]);
+  }, [formData]);
 
   return (
     <div className="p-4">
