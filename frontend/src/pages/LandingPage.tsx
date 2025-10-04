@@ -1,568 +1,1106 @@
-"use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  Bell,
+  CircleUser,
+  Menu,
+  Moon,
+  Sun,
+  Power,
+  Utensils,
+  ChevronRight,
+  Play,
+  CheckCircle2,
+  Zap,
+  Shield,
+  Users,
+  BarChart3,
+  FileText,
+  Share2,
+  Download,
+  Sparkles,
+  Globe,
+  Lock,
+  Workflow,
+  Brain,
+  PieChart,
+  TrendingUp,
+  Clock,
+  Filter,
+  Target,
+  Boxes,
+  Palette,
+  Code,
+  Database,
+  Mail,
+  Star,
+  ArrowRight,
+  Check,
+  X,
+  Award,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { motion } from "framer-motion";
-import {
-  ChevronRight,
-  FileText,
-  BarChart2,
-  Share2,
-  Users,
-  Edit,
-  Download,
-  Layers,
-  Star,
-  CheckCircle,
-  Zap,
-  PlayCircle,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
-// Add additional details for richer content
-const features = [
-  {
-    icon: <FileText className="w-6 h-6 text-orange-500" />,
-    title: "Build Custom Diagrams",
-    description:
-      "Design complex, dynamic workflows with a powerful drag-and-drop builder. Flexible for any business process.",
-  },
-  {
-    icon: <Edit className="w-6 h-6 text-green-500" />,
-    title: "Edit Instantly",
-    description:
-      "Revise your logic and forms on the fly. Real-time editing for maximum agility.",
-  },
-  {
-    icon: <FileText className="w-6 h-6 text-purple-500" />,
-    title: "Template Library",
-    description:
-      "Access and save templates for surveys, checklists, and SOPs. Deploy in seconds.",
-  },
-  {
-    icon: <Share2 className="w-6 h-6 text-blue-500" />,
-    title: "Seamless Sharing",
-    description:
-      "Share flows with anyone—no signup required. Gather info with public or restricted links.",
-  },
-  {
-    icon: <Users className="w-6 h-6 text-pink-500" />,
-    title: "Team Management",
-    description:
-      "Granular roles, permissions, and audit logs for secure internal governance.",
-  },
-  {
-    icon: <BarChart2 className="w-6 h-6 text-cyan-500" />,
-    title: "Insights & Analytics",
-    description:
-      "Actionable dashboards. Visualize metrics, discover trends, and make data-driven decisions.",
-  },
-  {
-    icon: <Download className="w-6 h-6 text-red-500" />,
-    title: "Export Anything",
-    description:
-      "Download submissions, charts, and raw data as CSV, XLSX, PDF, or JSON.",
-  },
-  {
-    icon: <Layers className="w-6 h-6 text-yellow-500" />,
-    title: "Multiple Projects",
-    description:
-      "Manage multiple workflows, submissions, and reviews—all in one workspace.",
-  },
-];
+export const LandingPage = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState<any>("hero");
+  const [hoveredPlan, setHoveredPlan] = useState<any>(null);
+  const [hoveredUseCase, setHoveredUseCase] = useState<any>(null);
+  const [hoveredAI, setHoveredAI] = useState<any>(null);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
 
-// Example Use Cases
-const useCases = [
-  {
-    icon: <Zap className="w-6 h-6 text-green-600" />,
-    title: "HR Onboarding",
-    desc: "Streamline new employee onboarding with automated, multi-step forms and compliance tracking.",
-  },
-  {
-    icon: <Zap className="w-6 h-6 text-blue-600" />,
-    title: "Customer Surveys",
-    desc: "Collect customer feedback, NPS, and satisfaction data via branded, mobile-ready forms.",
-  },
-  {
-    icon: <Zap className="w-6 h-6 text-yellow-600" />,
-    title: "IT Service Desk",
-    desc: "Build ticketing and approval flows for IT requests, maintenance, and asset management.",
-  },
-  {
-    icon: <Zap className="w-6 h-6 text-pink-600" />,
-    title: "Compliance Workflows",
-    desc: "Automate audits, safety checks, and SOP compliance with tracked digital flows.",
-  },
-  {
-    icon: <Zap className="w-6 h-6 text-purple-600" />,
-    title: "Field Data Collection",
-    desc: "Empower field teams to capture reports, inspections, and leads even offline.",
-  },
-];
+      const sections = [
+        "hero",
+        "features",
+        "flows",
+        "analytics",
+        "ai",
+        "pricing",
+      ];
+      const current = sections.find((section) => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+      if (current) setActiveSection(current);
+    };
 
-const testimonials = [
-  {
-    name: "Jenna K.",
-    title: "Head of Ops, BetaCorp",
-    quote:
-      "We've reduced our paperwork by 90%. Custom workflows are a lifesaver—setup is instant, and our team loves the UX.",
-  },
-  {
-    name: "Ali S.",
-    title: "Director, TechCrew",
-    quote:
-      "Our onboarding flow went from days to hours. The analytics blew our leadership away. Huge impact.",
-  },
-  {
-    name: "Luis M.",
-    title: "Product Manager, SnapData",
-    quote:
-      "Form builder is the best on the market. No-code automation is real!",
-  },
-];
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-const integrations = [
-  { label: "Slack", icon: "path/to/slack.svg" },
-  { label: "Google Sheets", icon: "path/to/googlesheets.svg" },
-  { label: "Zapier", icon: "path/to/zapier.svg" },
-  { label: "Jira", icon: "path/to/jira.svg" },
-  { label: "HubSpot", icon: "path/to/hubspot.svg" },
-];
+  const features = [
+    {
+      icon: <Workflow className="w-8 h-8" />,
+      title: "Visual Flow Builder",
+      description:
+        "Create complex survey flows with an intuitive drag-and-drop interface. Design conditional logic, branching paths, and dynamic routing based on user responses.",
+    },
+    {
+      icon: <FileText className="w-8 h-8" />,
+      title: "Rich Form Templates",
+      description:
+        "Access dozens of professionally designed form templates. Customize every aspect with 20+ question types including multiple choice, matrix, rating scales, file uploads, and more.",
+    },
+    {
+      icon: <Brain className="w-8 h-8" />,
+      title: "AI-Powered Intelligence",
+      description:
+        "Leverage artificial intelligence for smart question suggestions, sentiment analysis, automatic categorization, and predictive insights from your survey data.",
+    },
+    {
+      icon: <BarChart3 className="w-8 h-8" />,
+      title: "Advanced Analytics",
+      description:
+        "Comprehensive data visualization with real-time dashboards, cross-tabulation, trend analysis, heat maps, and exportable reports. Understand your data deeply.",
+    },
+    {
+      icon: <Share2 className="w-8 h-8" />,
+      title: "Smart Sharing",
+      description:
+        "Share surveys via multiple channels - email, social media, QR codes, embedded widgets. Track distribution and manage access with granular permissions.",
+    },
+    {
+      icon: <Download className="w-8 h-8" />,
+      title: "Flexible Exports",
+      description:
+        "Export individual responses as PDF reports or bulk data in CSV, Excel, JSON formats. Integrate with your favorite tools via webhooks and API.",
+    },
+  ];
 
-const faqs = [
-  {
-    q: "Can I use it for external surveys?",
-    a: "Absolutely! Share links publicly or restrict by email domain or user invite.",
-  },
-  {
-    q: "Is there a free plan?",
-    a: "Yes, our free plan includes all builder features and up to 100 submissions/month.",
-  },
-  {
-    q: "Do you support SSO and advanced RBAC?",
-    a: "Enterprise plans include SSO, advanced permissions, and audit trails.",
-  },
-  {
-    q: "Can I export form data?",
-    a: "Yes, one-click export to CSV, Excel, or JSON is built-in.",
-  },
-];
+  const questionTypes = [
+    "Single Choice",
+    "Multiple Choice",
+    "Text Input",
+    "Long Text",
+    "Number Input",
+    "Email Validation",
+    "Date Picker",
+    "Time Picker",
+    "Rating Scale",
+    "Star Rating",
+    "Slider",
+    "Matrix Grid",
+    "Ranking",
+    "File Upload",
+    "Image Choice",
+    "Video Response",
+    "Signature Capture",
+    "Location Picker",
+    "Phone Number",
+    "Dropdown Select",
+  ];
 
-export const LandingPage: React.FC = () => (
-  <div className="w-full font-sans">
-    {/* Sticky Nav */}
-    <header className="fixed inset-x-0 top-0 z-40 bg-white/80 backdrop-blur shadow">
-      <nav className="max-w-7xl mx-auto flex items-center justify-between py-3 px-8">
-        <div className="flex items-center gap-2 text-orange-500 font-extrabold text-2xl">
-          Melvok
+  const advancedFeatures = [
+    {
+      category: "Logic & Branching",
+      items: [
+        "Conditional logic and skip patterns",
+        "Question piping and dynamic text",
+        "Custom validation rules",
+        "Multi-page forms with progress tracking",
+        "Random question ordering",
+        "Question randomization within groups",
+      ],
+    },
+    {
+      category: "Design & Customization",
+      items: [
+        "Fully customizable themes and branding",
+        "Custom CSS and JavaScript support",
+        "White-label solutions",
+        "Mobile-responsive designs",
+        "Accessibility compliance (WCAG 2.1)",
+        "Multi-language support with auto-translation",
+      ],
+    },
+    {
+      category: "Data & Integration",
+      items: [
+        "Real-time response notifications",
+        "Webhook integrations",
+        "REST API access",
+        "Database connections",
+        "CRM integrations (Salesforce, HubSpot)",
+        "Marketing tool connections (Mailchimp, ActiveCampaign)",
+      ],
+    },
+    {
+      category: "Security & Compliance",
+      items: [
+        "SSL encryption for all data",
+        "GDPR compliance tools",
+        "Password-protected surveys",
+        "IP address restrictions",
+        "Response validation and fraud detection",
+        "SOC 2 Type II certified infrastructure",
+      ],
+    },
+  ];
+
+  const analyticsFeatures = [
+    {
+      icon: <PieChart className="w-6 h-6" />,
+      title: "Visual Dashboards",
+      description:
+        "Interactive charts, graphs, and visualizations that update in real-time as responses come in.",
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: "Trend Analysis",
+      description:
+        "Track changes over time with historical comparisons and predictive forecasting.",
+    },
+    {
+      icon: <Filter className="w-6 h-6" />,
+      title: "Advanced Filtering",
+      description:
+        "Segment data by demographics, responses, dates, or custom criteria for deeper insights.",
+    },
+    {
+      icon: <Target className="w-6 h-6" />,
+      title: "Cross-Tabulation",
+      description:
+        "Compare multiple variables simultaneously to discover hidden correlations and patterns.",
+    },
+    {
+      icon: <Database className="w-6 h-6" />,
+      title: "Data Tables",
+      description:
+        "View raw response data in sortable, filterable tables with bulk actions and annotations.",
+    },
+    {
+      icon: <Globe className="w-6 h-6" />,
+      title: "Geographic Mapping",
+      description:
+        "Visualize responses on interactive maps with heat maps and regional breakdowns.",
+    },
+  ];
+
+  const pricingPlans = [
+    {
+      name: "Free",
+      price: "$0",
+      period: "forever",
+      description: "Perfect for individuals and small projects",
+      features: [
+        "Up to 3 active flows",
+        "100 responses per month",
+        "10 question types",
+        "Basic analytics",
+        "Email support",
+        "7-day data retention",
+      ],
+      notIncluded: [
+        "AI features",
+        "Advanced analytics",
+        "Custom branding",
+        "API access",
+      ],
+      cta: "Get Started Free",
+      popular: false,
+    },
+    {
+      name: "Professional",
+      price: "$29",
+      period: "per month",
+      description: "For growing teams and businesses",
+      features: [
+        "Unlimited flows",
+        "10,000 responses per month",
+        "All 20+ question types",
+        "Advanced analytics & reporting",
+        "Custom branding",
+        "Priority support",
+        "90-day data retention",
+        "Export to CSV/PDF",
+        "Webhook integrations",
+        "Team collaboration (5 users)",
+      ],
+      notIncluded: ["AI features", "White-label", "Dedicated account manager"],
+      cta: "Start Free Trial",
+      popular: true,
+    },
+    {
+      name: "Enterprise",
+      price: "$99",
+      period: "per month",
+      description: "For large organizations with advanced needs",
+      features: [
+        "Everything in Professional",
+        "Unlimited responses",
+        "AI-powered insights & predictions",
+        "Advanced sentiment analysis",
+        "White-label solution",
+        "Custom integrations",
+        "Dedicated account manager",
+        "Unlimited data retention",
+        "SSO & advanced security",
+        "Role-based user management",
+        "Unlimited team members",
+        "SLA guarantee",
+        "Custom training & onboarding",
+      ],
+      notIncluded: [],
+      cta: "Contact Sales",
+      popular: false,
+    },
+  ];
+
+  const useCases = [
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "Customer Feedback",
+      description:
+        "Gather valuable insights from your customers to improve products and services.",
+      stat: "95% satisfaction",
+    },
+    {
+      icon: <Sparkles className="w-8 h-8" />,
+      title: "Employee Engagement",
+      description:
+        "Measure team satisfaction, collect feedback, and boost workplace culture.",
+      stat: "2x engagement",
+    },
+    {
+      icon: <Target className="w-8 h-8" />,
+      title: "Market Research",
+      description:
+        "Conduct comprehensive market studies with sophisticated questionnaires.",
+      stat: "10k+ responses",
+    },
+    {
+      icon: <Clock className="w-8 h-8" />,
+      title: "Event Registration",
+      description:
+        "Streamline event sign-ups with automated confirmations and reminders.",
+      stat: "Instant setup",
+    },
+    {
+      icon: <Star className="w-8 h-8" />,
+      title: "Lead Generation",
+      description:
+        "Capture qualified leads with smart forms that integrate with your CRM.",
+      stat: "3x conversion",
+    },
+    {
+      icon: <Shield className="w-8 h-8" />,
+      title: "Compliance & Audits",
+      description:
+        "Create secure assessment forms for compliance tracking and auditing.",
+      stat: "100% secure",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+
+      {/* Hero Section with Video Background */}
+      <section
+        id="hero"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+      >
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10">
+          <div className="absolute inset-0 bg-grid-white/5" />
         </div>
-        <ul className="hidden md:flex gap-8 font-medium text-gray-700">
-          <li>
-            <a href="#features" className="hover:text-orange-500 transition">
-              Features
-            </a>
-          </li>
-          <li>
-            <a href="#usecases" className="hover:text-orange-500 transition">
-              Solutions
-            </a>
-          </li>
-          <li>
-            <a
-              href="#integrations"
-              className="hover:text-orange-500 transition"
-            >
-              Integrations
-            </a>
-          </li>
-          <li>
-            <a href="#faq" className="hover:text-orange-500 transition">
-              FAQ
-            </a>
-          </li>
-        </ul>
-        <Button className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6">
-          Get Started
-        </Button>
-      </nav>
-    </header>
 
-    {/* Hero Section */}
-    <section className="pt-40 pb-28 px-6 bg-gradient-to-r from-orange-400 via-red-400 to-pink-500 text-white relative overflow-hidden">
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-5xl md:text-6xl font-extrabold mb-7 leading-tight drop-shadow"
-        >
-          Modern Workflow &{" "}
-          <span className="underline decoration-white">Survey Platform</span>
-        </motion.h1>
-        <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-8 font-medium">
-          Streamline processes. Collect rich data. Automate reviews. Empower
-          your team with no-code flow management.
-        </p>
-        <div className="flex justify-center gap-4 mb-6">
-          <Button
-            size="lg"
-            className="bg-white text-orange-500 font-bold shadow hover:bg-orange-100"
-          >
-            Start Free
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="border-white text-black hover:bg-white/10"
-          >
-            Request Demo
-          </Button>
-        </div>
-        <div className="flex items-center justify-center gap-4">
-          <Star className="text-yellow-400" />
-          <span className="font-bold">4.9/5 average on</span>
-          <img src="path/to/g2.svg" alt="G2" className="h-6" />
-          <img src="path/to/capterra.svg" alt="Capterra" className="h-6" />
-        </div>
-      </div>
-      {/* Gradient bubble decorations */}
-      <span className="absolute right-10 -top-20 w-96 h-96 bg-pink-400 opacity-20 blur-3xl rounded-full"></span>
-      <span className="absolute left-0 -bottom-40 w-96 h-96 bg-orange-400 opacity-20 blur-3xl rounded-full"></span>
-    </section>
-    <section className="py-28 px-6 bg-gradient-to-br from-orange-100 via-pink-50 to-white">
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-4xl font-bold mb-5 text-gray-900">
-          See Melvok in Action
-        </h2>
-        <p className="text-lg text-gray-500 mb-12">
-          Watch a quick platform demo to get a feel for beautiful builder UX,
-          workflow automation, and insights—all in one place.
-        </p>
-        <div className="relative mx-auto rounded-2xl overflow-hidden shadow-2xl w-full max-w-3xl group">
-          <video
-            className="w-full h-auto bg-black"
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls
-            poster="/static/video-poster.jpg" // optional preview image before load
-          >
-            <source src="/static/flowforms-demo.mp4" type="video/mp4" />
-            {/* Add other formats if needed */}
-            Your browser does not support the video tag.
-          </video>
-          {/* Optional: Big Play Button Overlay (appears only when paused) */}
-          {/* This version uses browser controls, so extra overlay is not strictly needed, but you can customize UX here */}
-          {/* <button
-            className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-80 bg-black/10 transition pointer-events-none"
-            tabIndex={-1}
-            aria-label="Play Demo"
-          >
-            <PlayCircle className="w-20 h-20 text-white/90 drop-shadow-lg" />
-          </button> */}
-        </div>
-      </div>
-    </section>
-    <section className="py-24 px-6 bg-gradient-to-br from-orange-100 via-pink-50 to-white">
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-4xl font-bold mb-4 text-gray-900">Product Demo</h2>
-        <p className="text-lg text-gray-600 mb-10">
-          Watch how easily you can build, automate, and analyze workflows on
-          Melvok in less than 90 seconds.
-        </p>
-        <div className="relative rounded-2xl overflow-hidden max-w-3xl mx-auto shadow-xl border border-orange-200">
-          <video
-            className="w-full h-auto"
-            src="/static/your-demo.mp4" // Replace with your video
-            autoPlay
-            loop
-            muted
-            controls
-            playsInline
-            poster="/static/video-thumbnail.jpg" // Optional poster image
-          />
-          <div className="absolute bottom-4 right-4 flex items-center gap-2 bg-white/70 backdrop-blur-lg px-4 py-2 rounded-full shadow">
-            <PlayCircle className="w-6 h-6 text-orange-500" />
-            <span className="font-medium text-gray-800">Auto demo</span>
-          </div>
-        </div>
-      </div>
-    </section>
-    {/* Features */}
-    <section id="features" className="py-28 px-6 bg-white">
-      <h2 className="text-4xl font-bold text-center mb-4">Key Features</h2>
-      <p className="text-lg text-center text-gray-500 max-w-2xl mx-auto mb-14">
-        Everything you need to build and run advanced workflow automations,
-        digital forms, and collaborative approval chains.
-      </p>
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-        {features.map((feature, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.1 }}
-          >
-            <Card className="shadow-xl border-orange-100 hover:translate-y-[-5px] transition-all duration-200">
-              <CardHeader className="flex items-center space-x-4">
-                {feature.icon}
-                <CardTitle>{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>{feature.description}</CardDescription>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-    </section>
-
-    {/* Use Cases */}
-    <section id="usecases" className="py-28 bg-gray-900 text-white relative">
-      <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-4">
-          Built For Every Department
-        </h2>
-        <p className="text-lg text-center mb-14 text-gray-200 max-w-2xl mx-auto">
-          Melvok is trusted across HR, operations, IT, field teams, compliance,
-          and customer engagement.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {useCases.map((uc, i) => (
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="rounded-xl bg-gray-800 p-7 flex flex-col items-center text-center shadow-md border border-gray-700"
-            >
-              {uc.icon}
-              <h3 className="font-semibold text-xl mt-4 mb-2">{uc.title}</h3>
-              <p className="text-gray-300">{uc.desc}</p>
-            </div>
+              className="absolute w-2 h-2 bg-primary/20 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${5 + Math.random() * 10}s`,
+              }}
+            />
           ))}
         </div>
-      </div>
-      <span className="absolute right-10 -top-28 w-80 h-80 bg-cyan-400 opacity-20 blur-3xl rounded-full"></span>
-    </section>
 
-    {/* Diagram & Form Builder Showcase */}
-    <section className="py-28 px-6 bg-orange-50">
-      <h2 className="text-4xl font-bold text-center mb-2">
-        Visual Builder in Action
-      </h2>
-      <p className="text-gray-700 text-center max-w-2xl mx-auto mb-12">
-        Flexible drag-and-drop design, with instant previews and version
-        history.
-      </p>
-      <div className="max-w-5xl mx-auto flex flex-col gap-14 md:flex-row md:gap-6">
-        <div className="flex-1 flex flex-col space-y-3">
-          <h3 className="font-bold text-lg mb-1">Diagramming Studio</h3>
-          <div className="rounded-lg bg-white h-64 shadow-inner flex items-center justify-center border border-dashed border-orange-300">
-            <span className="text-gray-400">
-              [Workflow Diagram Live Preview]
-            </span>
-          </div>
-        </div>
-        <div className="flex-1 flex flex-col space-y-3">
-          <h3 className="font-bold text-lg mb-1">Form Editor</h3>
-          <div className="rounded-lg bg-white h-64 shadow-inner flex items-center justify-center border border-dashed border-orange-300">
-            <span className="text-gray-400">[Form Builder Editor Preview]</span>
-          </div>
-        </div>
-      </div>
-    </section>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-5xl mx-auto text-center space-y-8 animate-fade-in">
+            <Badge variant="secondary" className="px-4 py-2">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI-Powered Survey Platform
+            </Badge>
 
-    {/* Analytics */}
-    <section className="py-28 px-6 bg-white">
-      <h2 className="text-4xl font-bold text-center mb-4">
-        Reporting & Analytics
-      </h2>
-      <p className="text-center max-w-3xl mx-auto mb-10 text-gray-600">
-        Visual dashboards, submission trends, automated flagging, and exports
-        for all your survey and workflow activities.
-      </p>
-      <div className="max-w-5xl mx-auto h-80 rounded-xl bg-gray-100 flex items-center justify-center shadow-inner border border-dashed border-orange-300">
-        <span className="text-gray-400">[Analytics Dashboard Preview]</span>
-      </div>
-    </section>
+            <h1 className="text-5xl md:text-7xl font-black leading-tight">
+              Create, Share & Analyze
+              <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                Beautiful Surveys
+              </span>
+            </h1>
 
-    {/* Integrations & Logos */}
-    <section id="integrations" className="py-24 px-6 bg-gray-50">
-      <h2 className="text-3xl font-bold text-center mb-5">
-        Connect With Your Tools
-      </h2>
-      <p className="text-center mb-10 text-gray-500">
-        Work better with secure, out-of-the-box integrations.
-      </p>
-      <div className="flex flex-wrap items-center justify-center gap-7 mx-auto max-w-4xl">
-        {integrations.map((integration, i) => (
-          <div
-            key={i}
-            className="bg-white shadow p-4 rounded-lg flex items-center gap-2"
-          >
-            <img
-              src={integration.icon}
-              alt={integration.label}
-              className="w-7 h-7"
-            />
-            <span className="text-base font-medium">{integration.label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+              The most powerful form builder and survey platform with advanced
+              analytics, AI insights, and enterprise-grade features. Transform
+              how you collect and understand data.
+            </p>
 
-    {/* Social Proof & Testimonials */}
-    <section className="py-28 px-6 bg-pink-50">
-      <h2 className="text-3xl font-bold text-center mb-4">Our Customers Say</h2>
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-gray-900">
-        {testimonials.map((t, i) => (
-          <div
-            key={i}
-            className="shadow-lg rounded-xl bg-white p-7 border border-pink-100 flex flex-col items-center"
-          >
-            <div className="mt-2 mb-4">
-              <CheckCircle className="text-green-500 w-7 h-7" />
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link to="/signup">
+                <Button size="lg" className="text-lg px-8 py-6 group">
+                  Start Building Free
+                  <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-lg px-8 py-6 group"
+              >
+                <Play className="mr-2 w-5 h-5" />
+                Watch Demo
+              </Button>
             </div>
-            <blockquote className="italic text-base">
-              &quot;{t.quote}&quot;
-            </blockquote>
-            <div className="flex flex-col items-center mt-6">
-              <span className="font-bold">{t.name}</span>
-              <span className="text-xs text-gray-400">{t.title}</span>
+
+            <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground pt-8">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-primary" />
+                No credit card required
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-primary" />
+                Free forever plan
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-primary" />
+                Cancel anytime
+              </div>
             </div>
           </div>
-        ))}
-      </div>
-    </section>
 
-    {/* FAQ */}
-    <section id="faq" className="py-28 px-6 bg-white">
-      <h2 className="text-3xl font-bold text-center mb-4">FAQs</h2>
-      <div className="max-w-3xl mx-auto">
-        {faqs.map((f, i) => (
-          <div key={i} className="mb-8">
-            <h4 className="font-bold text-lg mb-2">Q: {f.q}</h4>
-            <p className="text-gray-600 pl-2">{f.a}</p>
+          {/* Demo Video/Image Placeholder */}
+          <div className="mt-16 max-w-6xl mx-auto">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border bg-card">
+              <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                <div className="text-center space-y-4">
+                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                    <Play className="w-10 h-10 text-primary" />
+                  </div>
+                  <p className="text-muted-foreground">Product Demo Video</p>
+                </div>
+              </div>
+              {/* Floating Cards */}
+              <div
+                className="absolute -right-4 top-1/4 hidden lg:block animate-float"
+                style={{ animationDelay: "0s" }}
+              >
+                <Card className="w-48 shadow-lg">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-sm">
+                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <span>Response Received</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              <div
+                className="absolute -left-4 bottom-1/4 hidden lg:block animate-float"
+                style={{ animationDelay: "1s" }}
+              >
+                <Card className="w-48 shadow-lg">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 text-sm">
+                      <TrendingUp className="w-4 h-4 text-primary" />
+                      <span>85% Completion Rate</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+      </section>
 
-    {/* Pricing Table */}
-    <section className="py-28 px-6 bg-orange-50">
-      <h2 className="text-3xl font-bold text-center mb-10">
-        Transparent Pricing
-      </h2>
-      <div className="flex flex-col sm:flex-row gap-10 justify-center items-center max-w-5xl mx-auto">
-        <div className="flex-1 rounded-lg bg-white p-8 border shadow">
-          <div className="font-bold text-xl mb-2">Starter</div>
-          <div className="text-3xl font-bold mb-2 text-orange-500">Free</div>
-          <ul className="mb-4 text-gray-600">
-            <li>✔ Up to 100 submissions/month</li>
-            <li>✔ All core features</li>
-            <li>✔ 1 Team workspace</li>
-          </ul>
-          <Button className="bg-orange-500 text-white w-full">
-            Get Started
-          </Button>
-        </div>
-        <div className="flex-1 rounded-lg bg-white p-8 border-2 border-orange-500 shadow-xl scale-105">
-          <div className="flex items-center gap-2 font-bold text-xl mb-2">
-            Pro{" "}
-            <span className="bg-orange-100 text-orange-500 px-2 py-0.5 rounded-xl text-xs font-semibold">
-              Most Popular
-            </span>
+      {/* Stats Section */}
+      <section className="py-20 border-y bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { label: "Active Users", value: "50K+" },
+              { label: "Surveys Created", value: "2M+" },
+              { label: "Responses Collected", value: "500M+" },
+              { label: "Countries Worldwide", value: "150+" },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                className="space-y-2 animate-fade-in"
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
+                <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="text-3xl font-bold mb-2 text-orange-500">
-            $29 <span className="text-lg text-gray-500 font-normal">/mo</span>
-          </div>
-          <ul className="mb-4 text-gray-600">
-            <li>✔ Unlimited submissions</li>
-            <li>✔ Advanced analytics</li>
-            <li>✔ Priority support</li>
-            <li>✔ SSO & audit logs</li>
-          </ul>
-          <Button className="bg-orange-500 text-white w-full">
-            Start Free Trial
-          </Button>
         </div>
-        <div className="flex-1 rounded-lg bg-white p-8 border shadow">
-          <div className="font-bold text-xl mb-2">Enterprise</div>
-          <div className="text-3xl font-bold mb-2 text-orange-500">Custom</div>
-          <ul className="mb-4 text-gray-600">
-            <li>✔ Uptime SLA</li>
-            <li>✔ Custom integrations</li>
-            <li>✔ Dedicated manager</li>
-          </ul>
-          <Button className="bg-orange-500 text-white w-full">
-            Contact Sales
-          </Button>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    {/* CTA Section */}
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="py-32 px-6 bg-gradient-to-r from-orange-400 via-red-400 to-pink-500 text-white text-center"
-    >
-      <h2 className="text-4xl font-bold mb-4">Ready To Work Smarter?</h2>
-      <p className="mb-8 max-w-2xl mx-auto text-lg">
-        Launch your first workflow in minutes. No code. No hassle.
-      </p>
-      <Button
-        size="lg"
-        className="bg-white text-orange-500 font-bold shadow hover:bg-orange-100"
-      >
-        Try Free Now
-      </Button>
-    </motion.section>
+      {/* Main Features */}
+      <section id="features" className="py-32">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <Badge variant="outline" className="mb-4">
+              Features
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6">
+              Everything You Need to Create
+              <span className="block text-primary">Amazing Surveys</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Powerful features designed to help you collect better data, make
+              smarter decisions, and drive real business results.
+            </p>
+          </div>
 
-    {/* Footer */}
-    <footer className="bg-black text-gray-300 py-12 mt-[-1px]">
-      <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row gap-10 justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-orange-400 font-extrabold text-2xl mb-2">
-            Melvok
-          </div>
-          <div className="text-gray-400 mb-2">
-            Modern no-code workflow and survey management for businesses of all
-            sizes.
-          </div>
-          <div className="text-gray-500 text-sm mt-8">
-            &copy; 2025 Melvok, Inc. All rights reserved.
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, i) => (
+              <Card
+                key={i}
+                className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/50"
+              >
+                <CardHeader>
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
+                    {feature.icon}
+                  </div>
+                  <CardTitle className="text-2xl">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base leading-relaxed">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
-        <div className="flex flex-col gap-2">
-          <div className="font-bold text-gray-200 mb-1">Product</div>
-          <a href="#features" className="hover:text-orange-400">
-            Features
-          </a>
-          <a href="#usecases" className="hover:text-orange-400">
-            Solutions
-          </a>
-          <a href="#integrations" className="hover:text-orange-400">
-            Integrations
-          </a>
-          <a href="#faq" className="hover:text-orange-400">
-            FAQs
-          </a>
+      </section>
+
+      {/* Question Types */}
+      <section className="py-32 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <Badge variant="outline" className="mb-4">
+              Question Types
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6">
+              20+ Powerful Question Types
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              From simple text inputs to complex matrix grids, signature
+              captures, and file uploads. We have every question type you'll
+              ever need.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
+            {questionTypes.map((type, i) => (
+              <Badge
+                key={i}
+                variant="secondary"
+                className="text-sm px-4 py-2 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default"
+              >
+                {type}
+              </Badge>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-2">
-          <div className="font-bold text-gray-200 mb-1">Company</div>
-          <span>About</span>
-          <span>Careers</span>
-          <span>Contact</span>
+      </section>
+
+      {/* Advanced Features Grid */}
+      <section className="py-32">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <Badge variant="outline" className="mb-4">
+              Advanced Capabilities
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6">
+              Enterprise-Grade Features
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Professional tools and integrations that scale with your business
+              needs.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {advancedFeatures.map((category, i) => (
+              <Card key={i} className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-lg">{category.category}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-3">
+                    {category.items.map((item, j) => (
+                      <li key={j} className="flex items-start gap-2 text-sm">
+                        <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-muted-foreground">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
-    </footer>
-  </div>
-);
+      </section>
+
+      {/* Analytics Section */}
+      <section id="analytics" className="py-32 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <Badge variant="outline" className="mb-4">
+              Analytics
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6">
+              Turn Data Into
+              <span className="block text-primary">Actionable Insights</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Comprehensive analytics dashboard with real-time reporting,
+              advanced filtering, and beautiful visualizations. Export data in
+              any format you need.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {analyticsFeatures.map((feature, i) => (
+              <Card key={i} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 text-primary">
+                    {feature.icon}
+                  </div>
+                  <CardTitle>{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>{feature.description}</CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mt-16 grid md:grid-cols-3 gap-8">
+            <Card className="text-center p-8 bg-card">
+              <Download className="w-12 h-12 mx-auto mb-4 text-primary" />
+              <h3 className="text-xl font-bold mb-2">Individual PDFs</h3>
+              <p className="text-muted-foreground">
+                Generate professional PDF reports for each response
+              </p>
+            </Card>
+            <Card className="text-center p-8 bg-card">
+              <Database className="w-12 h-12 mx-auto mb-4 text-primary" />
+              <h3 className="text-xl font-bold mb-2">Bulk CSV Exports</h3>
+              <p className="text-muted-foreground">
+                Download all responses in CSV or Excel format
+              </p>
+            </Card>
+            <Card className="text-center p-8 bg-card">
+              <Code className="w-12 h-12 mx-auto mb-4 text-primary" />
+              <h3 className="text-xl font-bold mb-2">API Access</h3>
+              <p className="text-muted-foreground">
+                Integrate data directly into your applications
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Features */}
+      <section id="ai" className="py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <Badge variant="outline" className="mb-4">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Intelligence
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6">
+              Powered by Artificial Intelligence
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Leverage cutting-edge AI to gain deeper insights, automate
+              analysis, and make data-driven decisions faster than ever before.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
+              <Brain className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-2xl font-bold mb-4">
+                Smart Question Suggestions
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                AI analyzes your survey goals and suggests optimal questions,
+                question types, and flow structures to maximize response quality
+                and completion rates.
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>Context-aware recommendations</span>
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>Industry-specific templates</span>
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>Best practice guidance</span>
+                </li>
+              </ul>
+            </Card>
+
+            <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
+              <Sparkles className="w-12 h-12 text-primary mb-4" />
+              <h3 className="text-2xl font-bold mb-4">Sentiment Analysis</h3>
+              <p className="text-muted-foreground mb-4">
+                Automatically analyze open-ended responses to understand
+                emotional tone, satisfaction levels, and key themes without
+                manual review.
+              </p>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>Emotion detection</span>
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>Theme extraction</span>
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-primary" />
+                  <span>Satisfaction scoring</span>
+                </li>
+              </ul>
+            </Card>
+          </div>
+        </div>
+      </section>
+      <section className="py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:opacity-30" />
+        <div className="absolute top-40 right-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30" />
+        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000 dark:opacity-30" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
+              <Star className="w-4 h-4" />
+              Pricing Plans
+            </div>
+            <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
+              Choose Your Perfect Plan
+            </h2>
+            <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
+              Start free and scale as you grow. No hidden fees, no surprises.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {pricingPlans.map((plan, index) => (
+              <div
+                key={index}
+                onMouseEnter={() => setHoveredPlan(index)}
+                onMouseLeave={() => setHoveredPlan(null)}
+                className={`relative group animate-fade-in-up`}
+                style={{ animationDelay: `${600 + index * 200}ms` }}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold shadow-lg">
+                      Most Popular
+                    </div>
+                  </div>
+                )}
+
+                <div
+                  className={`relative h-full bg-card rounded-2xl p-8 border-2 transition-all duration-500 ${
+                    plan.popular
+                      ? "border-primary shadow-2xl scale-105"
+                      : hoveredPlan === index
+                      ? "border-primary/50 shadow-xl -translate-y-2"
+                      : "border-border shadow-lg hover:shadow-xl"
+                  }`}
+                >
+                  <div
+                    className={`absolute inset-0 bg-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                  />
+
+                  <div className="relative z-10">
+                    <div className="mb-6">
+                      <h3 className="text-2xl font-bold text-card-foreground mb-2">
+                        {plan.name}
+                      </h3>
+                      <p className="text-muted-foreground text-sm">
+                        {plan.description}
+                      </p>
+                    </div>
+
+                    <div className="mb-8">
+                      <div className="flex items-end gap-2">
+                        <span className="text-5xl font-black text-foreground">
+                          {plan.price}
+                        </span>
+                        <span className="text-muted-foreground pb-2">
+                          / {plan.period}
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 mb-8 ${
+                        plan.popular
+                          ? "bg-primary text-primary-foreground hover:shadow-2xl hover:scale-105"
+                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                      }`}
+                    >
+                      {plan.cta}
+                      <ArrowRight className="inline-block ml-2 w-5 h-5" />
+                    </button>
+
+                    <div className="space-y-4">
+                      <div className="font-semibold text-foreground mb-3">
+                        Included:
+                      </div>
+                      {plan.features.map((feature, i) => (
+                        <div
+                          key={i}
+                          className="flex items-start gap-3 group/item"
+                        >
+                          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
+                            <Check className="w-3 h-3 text-primary" />
+                          </div>
+                          <span className="text-muted-foreground text-sm group-hover/item:text-foreground transition-colors">
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+
+                      {plan.notIncluded.length > 0 && (
+                        <>
+                          <div className="font-semibold text-foreground mt-6 mb-3">
+                            Not included:
+                          </div>
+                          {plan.notIncluded.map((feature, i) => (
+                            <div key={i} className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-muted flex items-center justify-center mt-0.5">
+                                <X className="w-3 h-3 text-muted-foreground" />
+                              </div>
+                              <span className="text-muted-foreground/60 text-sm">
+                                {feature}
+                              </span>
+                            </div>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Use Cases Section */}
+      <section className="py-32 relative overflow-hidden bg-muted/30">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:14px_24px] opacity-50" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
+              <Target className="w-4 h-4" />
+              Use Cases
+            </div>
+            <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
+              Built for Every Scenario
+            </h2>
+            <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
+              From customer feedback to market research, we've got you covered.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {useCases.map((useCase, index) => (
+              <div
+                key={index}
+                onMouseEnter={() => setHoveredUseCase(index)}
+                onMouseLeave={() => setHoveredUseCase(null)}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${600 + index * 100}ms` }}
+              >
+                <div
+                  className={`relative h-full bg-card rounded-2xl p-8 border-2 border-border transition-all duration-500 overflow-hidden group ${
+                    hoveredUseCase === index
+                      ? "shadow-2xl -translate-y-2 border-primary/50"
+                      : "shadow-lg"
+                  }`}
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 opacity-0 group-hover:opacity-100 rounded-full blur-2xl transition-opacity duration-500 -translate-y-8 translate-x-8" />
+
+                  <div className="relative z-10">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-6 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+                      {useCase.icon}
+                    </div>
+
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-2xl font-bold text-card-foreground">
+                          {useCase.title}
+                        </h3>
+                      </div>
+                      <div className="inline-block text-primary font-semibold text-sm">
+                        {useCase.stat}
+                      </div>
+                    </div>
+
+                    <p className="text-muted-foreground leading-relaxed mb-6">
+                      {useCase.description}
+                    </p>
+
+                    <div
+                      className={`flex items-center gap-2 text-sm font-semibold text-primary transition-all duration-300 ${
+                        hoveredUseCase === index ? "translate-x-2" : ""
+                      }`}
+                    >
+                      <span>Learn more</span>
+                      <ArrowRight
+                        className={`w-4 h-4 transition-all duration-300 ${
+                          hoveredUseCase === index ? "translate-x-1" : ""
+                        }`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Features Section */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+        <div className="absolute top-20 right-10 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:opacity-30" />
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
+              <Sparkles className="w-4 h-4" />
+              AI Intelligence
+            </div>
+            <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
+              Powered by Artificial Intelligence
+            </h2>
+            <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
+              Leverage cutting-edge AI to gain deeper insights, automate
+              analysis, and make data-driven decisions faster than ever before.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
+            {[
+              {
+                icon: <Brain className="w-12 h-12" />,
+                title: "Smart Question Suggestions",
+                description:
+                  "AI analyzes your survey goals and suggests optimal questions, question types, and flow structures to maximize response quality and completion rates.",
+                features: [
+                  "Context-aware recommendations",
+                  "Industry-specific templates",
+                  "Best practice guidance",
+                ],
+              },
+              {
+                icon: <Sparkles className="w-12 h-12" />,
+                title: "Sentiment Analysis",
+                description:
+                  "Automatically analyze open-ended responses to understand emotional tone, satisfaction levels, and key themes without manual review.",
+                features: [
+                  "Emotion detection",
+                  "Theme extraction",
+                  "Satisfaction scoring",
+                ],
+              },
+            ].map((feature, index) => (
+              <div
+                key={index}
+                onMouseEnter={() => setHoveredAI(index)}
+                onMouseLeave={() => setHoveredAI(null)}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${600 + index * 200}ms` }}
+              >
+                <div
+                  className={`relative h-full bg-card rounded-3xl p-10 border-2 transition-all duration-500 overflow-hidden group ${
+                    hoveredAI === index
+                      ? "border-primary/50 shadow-2xl -translate-y-2"
+                      : "border-border shadow-xl"
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10">
+                    <div
+                      className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary text-primary-foreground mb-6 transform transition-all duration-500 ${
+                        hoveredAI === index ? "scale-110 rotate-6" : ""
+                      }`}
+                    >
+                      {feature.icon}
+                    </div>
+
+                    <h3 className="text-3xl font-black mb-4 text-card-foreground">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
+                      {feature.description}
+                    </p>
+
+                    <ul className="space-y-3">
+                      {feature.features.map((item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-center gap-3 group/item"
+                        >
+                          <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-primary flex items-center justify-center transform transition-transform duration-300 group-hover/item:scale-110">
+                            <Check className="w-4 h-4 text-primary-foreground" />
+                          </div>
+                          <span className="text-muted-foreground font-medium group-hover/item:text-foreground transition-colors">
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-x-8 translate-y-8" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* AI Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto animate-fade-in-up animation-delay-1000">
+            {[
+              {
+                icon: <Zap className="w-6 h-6" />,
+                stat: "10x",
+                label: "Faster Analysis",
+              },
+              {
+                icon: <TrendingUp className="w-6 h-6" />,
+                stat: "95%",
+                label: "Accuracy",
+              },
+              {
+                icon: <Award className="w-6 h-6" />,
+                stat: "50K+",
+                label: "AI Insights",
+              },
+              {
+                icon: <Brain className="w-6 h-6" />,
+                stat: "24/7",
+                label: "Auto Processing",
+              },
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="bg-card rounded-2xl p-6 border-2 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl text-center group"
+              >
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground mb-3 group-hover:scale-110 transition-transform duration-300">
+                  {stat.icon}
+                </div>
+                <div className="text-3xl font-black text-foreground mb-1">
+                  {stat.stat}
+                </div>
+                <div className="text-sm text-muted-foreground font-medium">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};

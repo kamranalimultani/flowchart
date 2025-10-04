@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Route, Navigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getRequest } from "@/utils/apiUtils"; // Ensure this utility exists and handles 'auth/me' fetching
 import { setUser, clearUser } from "@/slice/userSlice";
-import type { RootState } from "store";
 
 interface PrivateRouteProps {
   bypass: boolean;
@@ -11,7 +10,6 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ bypass, element }) => {
-  const { user } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(!bypass);
   const [allowed, setAllowed] = useState(bypass);

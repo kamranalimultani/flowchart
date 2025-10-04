@@ -1,6 +1,4 @@
-import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
-import ComingSoon from "./pages/comingsoon";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -12,6 +10,7 @@ import AddFormTemplate from "./pages/AddFormTemplate";
 import PrivateRoute from "./utils/ProtectedRoutes";
 import { Dashboard } from "./pages/Dashboard";
 import { LandingPage } from "./pages/LandingPage";
+import Documentation from "./pages/Documents";
 
 function App() {
   return (
@@ -20,7 +19,22 @@ function App() {
         {/* Public routes */}
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/"
+          element={
+            <DefaultLayout>
+              <LandingPage />
+            </DefaultLayout>
+          }
+        />
+        <Route
+          path="/documentation"
+          element={
+            <DefaultLayout>
+              <Documentation />
+            </DefaultLayout>
+          }
+        />
 
         {/* Protected routes with PrivateRoute per route */}
         <Route
