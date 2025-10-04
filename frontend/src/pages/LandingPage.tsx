@@ -41,22 +41,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Card,
   CardContent,
@@ -65,7 +55,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
 export const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -73,6 +62,15 @@ export const LandingPage = () => {
   const [hoveredPlan, setHoveredPlan] = useState<any>(null);
   const [hoveredUseCase, setHoveredUseCase] = useState<any>(null);
   const [hoveredAI, setHoveredAI] = useState<any>(null);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOpen(true);
+    }, 5000); // 10 seconds
+
+    return () => clearTimeout(timer); // cleanup
+  }, []);
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -362,11 +360,28 @@ export const LandingPage = () => {
       stat: "100% secure",
     },
   ];
-
+  const handleContactClick = () => {
+    window.location.href = "mailto:kamranalimultani1@gmail.com";
+  };
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="rounded-2xl shadow-lg p-6 max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-center">
+              🚀 We’re Invite-Only
+            </DialogTitle>
+            <DialogDescription className="text-center mt-2 leading-relaxed">
+              We’re currently operating on an invite-only basis. If you’d like
+              to get a demo or early access, please reach out to us.
+            </DialogDescription>
+          </DialogHeader>
 
+          <div className="flex justify-center mt-4">
+            <Button onClick={handleContactClick}>Contact Us</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       {/* Hero Section with Video Background */}
       <section
         id="hero"
