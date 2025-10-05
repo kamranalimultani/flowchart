@@ -55,6 +55,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import demoVideo from "@/assets/Melvok.webm";
 
 export const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -254,11 +255,8 @@ export const LandingPage = () => {
       description: "Perfect for individuals and small projects",
       features: [
         "Up to 3 active flows",
-        "100 responses per month",
-        "10 question types",
+        "10 responses per month",
         "Basic analytics",
-        "Email support",
-        "7-day data retention",
       ],
       notIncluded: [
         "AI features",
@@ -271,20 +269,18 @@ export const LandingPage = () => {
     },
     {
       name: "Professional",
-      price: "$29",
+      price: "$9",
       period: "per month",
       description: "For growing teams and businesses",
       features: [
         "Unlimited flows",
-        "10,000 responses per month",
-        "All 20+ question types",
+        "Unlimited responses ",
         "Advanced analytics & reporting",
         "Custom branding",
         "Priority support",
         "90-day data retention",
         "Export to CSV/PDF",
-        "Webhook integrations",
-        "Team collaboration (5 users)",
+        "Unlimited team members",
       ],
       notIncluded: ["AI features", "White-label", "Dedicated account manager"],
       cta: "Start Free Trial",
@@ -292,7 +288,7 @@ export const LandingPage = () => {
     },
     {
       name: "Enterprise",
-      price: "$99",
+      price: "$29",
       period: "per month",
       description: "For large organizations with advanced needs",
       features: [
@@ -304,11 +300,8 @@ export const LandingPage = () => {
         "Custom integrations",
         "Dedicated account manager",
         "Unlimited data retention",
-        "SSO & advanced security",
         "Role-based user management",
         "Unlimited team members",
-        "SLA guarantee",
-        "Custom training & onboarding",
       ],
       notIncluded: [],
       cta: "Contact Sales",
@@ -365,7 +358,7 @@ export const LandingPage = () => {
   };
   return (
     <div className="min-h-screen bg-background">
-      <Dialog open={open} onOpenChange={setOpen}>
+      {/* <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="rounded-2xl shadow-lg p-6 max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-center">
@@ -381,7 +374,7 @@ export const LandingPage = () => {
             <Button onClick={handleContactClick}>Contact Us</Button>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
       {/* Hero Section with Video Background */}
       <section
         id="hero"
@@ -462,15 +455,17 @@ export const LandingPage = () => {
           </div>
 
           {/* Demo Video/Image Placeholder */}
-          <div className="mt-16 max-w-6xl mx-auto">
+          <div className="mt-16 max-w-6xl mx-auto mb-6">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border bg-card">
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                    <Play className="w-10 h-10 text-primary" />
-                  </div>
-                  <p className="text-muted-foreground">Product Demo Video</p>
-                </div>
+              <div className=" mb-6 aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                <video
+                  className="w-full h-full object-cover"
+                  controls={false}
+                  autoPlay
+                >
+                  <source src={demoVideo} type="video/webm" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
               {/* Floating Cards */}
               <div
