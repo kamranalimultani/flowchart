@@ -13,6 +13,8 @@ class FlowController extends Controller
   // Store flow (custom or upload)
   public function store(Request $request)
   {
+    $user = $request->user(); // 🆕 get authenticated user
+    if($user->subscription_type == "free_trial" && Flow::where("user_id", $user->id)->exists()) {}
     $request->validate([
       'title' => 'required|string|max:255',
       'type' => 'required|in:custom,upload',
@@ -21,7 +23,6 @@ class FlowController extends Controller
 
     ]);
 
-    $user = $request->user(); // 🆕 get authenticated user
 
 
     // Generate unique file name

@@ -137,7 +137,7 @@ function Login() {
               <div className="text-sm text-center text-muted-foreground">
                 Don't have an account?{" "}
                 <Link
-                  to="/sign-up"
+                  to="/signup"
                   className="font-semibold text-primary hover:underline"
                 >
                   Sign up for free

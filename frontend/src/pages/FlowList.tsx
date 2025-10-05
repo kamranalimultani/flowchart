@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  ApiError,
   deleteRequest,
   getRequest,
   postRequest,
@@ -33,6 +34,7 @@ import {
 } from "@/utils/apiUtils";
 import { FlowPreview } from "@/components/FlowPreview";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "@/context/NotificationContext";
 
 // Dummy data: example flows
 type Flow = {
@@ -56,6 +58,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
   node_data,
   refreshFlows,
 }) => {
+  const { showSuccess, showError, showWarning } = useNotification();
+
   const [svgContent, setSvgContent] = useState<string>("");
   const [editorWindow, setEditorWindow] = useState<Window | null>(null);
   const navigate = useNavigate();
@@ -64,10 +68,12 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const deleteFlow = async (id: number) => {
     try {
       await deleteRequest(`/api/flows/${id}`, true);
-      // Remove deleted flow from state
+      showSuccess("Flow deleted successfully");
       refreshFlows();
+      setShowDeleteModal(false);
     } catch (err) {
       console.error("Error deleting flow:", err);
+      showError("Failed to delete flow. Please try again." + "error:" + err);
     }
   };
 
@@ -230,6 +236,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
 };
 
 export const FlowList: React.FC = () => {
+  const { showSuccess, showError, showWarning } = useNotification();
+
   const [flows, setFlows] = useState<Flow[]>([]);
   const [page, setPage] = useState(1);
   const flowsPerPage = 6;
@@ -266,6 +274,8 @@ export const FlowList: React.FC = () => {
       }
 
       await postRequest("/api/flows", formData, true);
+      showSuccess("Flow saved successfully");
+
       setOpenModal(false);
       setTitle("");
       setFile(null);
@@ -275,6 +285,17 @@ export const FlowList: React.FC = () => {
       setFlows(res || []);
     } catch (err) {
       console.error("Error creating flow:", err);
+
+      if (err instanceof ApiError) {
+        // Show the error message from API or client side
+        showError(err.message);
+      } else if (err instanceof Error) {
+        // General JS error fallback
+        showError(err.message);
+      } else {
+        // Unknown error fallback
+        showError("Failed to save flow. Please try again.");
+      }
     }
   };
 

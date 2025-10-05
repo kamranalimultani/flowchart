@@ -18,6 +18,9 @@ return new class extends Migration {
             $table->string('password');
             $table->enum('status', ['inactive', 'active'])->default('inactive'); // active after login
             $table->enum('subscription_type', ['free_trial', 'paid', 'none'])->default('none');
+            $table->string('lemon_squeezy_customer_id')->nullable();
+            $table->string('subscription_id')->nullable();
+            $table->string('subscription_status')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
