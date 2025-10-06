@@ -8,7 +8,7 @@ import { Loader2, MoveLeft } from "lucide-react"; // spinner icon
 import { toast } from "sonner"; // shadcn toast system
 import { getRequest, postRequest, putRequest } from "@/utils/apiUtils";
 import SurveyCreatorComponent from "@/components/SurveyJs/Survey";
-
+import defaultDarkThemeColorsSurvey, { FlatDark } from "survey-core/themes";
 /**
  * SurveyCreate component allows users to create or update survey forms.
  * It utilizes the SurveyCreator component to manage form creation and updates.
@@ -24,38 +24,18 @@ const AddFormTemplate: React.FC = () => {
   useEffect(() => {
     const initializeSurveyCreator = async () => {
       const surveyCreator = new SurveyCreator();
-
-      // Adding properties to the Serializer
-      survey.Serializer.addProperty("question", {
-        name: "allowTypesense",
-        displayName: "Allow Autosuggestion",
-        type: "boolean",
-        category: "Autosuggestion",
-        visibleIndex: 0,
-        isUnique: true,
-        visible: true,
-      });
-
-      survey.Serializer.addProperty("question", {
-        name: "separator",
-        displayName: "List of collection",
-        category: "Autosuggestion",
-        visibleIndex: 1,
-        visible: true,
-        readOnly: true,
-        visibleIf: (obj) => obj.allowTypesense === true,
-      });
-
-      // Adding dynamic properties based on choices
-
-      // Configure SurveyCreator
       surveyCreator.showPreviewTab = false;
       surveyCreator.previewShowResults = false;
+      // Apply dark theme to the creator
 
-      // Load form data if location state is available
       if (location?.state) {
-        console.log(location.state.form.id);
-        surveyCreator.JSON = location.state.form.form_data;
+        const formData = location.state.form.form_data;
+
+        surveyCreator.JSON = {
+          ...formData,
+          FlatDark,
+        };
+        // surveyCreator.JSON = location.state.form.form_data;
       }
 
       setCreator(surveyCreator);
@@ -125,7 +105,7 @@ const AddFormTemplate: React.FC = () => {
         if (location.state && location.state?.form) {
           await putRequest(`/api/form-templates/${reqBody.id}`, reqBody, true);
         } else {
-          await postRequest(`/api/form-templates/`, reqBody, true);
+          await postRequest(`/api/form-templates`, reqBody, true);
         }
 
         setLoading(false);

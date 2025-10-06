@@ -36,50 +36,29 @@ import { handleLogout } from "@/utils/commonUtils";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "store";
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
+const docsCategories = {
+  "Getting Started": [
+    { id: "intro", title: "Introduction to Melvok" },
+    { id: "auth", title: "Authentication & Plans" },
+  ],
+  "Core Features": [
+    { id: "form-builder", title: "Form Template Builder" },
+    { id: "flow-creation", title: "Creating Flows" },
+    { id: "flow-management", title: "Managing Your Flows" },
+  ],
+  // additional categories...
+};
 
 export function NavigationBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { setTheme } = useTheme();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
+  const docsForDropdown = React.useMemo(() => {
+    return Object.entries(docsCategories).flatMap(([category, docs]) =>
+      docs.map((doc) => ({ ...doc, category }))
+    );
+  }, []);
   React.useEffect(() => {
     // Check localStorage for auth token
     const authData = localStorage.getItem("auth");
@@ -150,13 +129,19 @@ export function NavigationBar() {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                          {components.map((component) => (
+                          {docsForDropdown.map((doc) => (
                             <ListItem
-                              key={component.title}
-                              title={component.title}
-                              href={component.href}
+                              key={doc.id}
+                              title={doc.title}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                // Navigate to docs page and pass id in URL query or route param
+                                navigate(`/documentation?section=${doc.id}`);
+                              }}
                             >
-                              {component.description}
+                              {/* Optional description if you want */}
+                              {`Section of ${doc.category}`}
                             </ListItem>
                           ))}
                         </ul>
@@ -254,13 +239,19 @@ export function NavigationBar() {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                          {components.map((component) => (
+                          {docsForDropdown.map((doc) => (
                             <ListItem
-                              key={component.title}
-                              title={component.title}
-                              href={"/documentation"}
+                              key={doc.id}
+                              title={doc.title}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                // Navigate to docs page and pass id in URL query or route param
+                                navigate(`/documentation?section=${doc.id}`);
+                              }}
                             >
-                              {component.description}
+                              {/* Optional description if you want */}
+                              {`Section of ${doc.category}`}
                             </ListItem>
                           ))}
                         </ul>

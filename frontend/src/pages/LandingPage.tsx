@@ -56,6 +56,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import demoVideo from "@/assets/Melvok.webm";
+import { Helmet } from "react-helmet-async";
 
 export const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -353,12 +354,48 @@ export const LandingPage = () => {
       stat: "100% secure",
     },
   ];
-  const handleContactClick = () => {
-    window.location.href = "mailto:kamranalimultani1@gmail.com";
-  };
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* <Dialog open={open} onOpenChange={setOpen}>
+    <>
+      <Helmet>
+        <title>Melvok — Visual Flow-Based Survey Platform</title>
+        <meta
+          name="description"
+          content="Melvok helps you visually create, manage, and share powerful flow-based surveys with 100+ question types, smart logic, and team collaboration tools."
+        />
+        <meta
+          name="keywords"
+          content="Melvok, survey builder, flow survey, form creator, drag-and-drop form, visual form builder, workflow survey, AI survey generator"
+        />
+        <link rel="canonical" href="https://melvok.com" />
+
+        {/* Open Graph */}
+        <meta
+          property="og:title"
+          content="Melvok — Visual Flow-Based Survey Platform"
+        />
+        <meta
+          property="og:description"
+          content="Design smart, visual, and interactive surveys using Melvok — the next-generation flow-based form builder for teams."
+        />
+        <meta property="og:image" content="https://melvok.com/og-image.jpg" />
+        <meta property="og:url" content="https://melvok.com" />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Melvok — Visual Flow-Based Survey Platform"
+        />
+        <meta
+          name="twitter:description"
+          content="Build and share visual surveys with Melvok — 100+ question types, templates, and team management."
+        />
+        <meta name="twitter:image" content="https://melvok.com/og-image.jpg" />
+      </Helmet>
+      <div className="min-h-screen bg-background">
+        {/* <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="rounded-2xl shadow-lg p-6 max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-center">
@@ -375,742 +412,750 @@ export const LandingPage = () => {
           </div>
         </DialogContent>
       </Dialog> */}
-      {/* Hero Section with Video Background */}
-      <section
-        id="hero"
-        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
-      >
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10">
-          <div className="absolute inset-0 bg-grid-white/5" />
-        </div>
-
-        {/* Floating Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 bg-primary/20 rounded-full animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${5 + Math.random() * 10}s`,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto text-center space-y-8 animate-fade-in">
-            <Badge variant="secondary" className="px-4 py-2">
-              <Sparkles className="w-4 h-4 mr-2" />
-              AI-Powered Survey Platform
-            </Badge>
-
-            <h1 className="text-5xl md:text-7xl font-black leading-tight">
-              Create, Share & Analyze
-              <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                Beautiful Surveys
-              </span>
-            </h1>
-
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-              The most powerful form builder and survey platform with advanced
-              analytics, AI insights, and enterprise-grade features. Transform
-              how you collect and understand data.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link to="/signup">
-                <Button size="lg" className="text-lg px-8 py-6 group">
-                  Start Building Free
-                  <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-6 group"
-              >
-                <Play className="mr-2 w-5 h-5" />
-                Watch Demo
-              </Button>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground pt-8">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-primary" />
-                No credit card required
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-primary" />
-                Free forever plan
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-primary" />
-                Cancel anytime
-              </div>
-            </div>
+        {/* Hero Section with Video Background */}
+        <section
+          id="hero"
+          className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+        >
+          {/* Animated Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/10">
+            <div className="absolute inset-0 bg-grid-white/5" />
           </div>
 
-          {/* Demo Video/Image Placeholder */}
-          <div className="mt-16 max-w-6xl mx-auto mb-6">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl border bg-card">
-              <div className=" mb-6 aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                <video
-                  className="w-full h-full object-cover"
-                  controls={false}
-                  autoPlay
-                >
-                  <source src={demoVideo} type="video/webm" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-              {/* Floating Cards */}
-              <div
-                className="absolute -right-4 top-1/4 hidden lg:block animate-float"
-                style={{ animationDelay: "0s" }}
-              >
-                <Card className="w-48 shadow-lg">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2 text-sm">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
-                      <span>Response Received</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              <div
-                className="absolute -left-4 bottom-1/4 hidden lg:block animate-float"
-                style={{ animationDelay: "1s" }}
-              >
-                <Card className="w-48 shadow-lg">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2 text-sm">
-                      <TrendingUp className="w-4 h-4 text-primary" />
-                      <span>85% Completion Rate</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 border-y bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { label: "Active Users", value: "50K+" },
-              { label: "Surveys Created", value: "2M+" },
-              { label: "Responses Collected", value: "500M+" },
-              { label: "Countries Worldwide", value: "150+" },
-            ].map((stat, i) => (
+          {/* Floating Elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(20)].map((_, i) => (
               <div
                 key={i}
-                className="space-y-2 animate-fade-in"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {stat.label}
-                </div>
-              </div>
+                className="absolute w-2 h-2 bg-primary/20 rounded-full animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 5}s`,
+                  animationDuration: `${5 + Math.random() * 10}s`,
+                }}
+              />
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Main Features */}
-      <section id="features" className="py-32">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <Badge variant="outline" className="mb-4">
-              Features
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-black mb-6">
-              Everything You Need to Create
-              <span className="block text-primary">Amazing Surveys</span>
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Powerful features designed to help you collect better data, make
-              smarter decisions, and drive real business results.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, i) => (
-              <Card
-                key={i}
-                className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/50"
-              >
-                <CardHeader>
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="text-2xl">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base leading-relaxed">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Question Types */}
-      <section className="py-32 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <Badge variant="outline" className="mb-4">
-              Question Types
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-black mb-6">
-              20+ Powerful Question Types
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              From simple text inputs to complex matrix grids, signature
-              captures, and file uploads. We have every question type you'll
-              ever need.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
-            {questionTypes.map((type, i) => (
-              <Badge
-                key={i}
-                variant="secondary"
-                className="text-sm px-4 py-2 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default"
-              >
-                {type}
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-5xl mx-auto text-center space-y-8 animate-fade-in">
+              <Badge variant="secondary" className="px-4 py-2">
+                <Sparkles className="w-4 h-4 mr-2" />
+                AI-Powered Survey Platform
               </Badge>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Advanced Features Grid */}
-      <section className="py-32">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <Badge variant="outline" className="mb-4">
-              Advanced Capabilities
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-black mb-6">
-              Enterprise-Grade Features
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Professional tools and integrations that scale with your business
-              needs.
-            </p>
-          </div>
+              <h1 className="text-5xl md:text-7xl font-black leading-tight">
+                Create, Share & Analyze
+                <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                  Beautiful Surveys
+                </span>
+              </h1>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {advancedFeatures.map((category, i) => (
-              <Card key={i} className="border-2">
-                <CardHeader>
-                  <CardTitle className="text-lg">{category.category}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {category.items.map((item, j) => (
-                      <li key={j} className="flex items-start gap-2 text-sm">
-                        <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-muted-foreground">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Analytics Section */}
-      <section id="analytics" className="py-32 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <Badge variant="outline" className="mb-4">
-              Analytics
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-black mb-6">
-              Turn Data Into
-              <span className="block text-primary">Actionable Insights</span>
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Comprehensive analytics dashboard with real-time reporting,
-              advanced filtering, and beautiful visualizations. Export data in
-              any format you need.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {analyticsFeatures.map((feature, i) => (
-              <Card key={i} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 text-primary">
-                    {feature.icon}
-                  </div>
-                  <CardTitle>{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="mt-16 grid md:grid-cols-3 gap-8">
-            <Card className="text-center p-8 bg-card">
-              <Download className="w-12 h-12 mx-auto mb-4 text-primary" />
-              <h3 className="text-xl font-bold mb-2">Individual PDFs</h3>
-              <p className="text-muted-foreground">
-                Generate professional PDF reports for each response
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+                The most powerful form builder and survey platform with advanced
+                analytics, AI insights, and enterprise-grade features. Transform
+                how you collect and understand data.
               </p>
-            </Card>
-            <Card className="text-center p-8 bg-card">
-              <Database className="w-12 h-12 mx-auto mb-4 text-primary" />
-              <h3 className="text-xl font-bold mb-2">Bulk CSV Exports</h3>
-              <p className="text-muted-foreground">
-                Download all responses in CSV or Excel format
-              </p>
-            </Card>
-            <Card className="text-center p-8 bg-card">
-              <Code className="w-12 h-12 mx-auto mb-4 text-primary" />
-              <h3 className="text-xl font-bold mb-2">API Access</h3>
-              <p className="text-muted-foreground">
-                Integrate data directly into your applications
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
 
-      {/* AI Features */}
-      <section id="ai" className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <Badge variant="outline" className="mb-4">
-              <Sparkles className="w-4 h-4 mr-2" />
-              AI Intelligence
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-black mb-6">
-              Powered by Artificial Intelligence
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Leverage cutting-edge AI to gain deeper insights, automate
-              analysis, and make data-driven decisions faster than ever before.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
-              <Brain className="w-12 h-12 text-primary mb-4" />
-              <h3 className="text-2xl font-bold mb-4">
-                Smart Question Suggestions
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                AI analyzes your survey goals and suggests optimal questions,
-                question types, and flow structures to maximize response quality
-                and completion rates.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2 text-sm">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>Context-aware recommendations</span>
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>Industry-specific templates</span>
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>Best practice guidance</span>
-                </li>
-              </ul>
-            </Card>
-
-            <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
-              <Sparkles className="w-12 h-12 text-primary mb-4" />
-              <h3 className="text-2xl font-bold mb-4">Sentiment Analysis</h3>
-              <p className="text-muted-foreground mb-4">
-                Automatically analyze open-ended responses to understand
-                emotional tone, satisfaction levels, and key themes without
-                manual review.
-              </p>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2 text-sm">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>Emotion detection</span>
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>Theme extraction</span>
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <Check className="w-4 h-4 text-primary" />
-                  <span>Satisfaction scoring</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </section>
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background" />
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:opacity-30" />
-        <div className="absolute top-40 right-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30" />
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000 dark:opacity-30" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
-              <Star className="w-4 h-4" />
-              Pricing Plans
-            </div>
-            <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
-              Choose Your Perfect Plan
-            </h2>
-            <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
-              Start free and scale as you grow. No hidden fees, no surprises.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {pricingPlans.map((plan, index) => (
-              <div
-                key={index}
-                onMouseEnter={() => setHoveredPlan(index)}
-                onMouseLeave={() => setHoveredPlan(null)}
-                className={`relative group animate-fade-in-up`}
-                style={{ animationDelay: `${600 + index * 200}ms` }}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold shadow-lg">
-                      Most Popular
-                    </div>
-                  </div>
-                )}
-
-                <div
-                  className={`relative h-full bg-card rounded-2xl p-8 border-2 transition-all duration-500 ${
-                    plan.popular
-                      ? "border-primary shadow-2xl scale-105"
-                      : hoveredPlan === index
-                      ? "border-primary/50 shadow-xl -translate-y-2"
-                      : "border-border shadow-lg hover:shadow-xl"
-                  }`}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link to="/signup">
+                  <Button size="lg" className="text-lg px-8 py-6 group">
+                    Start Building Free
+                    <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="text-lg px-8 py-6 group"
                 >
-                  <div
-                    className={`absolute inset-0 bg-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-                  />
+                  <Play className="mr-2 w-5 h-5" />
+                  Watch Demo
+                </Button>
+              </div>
 
-                  <div className="relative z-10">
-                    <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-card-foreground mb-2">
-                        {plan.name}
-                      </h3>
-                      <p className="text-muted-foreground text-sm">
-                        {plan.description}
-                      </p>
-                    </div>
-
-                    <div className="mb-8">
-                      <div className="flex items-end gap-2">
-                        <span className="text-5xl font-black text-foreground">
-                          {plan.price}
-                        </span>
-                        <span className="text-muted-foreground pb-2">
-                          / {plan.period}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 mb-8 ${
-                        plan.popular
-                          ? "bg-primary text-primary-foreground hover:shadow-2xl hover:scale-105"
-                          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                      }`}
-                    >
-                      {plan.cta}
-                      <ArrowRight className="inline-block ml-2 w-5 h-5" />
-                    </button>
-
-                    <div className="space-y-4">
-                      <div className="font-semibold text-foreground mb-3">
-                        Included:
-                      </div>
-                      {plan.features.map((feature, i) => (
-                        <div
-                          key={i}
-                          className="flex items-start gap-3 group/item"
-                        >
-                          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
-                            <Check className="w-3 h-3 text-primary" />
-                          </div>
-                          <span className="text-muted-foreground text-sm group-hover/item:text-foreground transition-colors">
-                            {feature}
-                          </span>
-                        </div>
-                      ))}
-
-                      {plan.notIncluded.length > 0 && (
-                        <>
-                          <div className="font-semibold text-foreground mt-6 mb-3">
-                            Not included:
-                          </div>
-                          {plan.notIncluded.map((feature, i) => (
-                            <div key={i} className="flex items-start gap-3">
-                              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-muted flex items-center justify-center mt-0.5">
-                                <X className="w-3 h-3 text-muted-foreground" />
-                              </div>
-                              <span className="text-muted-foreground/60 text-sm">
-                                {feature}
-                              </span>
-                            </div>
-                          ))}
-                        </>
-                      )}
-                    </div>
-                  </div>
+              <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground pt-8">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-primary" />
+                  No credit card required
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-primary" />
+                  Free forever plan
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-primary" />
+                  Cancel anytime
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases Section */}
-      <section className="py-32 relative overflow-hidden bg-muted/30">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:14px_24px] opacity-50" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
-              <Target className="w-4 h-4" />
-              Use Cases
             </div>
-            <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
-              Built for Every Scenario
-            </h2>
-            <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
-              From customer feedback to market research, we've got you covered.
-            </p>
-          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {useCases.map((useCase, index) => (
-              <div
-                key={index}
-                onMouseEnter={() => setHoveredUseCase(index)}
-                onMouseLeave={() => setHoveredUseCase(null)}
-                className="animate-fade-in-up"
-                style={{ animationDelay: `${600 + index * 100}ms` }}
-              >
+            {/* Demo Video/Image Placeholder */}
+            <div className="mt-16 max-w-6xl mx-auto mb-6">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border bg-card">
+                <div className=" mb-6 aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                  <video
+                    className="w-full h-full object-cover"
+                    controls={false}
+                    autoPlay
+                    muted
+                    loop
+                  >
+                    <source src={demoVideo} type="video/webm" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                {/* Floating Cards */}
                 <div
-                  className={`relative h-full bg-card rounded-2xl p-8 border-2 border-border transition-all duration-500 overflow-hidden group ${
-                    hoveredUseCase === index
-                      ? "shadow-2xl -translate-y-2 border-primary/50"
-                      : "shadow-lg"
-                  }`}
+                  className="absolute -right-4 top-1/4 hidden lg:block animate-float"
+                  style={{ animationDelay: "0s" }}
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 opacity-0 group-hover:opacity-100 rounded-full blur-2xl transition-opacity duration-500 -translate-y-8 translate-x-8" />
-
-                  <div className="relative z-10">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-6 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
-                      {useCase.icon}
-                    </div>
-
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-2xl font-bold text-card-foreground">
-                          {useCase.title}
-                        </h3>
+                  <Card className="w-48 shadow-lg">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 text-sm">
+                        <CheckCircle2 className="w-4 h-4 text-green-500" />
+                        <span>Response Received</span>
                       </div>
-                      <div className="inline-block text-primary font-semibold text-sm">
-                        {useCase.stat}
+                    </CardContent>
+                  </Card>
+                </div>
+                <div
+                  className="absolute -left-4 bottom-1/4 hidden lg:block animate-float"
+                  style={{ animationDelay: "1s" }}
+                >
+                  <Card className="w-48 shadow-lg">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 text-sm">
+                        <TrendingUp className="w-4 h-4 text-primary" />
+                        <span>85% Completion Rate</span>
                       </div>
-                    </div>
-
-                    <p className="text-muted-foreground leading-relaxed mb-6">
-                      {useCase.description}
-                    </p>
-
-                    <div
-                      className={`flex items-center gap-2 text-sm font-semibold text-primary transition-all duration-300 ${
-                        hoveredUseCase === index ? "translate-x-2" : ""
-                      }`}
-                    >
-                      <span>Learn more</span>
-                      <ArrowRight
-                        className={`w-4 h-4 transition-all duration-300 ${
-                          hoveredUseCase === index ? "translate-x-1" : ""
-                        }`}
-                      />
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* AI Features Section */}
-      <section className="py-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
-        <div className="absolute top-20 right-10 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:opacity-30" />
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
-              <Sparkles className="w-4 h-4" />
-              AI Intelligence
             </div>
-            <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
-              Powered by Artificial Intelligence
-            </h2>
-            <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
-              Leverage cutting-edge AI to gain deeper insights, automate
-              analysis, and make data-driven decisions faster than ever before.
-            </p>
           </div>
+        </section>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
-            {[
-              {
-                icon: <Brain className="w-12 h-12" />,
-                title: "Smart Question Suggestions",
-                description:
-                  "AI analyzes your survey goals and suggests optimal questions, question types, and flow structures to maximize response quality and completion rates.",
-                features: [
-                  "Context-aware recommendations",
-                  "Industry-specific templates",
-                  "Best practice guidance",
-                ],
-              },
-              {
-                icon: <Sparkles className="w-12 h-12" />,
-                title: "Sentiment Analysis",
-                description:
-                  "Automatically analyze open-ended responses to understand emotional tone, satisfaction levels, and key themes without manual review.",
-                features: [
-                  "Emotion detection",
-                  "Theme extraction",
-                  "Satisfaction scoring",
-                ],
-              },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                onMouseEnter={() => setHoveredAI(index)}
-                onMouseLeave={() => setHoveredAI(null)}
-                className="animate-fade-in-up"
-                style={{ animationDelay: `${600 + index * 200}ms` }}
-              >
+        {/* Stats Section */}
+        <section className="py-20 border-y bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              {[
+                { label: "Active Users", value: "50K+" },
+                { label: "Surveys Created", value: "2M+" },
+                { label: "Responses Collected", value: "500M+" },
+                { label: "Countries Worldwide", value: "150+" },
+              ].map((stat, i) => (
                 <div
-                  className={`relative h-full bg-card rounded-3xl p-10 border-2 transition-all duration-500 overflow-hidden group ${
-                    hoveredAI === index
-                      ? "border-primary/50 shadow-2xl -translate-y-2"
-                      : "border-border shadow-xl"
-                  }`}
+                  key={i}
+                  className="space-y-2 animate-fade-in"
+                  style={{ animationDelay: `${i * 0.1}s` }}
                 >
-                  <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="text-4xl md:text-5xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                  <div className="relative z-10">
-                    <div
-                      className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary text-primary-foreground mb-6 transform transition-all duration-500 ${
-                        hoveredAI === index ? "scale-110 rotate-6" : ""
-                      }`}
-                    >
+        {/* Main Features */}
+        <section id="features" className="py-32">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <Badge variant="outline" className="mb-4">
+                Features
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-6">
+                Everything You Need to Create
+                <span className="block text-primary">Amazing Surveys</span>
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Powerful features designed to help you collect better data, make
+                smarter decisions, and drive real business results.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, i) => (
+                <Card
+                  key={i}
+                  className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/50"
+                >
+                  <CardHeader>
+                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
                       {feature.icon}
                     </div>
-
-                    <h3 className="text-3xl font-black mb-4 text-card-foreground">
-                      {feature.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
+                    <CardTitle className="text-2xl">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base leading-relaxed">
                       {feature.description}
-                    </p>
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
 
+        {/* Question Types */}
+        <section className="py-32 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <Badge variant="outline" className="mb-4">
+                Question Types
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-6">
+                20+ Powerful Question Types
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                From simple text inputs to complex matrix grids, signature
+                captures, and file uploads. We have every question type you'll
+                ever need.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
+              {questionTypes.map((type, i) => (
+                <Badge
+                  key={i}
+                  variant="secondary"
+                  className="text-sm px-4 py-2 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default"
+                >
+                  {type}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Advanced Features Grid */}
+        <section className="py-32">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <Badge variant="outline" className="mb-4">
+                Advanced Capabilities
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-6">
+                Enterprise-Grade Features
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Professional tools and integrations that scale with your
+                business needs.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {advancedFeatures.map((category, i) => (
+                <Card key={i} className="border-2">
+                  <CardHeader>
+                    <CardTitle className="text-lg">
+                      {category.category}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     <ul className="space-y-3">
-                      {feature.features.map((item, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-3 group/item"
-                        >
-                          <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-primary flex items-center justify-center transform transition-transform duration-300 group-hover/item:scale-110">
-                            <Check className="w-4 h-4 text-primary-foreground" />
-                          </div>
-                          <span className="text-muted-foreground font-medium group-hover/item:text-foreground transition-colors">
-                            {item}
-                          </span>
+                      {category.items.map((item, j) => (
+                        <li key={j} className="flex items-start gap-2 text-sm">
+                          <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span className="text-muted-foreground">{item}</span>
                         </li>
                       ))}
                     </ul>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Analytics Section */}
+        <section id="analytics" className="py-32 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <Badge variant="outline" className="mb-4">
+                Analytics
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-6">
+                Turn Data Into
+                <span className="block text-primary">Actionable Insights</span>
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Comprehensive analytics dashboard with real-time reporting,
+                advanced filtering, and beautiful visualizations. Export data in
+                any format you need.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {analyticsFeatures.map((feature, i) => (
+                <Card key={i} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 text-primary">
+                      {feature.icon}
+                    </div>
+                    <CardTitle>{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription>{feature.description}</CardDescription>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="mt-16 grid md:grid-cols-3 gap-8">
+              <Card className="text-center p-8 bg-card">
+                <Download className="w-12 h-12 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl font-bold mb-2">Individual PDFs</h3>
+                <p className="text-muted-foreground">
+                  Generate professional PDF reports for each response
+                </p>
+              </Card>
+              <Card className="text-center p-8 bg-card">
+                <Database className="w-12 h-12 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl font-bold mb-2">Bulk CSV Exports</h3>
+                <p className="text-muted-foreground">
+                  Download all responses in CSV or Excel format
+                </p>
+              </Card>
+              <Card className="text-center p-8 bg-card">
+                <Code className="w-12 h-12 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl font-bold mb-2">API Access</h3>
+                <p className="text-muted-foreground">
+                  Integrate data directly into your applications
+                </p>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* AI Features */}
+        <section id="ai" className="py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <Badge variant="outline" className="mb-4">
+                <Sparkles className="w-4 h-4 mr-2" />
+                AI Intelligence
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-6">
+                Powered by Artificial Intelligence
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Leverage cutting-edge AI to gain deeper insights, automate
+                analysis, and make data-driven decisions faster than ever
+                before.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
+                <Brain className="w-12 h-12 text-primary mb-4" />
+                <h3 className="text-2xl font-bold mb-4">
+                  Smart Question Suggestions
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  AI analyzes your survey goals and suggests optimal questions,
+                  question types, and flow structures to maximize response
+                  quality and completion rates.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span>Context-aware recommendations</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span>Industry-specific templates</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span>Best practice guidance</span>
+                  </li>
+                </ul>
+              </Card>
+
+              <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
+                <Sparkles className="w-12 h-12 text-primary mb-4" />
+                <h3 className="text-2xl font-bold mb-4">Sentiment Analysis</h3>
+                <p className="text-muted-foreground mb-4">
+                  Automatically analyze open-ended responses to understand
+                  emotional tone, satisfaction levels, and key themes without
+                  manual review.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span>Emotion detection</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span>Theme extraction</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span>Satisfaction scoring</span>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+          </div>
+        </section>
+        <section className="py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:opacity-30" />
+          <div className="absolute top-40 right-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30" />
+          <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000 dark:opacity-30" />
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
+                <Star className="w-4 h-4" />
+                Pricing Plans
+              </div>
+              <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
+                Choose Your Perfect Plan
+              </h2>
+              <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
+                Start free and scale as you grow. No hidden fees, no surprises.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {pricingPlans.map((plan, index) => (
+                <div
+                  key={index}
+                  onMouseEnter={() => setHoveredPlan(index)}
+                  onMouseLeave={() => setHoveredPlan(null)}
+                  className={`relative group animate-fade-in-up`}
+                  style={{ animationDelay: `${600 + index * 200}ms` }}
+                >
+                  {plan.popular && (
+                    <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-10">
+                      <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-bold shadow-lg">
+                        Most Popular
+                      </div>
+                    </div>
+                  )}
+
+                  <div
+                    className={`relative h-full bg-card rounded-2xl p-8 border-2 transition-all duration-500 ${
+                      plan.popular
+                        ? "border-primary shadow-2xl scale-105"
+                        : hoveredPlan === index
+                        ? "border-primary/50 shadow-xl -translate-y-2"
+                        : "border-border shadow-lg hover:shadow-xl"
+                    }`}
+                  >
+                    <div
+                      className={`absolute inset-0 bg-primary/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                    />
+
+                    <div className="relative z-10">
+                      <div className="mb-6">
+                        <h3 className="text-2xl font-bold text-card-foreground mb-2">
+                          {plan.name}
+                        </h3>
+                        <p className="text-muted-foreground text-sm">
+                          {plan.description}
+                        </p>
+                      </div>
+
+                      <div className="mb-8">
+                        <div className="flex items-end gap-2">
+                          <span className="text-5xl font-black text-foreground">
+                            {plan.price}
+                          </span>
+                          <span className="text-muted-foreground pb-2">
+                            / {plan.period}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 mb-8 ${
+                          plan.popular
+                            ? "bg-primary text-primary-foreground hover:shadow-2xl hover:scale-105"
+                            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        }`}
+                      >
+                        {plan.cta}
+                        <ArrowRight className="inline-block ml-2 w-5 h-5" />
+                      </button>
+
+                      <div className="space-y-4">
+                        <div className="font-semibold text-foreground mb-3">
+                          Included:
+                        </div>
+                        {plan.features.map((feature, i) => (
+                          <div
+                            key={i}
+                            className="flex items-start gap-3 group/item"
+                          >
+                            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
+                              <Check className="w-3 h-3 text-primary" />
+                            </div>
+                            <span className="text-muted-foreground text-sm group-hover/item:text-foreground transition-colors">
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+
+                        {plan.notIncluded.length > 0 && (
+                          <>
+                            <div className="font-semibold text-foreground mt-6 mb-3">
+                              Not included:
+                            </div>
+                            {plan.notIncluded.map((feature, i) => (
+                              <div key={i} className="flex items-start gap-3">
+                                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-muted flex items-center justify-center mt-0.5">
+                                  <X className="w-3 h-3 text-muted-foreground" />
+                                </div>
+                                <span className="text-muted-foreground/60 text-sm">
+                                  {feature}
+                                </span>
+                              </div>
+                            ))}
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
-
-                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-x-8 translate-y-8" />
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+        </section>
 
-          {/* AI Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto animate-fade-in-up animation-delay-1000">
-            {[
-              {
-                icon: <Zap className="w-6 h-6" />,
-                stat: "10x",
-                label: "Faster Analysis",
-              },
-              {
-                icon: <TrendingUp className="w-6 h-6" />,
-                stat: "95%",
-                label: "Accuracy",
-              },
-              {
-                icon: <Award className="w-6 h-6" />,
-                stat: "50K+",
-                label: "AI Insights",
-              },
-              {
-                icon: <Brain className="w-6 h-6" />,
-                stat: "24/7",
-                label: "Auto Processing",
-              },
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="bg-card rounded-2xl p-6 border-2 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl text-center group"
-              >
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {stat.icon}
-                </div>
-                <div className="text-3xl font-black text-foreground mb-1">
-                  {stat.stat}
-                </div>
-                <div className="text-sm text-muted-foreground font-medium">
-                  {stat.label}
-                </div>
+        {/* Use Cases Section */}
+        <section className="py-32 relative overflow-hidden bg-muted/30">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:14px_24px] opacity-50" />
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
+                <Target className="w-4 h-4" />
+                Use Cases
               </div>
-            ))}
+              <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
+                Built for Every Scenario
+              </h2>
+              <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
+                From customer feedback to market research, we've got you
+                covered.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {useCases.map((useCase, index) => (
+                <div
+                  key={index}
+                  onMouseEnter={() => setHoveredUseCase(index)}
+                  onMouseLeave={() => setHoveredUseCase(null)}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${600 + index * 100}ms` }}
+                >
+                  <div
+                    className={`relative h-full bg-card rounded-2xl p-8 border-2 border-border transition-all duration-500 overflow-hidden group ${
+                      hoveredUseCase === index
+                        ? "shadow-2xl -translate-y-2 border-primary/50"
+                        : "shadow-lg"
+                    }`}
+                  >
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 opacity-0 group-hover:opacity-100 rounded-full blur-2xl transition-opacity duration-500 -translate-y-8 translate-x-8" />
+
+                    <div className="relative z-10">
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-6 transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
+                        {useCase.icon}
+                      </div>
+
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-2xl font-bold text-card-foreground">
+                            {useCase.title}
+                          </h3>
+                        </div>
+                        <div className="inline-block text-primary font-semibold text-sm">
+                          {useCase.stat}
+                        </div>
+                      </div>
+
+                      <p className="text-muted-foreground leading-relaxed mb-6">
+                        {useCase.description}
+                      </p>
+
+                      <div
+                        className={`flex items-center gap-2 text-sm font-semibold text-primary transition-all duration-300 ${
+                          hoveredUseCase === index ? "translate-x-2" : ""
+                        }`}
+                      >
+                        <span>Learn more</span>
+                        <ArrowRight
+                          className={`w-4 h-4 transition-all duration-300 ${
+                            hoveredUseCase === index ? "translate-x-1" : ""
+                          }`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        {/* AI Features Section */}
+        <section className="py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+          <div className="absolute top-20 right-10 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:opacity-30" />
+          <div className="absolute bottom-20 left-10 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30" />
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
+                <Sparkles className="w-4 h-4" />
+                AI Intelligence
+              </div>
+              <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
+                Powered by Artificial Intelligence
+              </h2>
+              <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
+                Leverage cutting-edge AI to gain deeper insights, automate
+                analysis, and make data-driven decisions faster than ever
+                before.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16">
+              {[
+                {
+                  icon: <Brain className="w-12 h-12" />,
+                  title: "Smart Question Suggestions",
+                  description:
+                    "AI analyzes your survey goals and suggests optimal questions, question types, and flow structures to maximize response quality and completion rates.",
+                  features: [
+                    "Context-aware recommendations",
+                    "Industry-specific templates",
+                    "Best practice guidance",
+                  ],
+                },
+                {
+                  icon: <Sparkles className="w-12 h-12" />,
+                  title: "Sentiment Analysis",
+                  description:
+                    "Automatically analyze open-ended responses to understand emotional tone, satisfaction levels, and key themes without manual review.",
+                  features: [
+                    "Emotion detection",
+                    "Theme extraction",
+                    "Satisfaction scoring",
+                  ],
+                },
+              ].map((feature, index) => (
+                <div
+                  key={index}
+                  onMouseEnter={() => setHoveredAI(index)}
+                  onMouseLeave={() => setHoveredAI(null)}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${600 + index * 200}ms` }}
+                >
+                  <div
+                    className={`relative h-full bg-card rounded-3xl p-10 border-2 transition-all duration-500 overflow-hidden group ${
+                      hoveredAI === index
+                        ? "border-primary/50 shadow-2xl -translate-y-2"
+                        : "border-border shadow-xl"
+                    }`}
+                  >
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    <div className="relative z-10">
+                      <div
+                        className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary text-primary-foreground mb-6 transform transition-all duration-500 ${
+                          hoveredAI === index ? "scale-110 rotate-6" : ""
+                        }`}
+                      >
+                        {feature.icon}
+                      </div>
+
+                      <h3 className="text-3xl font-black mb-4 text-card-foreground">
+                        {feature.title}
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed mb-6 text-lg">
+                        {feature.description}
+                      </p>
+
+                      <ul className="space-y-3">
+                        {feature.features.map((item, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-3 group/item"
+                          >
+                            <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-primary flex items-center justify-center transform transition-transform duration-300 group-hover/item:scale-110">
+                              <Check className="w-4 h-4 text-primary-foreground" />
+                            </div>
+                            <span className="text-muted-foreground font-medium group-hover/item:text-foreground transition-colors">
+                              {item}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-x-8 translate-y-8" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* AI Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto animate-fade-in-up animation-delay-1000">
+              {[
+                {
+                  icon: <Zap className="w-6 h-6" />,
+                  stat: "10x",
+                  label: "Faster Analysis",
+                },
+                {
+                  icon: <TrendingUp className="w-6 h-6" />,
+                  stat: "95%",
+                  label: "Accuracy",
+                },
+                {
+                  icon: <Award className="w-6 h-6" />,
+                  stat: "50K+",
+                  label: "AI Insights",
+                },
+                {
+                  icon: <Brain className="w-6 h-6" />,
+                  stat: "24/7",
+                  label: "Auto Processing",
+                },
+              ].map((stat, index) => (
+                <div
+                  key={index}
+                  className="bg-card rounded-2xl p-6 border-2 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl text-center group"
+                >
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-primary-foreground mb-3 group-hover:scale-110 transition-transform duration-300">
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl font-black text-foreground mb-1">
+                    {stat.stat}
+                  </div>
+                  <div className="text-sm text-muted-foreground font-medium">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 };

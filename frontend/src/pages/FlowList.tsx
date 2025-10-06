@@ -149,88 +149,91 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   return (
     <>
-      <Card className="relative group w-80 h-56 shadow-md hover:shadow-lg transition-all rounded-xl flex flex-col justify-between overflow-hidden">
-        {/* Preview */}
-        <CardContent className="p-3 flex flex-center justify-center h-[30%]">
-          <FlowPreview xml={xml} containerId={`preview-${id}`} />
-        </CardContent>
-
-        {/* Info */}
-        <CardHeader className="bg-muted/30 rounded-t-xl p-3">
-          <CardTitle className="truncate text-base font-semibold">
-            {title}
-          </CardTitle>
-          <CardDescription className="truncate text-sm">
-            {description}
-          </CardDescription>
-        </CardHeader>
-
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/flow/${id}`, {
-                state: { id, title, description, xml, node_data, file_name },
-              });
-            }}
-            className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
-          >
-            <Eye
-              color="green"
-              className="w-5 h-5 text-gray-700 cursor-pointer"
-            />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEditDiagram(e, {
-                id,
-                title,
-                description,
-                xml,
-                node_data,
-                file_name,
-              });
-            }}
-            className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
-          >
-            <Edit className="w-5 h-5 text-gray-700 cursor-pointer" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-
-              setShowDeleteModal(true); // TODO: handle delete flow
-            }}
-            className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
-          >
-            <Trash2 className="w-5 h-5 text-red-600 cursor-pointer" />
-          </button>
-        </div>
-      </Card>
-      {/* Delete Confirmation Modal */}
-      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle>Delete Flow</DialogTitle>
-          </DialogHeader>
-          <p>Are you sure you want to delete this flow?</p>
-          <div className="mt-4 flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                if (id !== undefined) deleteFlow(id);
-              }}
-            >
-              Delete
-            </Button>
+      <>
+        <Card className="relative group w-80 h-60 shadow-md hover:shadow-lg transition-all rounded-xl flex flex-col overflow-hidden">
+          {/* Preview - positioned absolutely to fill the card */}
+          <div className="absolute inset-0 w-full h-full">
+            <FlowPreview xml={xml} containerId={`preview-${id}`} />
           </div>
-        </DialogContent>
-      </Dialog>
+
+          {/* Info - positioned at bottom with solid background */}
+          <div className="relative z-10 bg-card border-t mt-auto p-3 rounded-b-xl">
+            <h3 className="truncate text-sm font-semibold mb-0.5">{title}</h3>
+            <p className="truncate text-xs text-muted-foreground">
+              {description ?? "No Description"}
+            </p>
+          </div>
+
+          {/* Hover overlay */}
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 z-20">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/flow/${id}`, {
+                  state: { id, title, description, xml, node_data, file_name },
+                });
+              }}
+              className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
+            >
+              <Eye
+                color="green"
+                className="w-5 h-5 text-gray-700 cursor-pointer"
+              />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEditDiagram(e, {
+                  id,
+                  title,
+                  description,
+                  xml,
+                  node_data,
+                  file_name,
+                });
+              }}
+              className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
+            >
+              <Edit className="w-5 h-5 text-gray-700 cursor-pointer" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDeleteModal(true);
+              }}
+              className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
+            >
+              <Trash2 className="w-5 h-5 text-red-600 cursor-pointer" />
+            </button>
+          </div>
+        </Card>
+
+        {/* Delete Confirmation Modal */}
+        <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+          <DialogContent className="max-w-sm">
+            <DialogHeader>
+              <DialogTitle>Delete Flow</DialogTitle>
+            </DialogHeader>
+            <p>Are you sure you want to delete this flow?</p>
+            <div className="mt-4 flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (id !== undefined) deleteFlow(id);
+                }}
+              >
+                Delete
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </>
     </>
   );
 };
@@ -300,7 +303,7 @@ export const FlowList: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-8 w-full gap-8">
+    <div className="flex flex-col items-center py-8 px-4 w-full gap-8">
       {/* Header */}
       <div className="items-center flex justify-between gap-2 w-full max-w-7xl mb-6">
         <h1 className="text-2xl font-bold">Flow Template List</h1>

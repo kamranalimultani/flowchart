@@ -1,451 +1,463 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Search,
-  BookOpen,
-  Zap,
-  Code,
-  Settings,
-  Shield,
-  HelpCircle,
-  ChevronRight,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from "react";
+import { BookOpen, Menu, X, ChevronRight, Home, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
-// Dummy documentation sections
-const docSections = [
-  {
-    id: "getting-started",
-    title: "Getting Started",
-    icon: BookOpen,
-    subsections: [
-      { id: "introduction", title: "Introduction" },
-      { id: "installation", title: "Installation" },
-      { id: "quick-start", title: "Quick Start Guide" },
-    ],
+const docsCategories = {
+  "Getting Started": [
+    { id: "intro", title: "Introduction to Melvok" },
+    { id: "auth", title: "Authentication & Plans" },
+  ],
+  "Core Features": [
+    { id: "form-builder", title: "Form Template Builder" },
+    { id: "flow-creation", title: "Creating Flows" },
+    { id: "flow-management", title: "Managing Your Flows" },
+  ],
+  "Working with Flows": [
+    { id: "canvas-editor", title: "Flow Canvas Editor" },
+    { id: "assigning-forms", title: "Assigning Forms to Nodes" },
+    { id: "sharing-flows", title: "Sharing & Publishing Flows" },
+  ],
+  "End User Guide": [
+    { id: "completing-surveys", title: "Completing Flow Surveys" },
+    { id: "best-practices", title: "Best Practices" },
+  ],
+};
+
+const docsContent = {
+  intro: {
+    title: "Welcome to Melvok Documentation",
+    content: `Melvok is a flow survey company that empowers users to create interactive flow diagrams (“flows”) and conduct surveys via custom forms integrated at various steps.
+
+## What is Melvok?
+
+Melvok lets you build surveys as visual flowcharts. Each node in your flow can represent a form, a decision point, or an informational step. This gives survey creators powerful flexibility and respondents a more engaging experience.
+
+![Dummy Image: Melvok Platform Overview](https://via.placeholder.com/800x450?text=Melvok+Platform+Overview)
+
+## Key Features
+
+- Visual flowchart survey creation
+- Reusable custom form templates
+- Two methods to create flows: Quick create or DrawIO import
+- Share flows to collect data
+- Built-in analytics to gain insights
+
+Continue to the next section to learn about signing up and plans.`,
   },
-  {
-    id: "core-concepts",
-    title: "Core Concepts",
-    icon: Zap,
-    subsections: [
-      { id: "flows", title: "Understanding Flows" },
-      { id: "nodes", title: "Working with Nodes" },
-      { id: "triggers", title: "Triggers & Events" },
-    ],
+
+  auth: {
+    title: "Authentication & Plans",
+    content: `Melvok offers two signup options:
+
+## Free Tier
+
+- Limited to creating 3 flows during the free trial
+- Access unlimited form templates
+- Basic analytics and community support
+
+## Paid Monthly Plans
+
+- Unlimited flows and advanced form features
+- Team collaboration tools
+- Priority support and custom branding
+- Import DrawIO diagrams
+- More monthly responses and data retention
+
+![Dummy Image: Plans Comparison](https://via.placeholder.com/800x450?text=Plans+Comparison)
+
+Sign up at melvok.com by providing your email and choosing a plan. You can upgrade anytime from account settings.`,
   },
-  {
-    id: "api-reference",
-    title: "API Reference",
-    icon: Code,
-    subsections: [
-      { id: "authentication", title: "Authentication" },
-      { id: "endpoints", title: "API Endpoints" },
-      { id: "webhooks", title: "Webhooks" },
-    ],
+
+  "form-builder": {
+    title: "Creating Form Templates in Melvok",
+    content: `Melvok’s form template builder provides a visual, drag-and-drop interface to create survey forms that integrate with your flows.
+
+## How to Create a Form Template
+
+1. Navigate to **Form Templates** in your dashboard.
+2. Click **Create New Template**.
+3. Enter a name and description.
+4. Use Melvok’s form elements to design your survey using:
+   - Text input (single-line)
+   - Text area (multi-line)
+   - Number, Date pickers
+   - Dropdowns, radio buttons, and checkboxes
+   - Rating scales and matrix grids
+   - File uploads and digital signatures (paid plans)
+   - Calculated fields for values based on input (paid plans)
+
+## Form Organization
+
+- Multi-page support for long surveys
+- Sections to group related questions
+- Preview mode to test design
+
+![Dummy Image: Form Template Builder](https://via.placeholder.com/800x450?text=Form+Template+Builder)`,
   },
-  {
-    id: "configuration",
-    title: "Configuration",
-    icon: Settings,
-    subsections: [
-      { id: "environment", title: "Environment Setup" },
-      { id: "integrations", title: "Third-party Integrations" },
-      { id: "advanced", title: "Advanced Settings" },
-    ],
+
+  "flow-creation": {
+    title: "Creating Flows",
+    content: `Flows orchestrate the survey logic visually.
+
+## Two Ways to Create Flows
+
+1. **Quick Create:**  
+   Enter a flow name and description, and Melvok generates a default welcome flow chart with main nodes (welcome, start, example form, thank you).
+
+2. **Import DrawIO:**  
+   Upload DrawIO or .xml diagram files to create complex flows from existing designs.
+
+## Flow List Page Actions
+
+- **Eye Button:** View and interact with the flow on the Canvas page.
+- **Edit Button:** Open DrawIO editor popup to modify the flow diagram.
+- **Delete Button:** Permanently delete a flow after confirmation.
+
+![Dummy Image: Flow Creation](https://via.placeholder.com/800x450?text=Flow+Creation)`,
   },
-  {
-    id: "security",
-    title: "Security",
-    icon: Shield,
-    subsections: [
-      { id: "best-practices", title: "Security Best Practices" },
-      { id: "encryption", title: "Data Encryption" },
-      { id: "compliance", title: "Compliance" },
-    ],
+
+  "flow-management": {
+    title: "Managing Your Flows",
+    content: `Track and maintain your flows efficiently.
+
+## Flow Lifecycle
+
+- Draft: Editable, not live
+- Published: Live, collecting responses, minor edits allowed
+- Paused: Temporarily stops new responses
+- Archived: Inactive, preserved data
+
+## Flow Settings
+
+- General info: name, description, tags
+- Access control: public, private, password-protected
+- Response behavior: partial saves, multiple submissions
+- Notifications and appearance customization
+
+## Export & Backup
+
+- Export flows (DrawIO, JSON, images)
+- Export response data (CSV, Excel, JSON, PDF)
+- Scheduled backups (enterprise plans)
+
+![Dummy Image: Flow Management](https://via.placeholder.com/800x450?text=Flow+Management)`,
   },
-];
 
-// Dummy markdown content
-const markdownContent = `
-# Getting Started with MelvokFlow
+  "canvas-editor": {
+    title: "Flow Canvas Editor",
+    content: `Your main workspace to design, edit, and refine flows.
 
-Welcome to MelvokFlow! This comprehensive guide will help you understand and leverage the full power of our workflow automation platform.
+## Access
 
-## Introduction
+- Click the eye icon on a flow for full-size view.
+- Auto-opens after new flow creation.
 
-MelvokFlow is a cutting-edge workflow automation platform designed to streamline your business processes without writing a single line of code. Whether you're automating simple tasks or building complex multi-step workflows, MelvokFlow provides the tools you need.
+## Features
 
-### Key Features
+- Pan and zoom canvas
+- Multi-select nodes
+- Minimap for overview
+- Toolbar with flow name, status, auto-save, zoom, layout, validate, publish
 
-- **Visual Flow Builder**: Drag-and-drop interface for creating workflows
-- **Real-time Analytics**: Monitor and optimize your workflows
-- **Enterprise Security**: Bank-level encryption and compliance
-- **Extensive Integrations**: Connect with 100+ popular services
-- **Scalable Infrastructure**: Handle millions of executions per month
+## Node Palette
 
-## Installation
+- Start, Form, Decision, Display, End nodes
+- Advanced nodes: Delay, API (enterprise), Redirect, Calculate
 
-Getting started with MelvokFlow is quick and easy. Follow these steps:
-
-### Step 1: Create an Account
-
-Visit our [signup page](https://melvokflow.com/signup) and create your free account. You'll get:
-
-- 1,000 free executions per month
-- Access to all core features
-- 24/7 community support
-
-### Step 2: Install the CLI (Optional)
-
-For advanced users, install our command-line interface:
-
-\`\`\`bash
-npm install -g @melvokflow/cli
-melvokflow login
-\`\`\`
-
-### Step 3: Create Your First Flow
-
-1. Navigate to the **Flows** section
-2. Click **"Create New Flow"**
-3. Choose a template or start from scratch
-4. Add nodes and configure triggers
-5. Test and deploy your flow
-
-## Quick Start Guide
-
-Let's create a simple automation workflow that sends a Slack notification when a new form is submitted.
-
-### Creating a Form Trigger
-
-1. In the Flow Builder, drag a **Form Trigger** node to the canvas
-2. Configure the form fields:
-   - Name (Text)
-   - Email (Email)
-   - Message (Textarea)
-3. Save the form configuration
-
-### Adding a Slack Action
-
-1. Drag a **Slack** node after your trigger
-2. Connect the Form Trigger to the Slack node
-3. Authenticate with your Slack workspace
-4. Configure the message template:
-
-\`\`\`
-New form submission from {{form.name}}
-Email: {{form.email}}
-Message: {{form.message}}
-\`\`\`
-
-### Testing Your Flow
-
-Click the **Test** button to simulate a form submission. You should see:
-
-- ✅ Form trigger activated
-- ✅ Slack message sent successfully
-- ✅ Execution completed in < 2s
-
-## Understanding Flows
-
-A **Flow** is a sequence of connected nodes that automate a specific process. Each flow consists of:
-
-### 1. Triggers
-
-Triggers start your flow execution. Common trigger types include:
-
-- **Webhook**: HTTP requests from external services
-- **Schedule**: Time-based execution (cron)
-- **Form**: User form submissions
-- **Email**: Incoming email messages
-- **Database**: Database changes
-
-### 2. Actions
-
-Actions perform operations within your flow:
-
-- **Send Email**: Automated email notifications
-- **HTTP Request**: Call external APIs
-- **Database Query**: Read/write data
-- **Transform Data**: Manipulate and format data
-- **Conditional Logic**: If/else branching
-
-### 3. Connections
-
-Connections link nodes together and pass data between them. You can:
-
-- Map input/output fields
-- Transform data in transit
-- Add conditional routing
-- Handle errors gracefully
-
-## API Reference
-
-MelvokFlow provides a comprehensive REST API for programmatic access to all platform features.
-
-### Authentication
-
-All API requests require authentication using an API key:
-
-\`\`\`bash
-curl -X GET https://api.melvokflow.com/v1/flows \\
-  -H "Authorization: Bearer YOUR_API_KEY"
-\`\`\`
-
-### Create a Flow
-
-\`\`\`javascript
-POST /v1/flows
-
-{
-  "name": "My Automated Flow",
-  "description": "Automates customer onboarding",
-  "trigger": {
-    "type": "webhook",
-    "config": {
-      "method": "POST"
-    }
+![Dummy Image: Canvas Editor](https://via.placeholder.com/800x450?text=Canvas+Editor)`,
   },
-  "nodes": [
-    {
-      "id": "send-email",
-      "type": "email",
-      "config": {
-        "to": "{{trigger.email}}",
-        "subject": "Welcome!",
-        "body": "Thanks for signing up!"
-      }
-    }
-  ]
-}
-\`\`\`
 
-### Execute a Flow
+  "assigning-forms": {
+    title: "Assigning Forms to Nodes",
+    content: `After designing your forms and creating flows, assign one or more form templates to nodes in the flow.
 
-\`\`\`javascript
-POST /v1/flows/{flowId}/execute
+## How to Assign
 
-{
-  "input": {
-    "email": "user@example.com",
-    "name": "John Doe"
-  }
-}
-\`\`\`
+- Click a user node on the Canvas page.
+- The sidebar will open showing all available form templates.
+- Check the boxes to assign multiple forms to the node.
+- Each assigned form displays an eye button for preview.
 
-## Best Practices
+![Dummy Image: Assigning Forms](https://via.placeholder.com/800x450?text=Assigning+Forms+to+Nodes)`,
+  },
 
-### Performance Optimization
+  "sharing-flows": {
+    title: "Sharing & Publishing Flows",
+    content: `Administrators with paid plans can share flows for data collection.
 
-1. **Use Batching**: Process multiple items in a single execution
-2. **Cache Results**: Store frequently accessed data
-3. **Optimize Queries**: Use indexes and limit result sets
-4. **Async Operations**: Use webhooks for long-running tasks
+## How Sharing Works
 
-### Error Handling
+- Share the URL of the flow with end users.
+- End users see the flow without form assignment checkboxes.
+- They click the eye icon on assigned forms at nodes to fill them.
+- Upon submission, the form ends and users proceed until completing the survey flow.
 
-Always implement proper error handling:
+![Dummy Image: Sharing Flows](https://via.placeholder.com/800x450?text=Sharing+Flows)`,
+  },
 
-\`\`\`javascript
-{
-  "errorHandling": {
-    "retry": {
-      "enabled": true,
-      "maxAttempts": 3,
-      "backoff": "exponential"
-    },
-    "onError": "notify-admin"
-  }
-}
-\`\`\`
+  "completing-surveys": {
+    title: "Completing Flow Surveys",
+    content: `End users complete surveys by interacting with shared flows.
 
-### Security Guidelines
+- Users open the shared URL.
+- Click nodes to reveal assigned forms.
+- Fill and submit forms via the eye icon preview.
+- Complete all nodes to finish the survey.
 
-- **Never hardcode secrets**: Use environment variables
-- **Validate inputs**: Sanitize all user-provided data
-- **Use HTTPS**: Always encrypt data in transit
-- **Rotate credentials**: Regular key rotation policy
-- **Monitor access**: Enable audit logs
+This streamlined interface removes assignment controls to ensure a focused survey experience.
 
-## Need Help?
+![Dummy Image: Completing Surveys](https://via.placeholder.com/800x450?text=Completing+Surveys)`,
+  },
 
-### Community Resources
+  "best-practices": {
+    title: "Best Practices",
+    content: `To get the most from Melvok:
 
-- 📚 [Knowledge Base](https://docs.melvokflow.com)
-- 💬 [Community Forum](https://community.melvokflow.com)
-- 🎥 [Video Tutorials](https://youtube.com/melvokflow)
-- 📧 [Email Support](mailto:support@melvokflow.com)
+- Use descriptive names for flows and form templates.
+- Keep forms concise and logically grouped.
+- Leverage conditional logic and multi-page forms for usability.
+- Test thoroughly using preview before publishing.
+- Ensure mobile responsiveness.
+- Regularly analyze flow analytics to improve surveys.
 
-### Enterprise Support
+![Dummy Image: Best Practices](https://via.placeholder.com/800x450?text=Best+Practices)`,
+  },
+};
 
-For enterprise customers, we offer:
-
-- Dedicated account manager
-- 24/7 priority support
-- Custom integration development
-- On-site training sessions
-
----
-
-**Last Updated**: October 4, 2025  
-**Version**: 2.1.0
-`;
-
-function Documentation() {
-  const [activeSection, setActiveSection] = useState("getting-started");
+export default function MelvokDocs() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const queryParams = new URLSearchParams(location.search);
+  const sectionFromUrl = queryParams.get("section") || "intro";
+  const [activeDoc, setActiveDoc] = React.useState(sectionFromUrl);
+
+  const currentDoc = docsContent[activeDoc] || docsContent.intro;
+  const getCurrentCategoryDocs = () => {
+    for (const [category, docs] of Object.entries(docsCategories)) {
+      if (docs.some((d) => d.id === activeDoc)) return docs;
+    }
+    return [];
+  };
+  React.useEffect(() => {
+    if (sectionFromUrl && sectionFromUrl !== activeDoc) {
+      setActiveDoc(sectionFromUrl);
+    }
+  }, [sectionFromUrl]);
+
+  const handleNext = () => {
+    const docsInCategory = getCurrentCategoryDocs();
+    const currentIndex = docsInCategory.findIndex((d) => d.id === activeDoc);
+    if (currentIndex >= 0 && currentIndex < docsInCategory.length - 1) {
+      setActiveDoc(docsInCategory[currentIndex + 1].id);
+    }
+  };
+  const renderMarkdown = (text) => {
+    return text.split("\n").map((line, i) => {
+      if (line.startsWith("### ")) {
+        return (
+          <h3 key={i} className="text-xl font-semibold mt-6 mb-3">
+            {line.slice(4)}
+          </h3>
+        );
+      }
+      if (line.startsWith("## ")) {
+        return (
+          <h2 key={i} className="text-2xl font-bold mt-8 mb-4">
+            {line.slice(3)}
+          </h2>
+        );
+      }
+      if (line.startsWith("# ")) {
+        return (
+          <h1 key={i} className="text-3xl font-bold mb-6">
+            {line.slice(2)}
+          </h1>
+        );
+      }
+      if (line.startsWith("- ")) {
+        return (
+          <li key={i} className="ml-6 mb-2">
+            {line.slice(2)}
+          </li>
+        );
+      }
+      if (line.match(/^\*\*(.+?)\*\*/)) {
+        const parts = line.split(/(\*\*.*?\*\*)/g);
+        return (
+          <p key={i} className="mb-3">
+            {parts.map((part, j) => {
+              if (part.startsWith("**") && part.endsWith("**")) {
+                return (
+                  <strong key={j} className="font-semibold">
+                    {part.slice(2, -2)}
+                  </strong>
+                );
+              }
+              return part;
+            })}
+          </p>
+        );
+      }
+      if (line.trim() === "") {
+        return <div key={i} className="h-2" />;
+      }
+      return (
+        <p key={i} className="mb-3 leading-relaxed">
+          {line}
+        </p>
+      );
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-background pt-20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
-          {/* Sidebar Navigation */}
-          <aside className="lg:sticky lg:top-24 h-fit">
-            <div className="space-y-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search documentation..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
+    <>
+      <Helmet>
+        {/* Basic SEO */}
+        <title>Melvok Documentation | Flow-Based Survey Platform</title>
+        <meta
+          name="description"
+          content="Melvok is a visual flow-based survey platform that allows users to create interactive survey flows, reusable form templates, and manage survey responses efficiently."
+        />
+        <meta
+          name="keywords"
+          content="Melvok, survey platform, flow survey, form templates, visual flow, interactive surveys, analytics"
+        />
+        <link rel="canonical" href="https://melvok.com/docs" />
+
+        {/* Open Graph / Facebook */}
+        <meta
+          property="og:title"
+          content="Melvok Documentation | Flow-Based Survey Platform"
+        />
+        <meta
+          property="og:description"
+          content="Explore Melvok Docs to learn how to create flows, assign forms, share surveys, and leverage analytics for better insights."
+        />
+        <meta
+          property="og:image"
+          content="https://via.placeholder.com/800x450?text=Melvok+Documentation"
+        />
+        <meta property="og:url" content="https://melvok.com/docs" />
+        <meta property="og:type" content="article" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Melvok Documentation | Flow-Based Survey Platform"
+        />
+        <meta
+          name="twitter:description"
+          content="Explore Melvok Docs to learn how to create flows, assign forms, share surveys, and leverage analytics for better insights."
+        />
+        <meta
+          name="twitter:image"
+          content="https://via.placeholder.com/800x450?text=Melvok+Documentation"
+        />
+      </Helmet>
+      <div className="flex h-screen bg-background">
+        {/* Sidebar */}
+        <aside
+          className={`${
+            sidebarOpen ? "w-72" : "w-0"
+          } bg-background border-r overflow-hidden transition-all duration-300 border-border`}
+        >
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-8">
+              <BookOpen className="w-8 h-8" />
+              <h1 className="text-2xl font-bold">Melvok Docs</h1>
+            </div>
+
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-2.5 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search docs..."
+                className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            <nav className="space-y-6">
+              {Object.entries(docsCategories).map(([category, docs]) => (
+                <div key={category}>
+                  <h3 className="text-xs font-semibold uppercase tracking-wider mb-2">
+                    {category}
+                  </h3>
+                  <ul className="space-y-1">
+                    {docs.map((doc) => (
+                      <li key={doc.id}>
+                        <button
+                          onClick={() => setActiveDoc(doc.id)}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                            activeDoc === doc.id
+                              ? "font-medium"
+                              : "hover:bg-muted"
+                          }`}
+                        >
+                          {doc.title}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </nav>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="max-w-4xl mx-auto px-8 py-8">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="mb-6 flex items-center gap-2 transition-colors hover:underline"
+              aria-expanded={sidebarOpen}
+              aria-controls="sidebar"
+            >
+              {sidebarOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+              <span className="text-sm font-medium">
+                {sidebarOpen ? "Close" : "Open"} Menu
+              </span>
+            </button>
+
+            <article className="bg-card rounded-xl shadow-sm p-8 border border-border">
+              <div className="prose max-w-none">
+                {renderMarkdown(currentDoc.content)}
               </div>
 
-              {/* Navigation Sections */}
-              <ScrollArea className="h-[calc(100vh-200px)]">
-                <nav className="space-y-2">
-                  {docSections.map((section) => {
-                    const Icon = section.icon;
-                    return (
-                      <div key={section.id} className="space-y-1">
-                        <Button
-                          variant={
-                            activeSection === section.id ? "secondary" : "ghost"
-                          }
-                          className="w-full justify-start"
-                          onClick={() => setActiveSection(section.id)}
-                        >
-                          <Icon className="mr-2 h-4 w-4" />
-                          {section.title}
-                        </Button>
-                        {activeSection === section.id && (
-                          <div className="ml-6 space-y-1">
-                            {section.subsections.map((subsection) => (
-                              <Button
-                                key={subsection.id}
-                                variant="ghost"
-                                size="sm"
-                                className="w-full justify-start text-muted-foreground hover:text-foreground"
-                              >
-                                <ChevronRight className="mr-2 h-3 w-3" />
-                                {subsection.title}
-                              </Button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </nav>
-              </ScrollArea>
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <main className="min-w-0">
-            <div className="bg-card border rounded-lg shadow-sm">
-              <div className="p-8">
-                {/* Documentation Content */}
-                <article className="prose prose-slate dark:prose-invert max-w-none">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: formatMarkdown(markdownContent),
-                    }}
-                  />
-                </article>
-
-                {/* Help Section */}
-                <div className="mt-12 p-6 bg-muted rounded-lg border">
-                  <div className="flex items-start space-x-4">
-                    <div className="rounded-full bg-primary/10 p-3">
-                      <HelpCircle className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-2">
-                        Was this page helpful?
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Let us know if you have any questions or feedback about
-                        this documentation.
-                      </p>
-                      <div className="flex space-x-2">
-                        <Button size="sm">Yes, helpful</Button>
-                        <Button size="sm" variant="outline">
-                          No, needs improvement
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+              <div className="mt-12 pt-6 border-t border-border">
+                <div className="flex justify-between items-center">
+                  <button
+                    onClick={() => setActiveDoc("intro")}
+                    className="flex items-center gap-2 transition-colors hover:underline"
+                  >
+                    <Home className="w-4 h-4" />
+                    <span className="text-sm font-medium">Back to Home</span>
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="flex items-center gap-2 transition-colors hover:underline"
+                  >
+                    <span className="text-sm font-medium">Next Section</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-            </div>
-          </main>
-        </div>
+            </article>
+
+            <footer className="mt-8 text-center text-sm">
+              <p>© 2024 Melvok. All rights reserved.</p>
+            </footer>
+          </div>
+        </main>
       </div>
-    </div>
+    </>
   );
 }
-
-// Simple markdown to HTML converter (basic implementation)
-function formatMarkdown(markdown: string): string {
-  let html = markdown;
-
-  // Headers
-  html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
-  html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
-  html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
-
-  // Bold
-  html = html.replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>");
-
-  // Italic
-  html = html.replace(/\*(.*?)\*/gim, "<em>$1</em>");
-
-  // Links
-  html = html.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
-
-  // Code blocks
-  html = html.replace(
-    /```(.*?)\n([\s\S]*?)```/gim,
-    "<pre><code>$2</code></pre>"
-  );
-
-  // Inline code
-  html = html.replace(/`([^`]+)`/gim, "<code>$1</code>");
-
-  // Lists
-  html = html.replace(/^\- (.*$)/gim, "<li>$1</li>");
-  html = html.replace(/(<li>.*<\/li>)/s, "<ul>$1</ul>");
-
-  // Numbered lists
-  html = html.replace(/^\d+\. (.*$)/gim, "<li>$1</li>");
-
-  // Checkmarks
-  html = html.replace(/✅/g, '<span class="text-green-600">✅</span>');
-
-  // Paragraphs
-  html = html.replace(/\n\n/g, "</p><p>");
-  html = "<p>" + html + "</p>";
-
-  // Horizontal rule
-  html = html.replace(/^---$/gim, "<hr />");
-
-  return html;
-}
-
-export default Documentation;

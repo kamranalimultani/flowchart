@@ -8,3 +8,20 @@
     border: 1px solid #ddd;
     padding: 8px;
 }
+:root {
+  /* Primary color */
+  --sjs-primary-backcolor: #000000;
+  --sjs-primary-textcolor: #000000;
+
+  /* Secondary color */
+  --sjs-secondary-backcolor: #000000;
+  --sjs-secondary-textcolor: #000000;
+
+  /* Optional: border and other relevant colors */
+  --sjs-border-color: #000000;
+  --sjs-border-text-color: #000000;
+
+  /* Button colors */
+  --sjs-button-text-color: #000000;
+  --sjs-button-bg-color: #000000;
+}

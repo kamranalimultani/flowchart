@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\FormTemplateController;
@@ -26,6 +27,8 @@ Route::get('/test-api-connection', [AuthController::class, 'testApiConnection'])
 // form tempaltes
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+
     Route::apiResource('/form-templates', FormTemplateController::class);
     Route::get('/forms/all', [FormTemplateController::class, 'fetchAll']);
 

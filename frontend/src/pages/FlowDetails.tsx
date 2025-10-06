@@ -9,7 +9,7 @@ import { extractGraphModel } from "@/utils/commonUtils";
 
 export const FlowDetails = () => {
   const location = useLocation();
-  const navigate = useNavigate(); // ✅ hook for navigation
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const graphRef = useRef(null);
   const flowData = location.state as {
@@ -26,11 +26,11 @@ export const FlowDetails = () => {
     {}
   );
   const [idAttribute, setIdAttribute] = useState<string>("");
+  const [flowDetails, setFlowDetails] = useState<any>(null);
 
   const handleCheck = async (formId: string, checked: boolean) => {
     setCheckedForms((x) => ({ ...x, [formId]: checked }));
 
-    // ✅ Work with flowDetails not flowData
     let nodeData = [...(flowDetails?.node_data || [])];
     let node = nodeData.find((n: any) => n.node_id === idAttribute);
 
@@ -42,7 +42,6 @@ export const FlowDetails = () => {
       nodeData.push({ node_id: idAttribute, form_templates: [formId] });
     }
 
-    // ✅ update state so UI stays in sync
     setFlowDetails((prev: any) => ({ ...prev, node_data: nodeData }));
 
     await putRequest(
@@ -56,14 +55,12 @@ export const FlowDetails = () => {
     const res = await getRequest("/api/forms/all", true);
     setForms(res);
   };
-  const [flowDetails, setFlowDetails] = useState<any>(null);
 
   const fetchFlowDetails = async () => {
     try {
       const res = await getRequest(`/api/flows/${flowData.file_name}`, true);
       let flow = res.flow;
 
-      // Ensure node_data is parsed
       if (typeof flow.node_data === "string") {
         try {
           flow.node_data = JSON.parse(flow.node_data);
@@ -81,77 +78,133 @@ export const FlowDetails = () => {
 
   useEffect(() => {
     fetchTemplates();
-    fetchFlowDetails(); // ✅ fetch fresh flow by file_name
+    fetchFlowDetails();
   }, []);
 
   useEffect(() => {
-    if (!flowDetails) return; // wait until flowDetails is fetched
+    if (!flowDetails || !flowData.xml) return;
 
-    // Access mxGraph from the CDN in public/index.html
-    const { mxGraph, mxRubberband, mxEvent, mxUtils, mxCodec } = window as any;
+    const container = containerRef.current;
+    if (!container) return;
 
-    if (!mxGraph && !flowData.xml) {
-      console.error("mxGraph not loaded! Add CDN in public/index.html");
+    // Access mxGraph factory from window
+    const mxGraphFactory = (window as any).mxgraph;
+
+    if (!mxGraphFactory) {
+      console.error("mxGraph not loaded! Check CDN script in index.html");
       return;
     }
 
-    const container = containerRef.current;
+    // Initialize mxGraph with base path
+    const mx = mxGraphFactory({
+      mxBasePath: "https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/src",
+    });
+
+    // Extract classes
+    const mxGraph = mx.mxGraph;
+    const mxRubberband = mx.mxRubberband;
+    const mxEvent = mx.mxEvent;
+    const mxUtils = mx.mxUtils;
+    const mxCodec = mx.mxCodec;
+
+    console.log("mxGraph loaded successfully");
+
+    // Create graph instance
     const graph = new mxGraph(container);
     graphRef.current = graph;
-    // // graph.getStylesheet().getDefaultVertexStyle().strokeColor = "none";
-    // graph.getStylesheet().getDefaultEdgeStyle().strokeColor = "none";
-    // graph.getStylesheet().getDefaultEdgeStyle().stroke = "none";
+
+    // Configure graph behavior
+    graph.setCellsMovable(false);
+    graph.setConnectable(false);
+    graph.setPanning(true);
+    graph.panningHandler.useLeftButtonForPanning = true;
+    graph.setHtmlLabels(true);
+    graph.setEnabled(true);
+
+    // Customize cursor for vertices
+    const originalGetCursor = graph.getCursorForCell;
+    graph.getCursorForCell = function (cell: any) {
+      if (cell && cell.isVertex()) {
+        return "pointer";
+      }
+      return originalGetCursor.apply(this, arguments);
+    };
+
+    // Remove fill color for text-only vertices
     const originalGetCellStyle = graph.getCellStyle;
-    graph.getStylesheet().getDefaultVertexStyle().fillColor = "none";
     graph.getCellStyle = function (cell: any) {
       let style = originalGetCellStyle.apply(this, arguments);
 
-      // If it's a text-only vertex (style contains "text;html=1")
       if (
         cell &&
         cell.isVertex() &&
         cell.style &&
         cell.style.includes("text;html=1")
       ) {
-        style = { ...style, strokeColor: "none", fillColor: "none" }; // no border, no fill
+        style = { ...style, strokeColor: "none", fillColor: "none" };
       }
 
       return style;
     };
-    // --- Graph options ---
-    graph.setCellsMovable(false);
-    graph.setConnectable(false);
-    graph.setPanning(true);
-    graph.panningHandler.useLeftButtonForPanning = true;
-    graph.setHtmlLabels(true);
 
-    graph.getCursorForCell = function (cell: any) {
-      if (cell && cell.isVertex()) {
-        return "pointer";
-      }
-      return mxGraph.prototype.getCursorForCell.apply(this, arguments);
-    };
-    // Rubberband selection
+    // Enable rubberband selection
     new mxRubberband(graph);
-    const parsed = extractGraphModel(flowData.xml);
-    // Parse XML and decode into the graph
-    const doc = mxUtils.parseXml(parsed);
-    const codec = new mxCodec(doc);
-    codec.decode(doc.documentElement, graph.getModel());
 
-    graph.view.setScale(1); // 50% zoom
-    const bounds = graph.getGraphBounds();
-    if (!container) return;
-    const dx = container.clientWidth / 2 - (bounds.x + bounds.width / 2) * 0.5;
-    const dy =
-      container.clientHeight / 2 - (bounds.y + bounds.height / 2) * 0.5;
-    graph.view.setTranslate(dx, dy);
+    // Parse and render the XML
+    try {
+      const parsed = extractGraphModel(flowData.xml);
+      console.log("Parsed XML:", parsed.substring(0, 200));
 
-    // Node click listener
+      const doc = mxUtils.parseXml(parsed);
+      const codec = new mxCodec(doc);
+
+      // Decode into graph model
+      graph.getModel().beginUpdate();
+      try {
+        codec.decode(doc.documentElement, graph.getModel());
+      } finally {
+        graph.getModel().endUpdate();
+      }
+
+      console.log(
+        "Graph cells:",
+        graph.getModel().getChildCount(graph.getDefaultParent())
+      );
+
+      // Fit and center the graph
+      const bounds = graph.getGraphBounds();
+      console.log("Graph bounds:", bounds);
+
+      if (bounds.width > 0 && bounds.height > 0) {
+        // Calculate scale to fit
+        const widthScale = container.clientWidth / (bounds.width + 40);
+        const heightScale = container.clientHeight / (bounds.height + 40);
+        const scale = Math.min(widthScale, heightScale, 1); // Don't zoom in beyond 100%
+
+        graph.view.setScale(scale);
+
+        // Center the graph
+        const dx =
+          (container.clientWidth - bounds.width * scale) / 2 - bounds.x * scale;
+        const dy =
+          (container.clientHeight - bounds.height * scale) / 2 -
+          bounds.y * scale;
+        graph.view.setTranslate(dx, dy);
+      }
+
+      // Force refresh
+      graph.refresh();
+      console.log("Graph rendered successfully");
+    } catch (err) {
+      console.error("Error parsing/rendering XML:", err);
+    }
+
+    // Add click listener for nodes
     graph.addListener(mxEvent.CLICK, (sender: any, evt: any) => {
       const cell = evt.getProperty("cell");
       if (cell && cell.isVertex() && flowDetails) {
         const nodeId = cell.getId();
+        console.log("Clicked node:", nodeId);
         setIdAttribute(nodeId);
         const node = (flowDetails.node_data || []).find(
           (n: any) => n.node_id === nodeId
@@ -167,21 +220,28 @@ export const FlowDetails = () => {
       }
     });
 
-    container.addEventListener("wheel", (e) => {
-      if (!e.ctrlKey) return; // Only zoom when Ctrl is pressed
+    // Add zoom with Ctrl+Wheel
+    const wheelHandler = (e: WheelEvent) => {
+      if (!e.ctrlKey) return;
       e.preventDefault();
-
       if (e.deltaY < 0) graph.zoomIn();
       else graph.zoomOut();
-    });
-  }, [flowData.xml, flowDetails]);
+    };
+
+    container.addEventListener("wheel", wheelHandler);
+
+    // Cleanup
+    return () => {
+      container.removeEventListener("wheel", wheelHandler);
+      graph.destroy();
+    };
+  }, [flowData.xml, flowDetails, forms]);
 
   return (
     <>
       <div className="my-4 flex justify-between items-center mx-4 z-0">
-        {/* Left side - glass card back button */}
         <div
-          onClick={() => navigate(-1)} // ✅ navigate back
+          onClick={() => navigate(-1)}
           className="flex items-center space-x-2 cursor-pointer rounded-xl px-3 py-2
                       bg-white/20 backdrop-blur-md border border-white/30 shadow-md
                       hover:bg-white/30 transition"
@@ -190,17 +250,17 @@ export const FlowDetails = () => {
           <span className="text-sm font-medium">Back</span>
         </div>
 
-        {/* Right side - graph title */}
         <h2 className="text-lg font-semibold">{flowData.title}</h2>
       </div>
       <div
         ref={containerRef}
         style={{
           width: "100%",
-          height: "100vh",
+          height: "calc(100vh - 100px)",
           border: "1px solid #ccc",
           cursor: "grab",
           overflow: "hidden",
+          backgroundColor: "#ffffff",
         }}
       />
       {showSidebar && (
@@ -214,8 +274,8 @@ export const FlowDetails = () => {
           }))}
           idAttribute={idAttribute}
           flow_id={flowData.id}
-          loading={false} // Add this prop!
-          selectedTitle="Form Assignment" // This is optional, but recommended
+          loading={false}
+          selectedTitle="Form Assignment"
           onCheck={handleCheck}
         />
       )}

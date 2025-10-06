@@ -5,6 +5,7 @@ import {
 // components/SurveyCreator.tsx
 import "survey-core/survey-core.css";
 import "survey-creator-core/survey-creator-core.css";
+import "survey-creator-core/survey-creator-core.css";
 
 interface Props {
   creator: SurveyCreator;

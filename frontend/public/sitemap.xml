@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+  <!-- Home / Landing Page -->
+  <url>
+    <loc>https://melvok.com/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Public Pages -->
+  <url>
+    <loc>https://melvok.com/login</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://melvok.com/signup</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://melvok.com/payment-success</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://melvok.com/documentation</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Protected / Dashboard Pages -->
+  <url>
+    <loc>https://melvok.com/dashboard</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://melvok.com/flow</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://melvok.com/forms-templates</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://melvok.com/add-form-template</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>

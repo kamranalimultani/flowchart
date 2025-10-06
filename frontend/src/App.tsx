@@ -13,103 +13,106 @@ import Documentation from "./pages/Documents";
 import SignUp from "./pages/SignUp";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import { NotificationProvider } from "./context/NotificationContext";
+import { HelmetProvider } from "react-helmet-async";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <NotificationProvider>
-        <Routes>
-          {/* Public routes */}
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
+    <HelmetProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <NotificationProvider>
+          <Routes>
+            {/* Public routes */}
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
 
-          <Route
-            path="/"
-            element={
-              <DefaultLayout>
-                <LandingPage />
-              </DefaultLayout>
-            }
-          />
-          <Route
-            path="/documentation"
-            element={
-              <DefaultLayout>
-                <Documentation />
-              </DefaultLayout>
-            }
-          />
+            <Route
+              path="/"
+              element={
+                <DefaultLayout>
+                  <LandingPage />
+                </DefaultLayout>
+              }
+            />
+            <Route
+              path="/documentation"
+              element={
+                <DefaultLayout>
+                  <Documentation />
+                </DefaultLayout>
+              }
+            />
 
-          {/* Protected routes with PrivateRoute per route */}
-          <Route
-            path="/flow"
-            element={
-              <PrivateRoute
-                bypass={false}
-                element={
-                  <DefaultLayout>
-                    <FlowList />
-                  </DefaultLayout>
-                }
-              />
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute
-                bypass={false}
-                element={
-                  <DefaultLayout>
-                    <Dashboard />
-                  </DefaultLayout>
-                }
-              />
-            }
-          />
-          <Route
-            path="/flow/:id"
-            element={
-              <PrivateRoute
-                bypass={false}
-                element={
-                  <DefaultLayout>
-                    <FlowDetails />
-                  </DefaultLayout>
-                }
-              />
-            }
-          />
-          <Route
-            path="/forms-templates"
-            element={
-              <PrivateRoute
-                bypass={false}
-                element={
-                  <DefaultLayout>
-                    <FormTemplates />
-                  </DefaultLayout>
-                }
-              />
-            }
-          />
-          <Route
-            path="/add-form-template"
-            element={
-              <PrivateRoute
-                bypass={false}
-                element={
-                  <DefaultLayout>
-                    <AddFormTemplate />
-                  </DefaultLayout>
-                }
-              />
-            }
-          />
-        </Routes>
-      </NotificationProvider>
-    </ThemeProvider>
+            {/* Protected routes with PrivateRoute per route */}
+            <Route
+              path="/flow"
+              element={
+                <PrivateRoute
+                  bypass={false}
+                  element={
+                    <DefaultLayout>
+                      <FlowList />
+                    </DefaultLayout>
+                  }
+                />
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute
+                  bypass={false}
+                  element={
+                    <DefaultLayout>
+                      <Dashboard />
+                    </DefaultLayout>
+                  }
+                />
+              }
+            />
+            <Route
+              path="/flow/:id"
+              element={
+                <PrivateRoute
+                  bypass={false}
+                  element={
+                    <DefaultLayout>
+                      <FlowDetails />
+                    </DefaultLayout>
+                  }
+                />
+              }
+            />
+            <Route
+              path="/forms-templates"
+              element={
+                <PrivateRoute
+                  bypass={false}
+                  element={
+                    <DefaultLayout>
+                      <FormTemplates />
+                    </DefaultLayout>
+                  }
+                />
+              }
+            />
+            <Route
+              path="/add-form-template"
+              element={
+                <PrivateRoute
+                  bypass={false}
+                  element={
+                    <DefaultLayout>
+                      <AddFormTemplate />
+                    </DefaultLayout>
+                  }
+                />
+              }
+            />
+          </Routes>
+        </NotificationProvider>
+      </ThemeProvider>
+    </HelmetProvider>
   );
 }
 
