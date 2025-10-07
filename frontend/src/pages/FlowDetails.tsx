@@ -6,12 +6,12 @@ import { ArrowLeft } from "lucide-react";
 import { getRequest, putRequest } from "@/utils/apiUtils";
 import { FloatSidebar } from "@/components/customComponents/FloatOverlay";
 import { extractGraphModel } from "@/utils/commonUtils";
+import { drawioConverterAsync } from "@/utils/test";
 
 export const FlowDetails = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ✅ hook for navigation
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const graphRef = useRef(null);
   const flowData = location.state as {
     id: number;
     title: string;
@@ -26,11 +26,11 @@ export const FlowDetails = () => {
     {}
   );
   const [idAttribute, setIdAttribute] = useState<string>("");
-  const [flowDetails, setFlowDetails] = useState<any>(null);
 
   const handleCheck = async (formId: string, checked: boolean) => {
     setCheckedForms((x) => ({ ...x, [formId]: checked }));
 
+    // ✅ Work with flowDetails not flowData
     let nodeData = [...(flowDetails?.node_data || [])];
     let node = nodeData.find((n: any) => n.node_id === idAttribute);
 
@@ -42,6 +42,7 @@ export const FlowDetails = () => {
       nodeData.push({ node_id: idAttribute, form_templates: [formId] });
     }
 
+    // ✅ update state so UI stays in sync
     setFlowDetails((prev: any) => ({ ...prev, node_data: nodeData }));
 
     await putRequest(
@@ -55,12 +56,14 @@ export const FlowDetails = () => {
     const res = await getRequest("/api/forms/all", true);
     setForms(res);
   };
+  const [flowDetails, setFlowDetails] = useState<any>(null);
 
   const fetchFlowDetails = async () => {
     try {
       const res = await getRequest(`/api/flows/${flowData.file_name}`, true);
       let flow = res.flow;
 
+      // Ensure node_data is parsed
       if (typeof flow.node_data === "string") {
         try {
           flow.node_data = JSON.parse(flow.node_data);
@@ -78,170 +81,78 @@ export const FlowDetails = () => {
 
   useEffect(() => {
     fetchTemplates();
-    fetchFlowDetails();
+    fetchFlowDetails(); // ✅ fetch fresh flow by file_name
   }, []);
 
-  useEffect(() => {
-    if (!flowDetails || !flowData.xml) return;
+  const setupClickableEvents = () => {
+    console.log("Setting up clickable events");
+    const graphViewer = (window as any).newGraphViewer;
 
-    const container = containerRef.current;
-    if (!container) return;
-
-    // Access mxGraph factory from window
-    const mxGraphFactory = (window as any).mxgraph;
-
-    if (!mxGraphFactory) {
-      console.error("mxGraph not loaded! Check CDN script in index.html");
+    if (!graphViewer || !graphViewer.graph) {
+      console.error("Graph viewer is not initialized.");
       return;
     }
 
-    // Initialize mxGraph with base path
-    const mx = mxGraphFactory({
-      mxBasePath: "https://cdn.jsdelivr.net/npm/mxgraph@4.2.2/javascript/src",
-    });
+    const graph = graphViewer.graph;
+    const view = graph.getView();
+    const states = view.states;
 
-    // Extract classes
-    const mxGraph = mx.mxGraph;
-    const mxRubberband = mx.mxRubberband;
-    const mxEvent = mx.mxEvent;
-    const mxUtils = mx.mxUtils;
-    const mxCodec = mx.mxCodec;
-
-    console.log("mxGraph loaded successfully");
-
-    // Create graph instance
-    const graph = new mxGraph(container);
-    graphRef.current = graph;
-
-    // Configure graph behavior
-    graph.setCellsMovable(false);
-    graph.setConnectable(false);
-    graph.setPanning(true);
-    graph.panningHandler.useLeftButtonForPanning = true;
-    graph.setHtmlLabels(true);
-    graph.setEnabled(true);
-
-    // Customize cursor for vertices
-    const originalGetCursor = graph.getCursorForCell;
-    graph.getCursorForCell = function (cell: any) {
-      if (cell && cell.isVertex()) {
-        return "pointer";
-      }
-      return originalGetCursor.apply(this, arguments);
-    };
-
-    // Remove fill color for text-only vertices
-    const originalGetCellStyle = graph.getCellStyle;
-    graph.getCellStyle = function (cell: any) {
-      let style = originalGetCellStyle.apply(this, arguments);
-
-      if (
-        cell &&
-        cell.isVertex() &&
-        cell.style &&
-        cell.style.includes("text;html=1")
-      ) {
-        style = { ...style, strokeColor: "none", fillColor: "none" };
-      }
-
-      return style;
-    };
-
-    // Enable rubberband selection
-    new mxRubberband(graph);
-
-    // Parse and render the XML
-    try {
-      const parsed = extractGraphModel(flowData.xml);
-      console.log("Parsed XML:", parsed.substring(0, 200));
-
-      const doc = mxUtils.parseXml(parsed);
-      const codec = new mxCodec(doc);
-
-      // Decode into graph model
-      graph.getModel().beginUpdate();
-      try {
-        codec.decode(doc.documentElement, graph.getModel());
-      } finally {
-        graph.getModel().endUpdate();
-      }
-
-      console.log(
-        "Graph cells:",
-        graph.getModel().getChildCount(graph.getDefaultParent())
-      );
-
-      // Fit and center the graph
-      const bounds = graph.getGraphBounds();
-      console.log("Graph bounds:", bounds);
-
-      if (bounds.width > 0 && bounds.height > 0) {
-        // Calculate scale to fit
-        const widthScale = container.clientWidth / (bounds.width + 40);
-        const heightScale = container.clientHeight / (bounds.height + 40);
-        const scale = Math.min(widthScale, heightScale, 1); // Don't zoom in beyond 100%
-
-        graph.view.setScale(scale);
-
-        // Center the graph
-        const dx =
-          (container.clientWidth - bounds.width * scale) / 2 - bounds.x * scale;
-        const dy =
-          (container.clientHeight - bounds.height * scale) / 2 -
-          bounds.y * scale;
-        graph.view.setTranslate(dx, dy);
-      }
-
-      // Force refresh
-      graph.refresh();
-      console.log("Graph rendered successfully");
-    } catch (err) {
-      console.error("Error parsing/rendering XML:", err);
+    if (!states) {
+      console.error("No states found in graph view.");
+      return;
     }
 
-    // Add click listener for nodes
-    graph.addListener(mxEvent.CLICK, (sender: any, evt: any) => {
-      const cell = evt.getProperty("cell");
-      if (cell && cell.isVertex() && flowDetails) {
-        const nodeId = cell.getId();
-        console.log("Clicked node:", nodeId);
-        setIdAttribute(nodeId);
-        const node = (flowDetails.node_data || []).find(
-          (n: any) => n.node_id === nodeId
+    states.visit((key: any, state: any) => {
+      const cell = state.cell;
+      const cellID = cell?.id;
+      const shapeNode = state.shape?.node;
+      const textNode = state.text?.node; // 👈 this handles the label
+
+      if (!cellID) return;
+
+      // A small helper to attach both cursor + click
+      const attachClickable = (node: any) => {
+        if (!node) return;
+
+        node.style.cursor = "pointer";
+        node.onclick = null;
+
+        node.addEventListener(
+          "click",
+          (e: MouseEvent) => {
+            e.stopPropagation(); // avoid double triggering
+            console.log("Clicked cell with ID:", cellID);
+            setIdAttribute(cellID);
+            setShowSidebar((prev) => !prev);
+          },
+          false
         );
-        const updatedChecked: { [key: string]: boolean } = {};
-        forms.forEach((f) => {
-          updatedChecked[f.id] = node
-            ? node.form_templates.includes(f.id)
-            : false;
-        });
-        setShowSidebar(true);
-        setCheckedForms(updatedChecked);
-      }
+      };
+
+      // Apply to both shape and text nodes 👇
+      attachClickable(shapeNode);
+      attachClickable(textNode);
     });
+  };
 
-    // Add zoom with Ctrl+Wheel
-    const wheelHandler = (e: WheelEvent) => {
-      if (!e.ctrlKey) return;
-      e.preventDefault();
-      if (e.deltaY < 0) graph.zoomIn();
-      else graph.zoomOut();
+  useEffect(() => {
+    if (!flowDetails) return;
+
+    const initGraph = async () => {
+      console.log(flowData.xml);
+      drawioConverterAsync(flowData.xml, "drawioContainer");
+      setupClickableEvents();
     };
 
-    container.addEventListener("wheel", wheelHandler);
-
-    // Cleanup
-    return () => {
-      container.removeEventListener("wheel", wheelHandler);
-      graph.destroy();
-    };
-  }, [flowData.xml, flowDetails, forms]);
+    initGraph();
+  }, [flowData.xml, flowDetails]);
 
   return (
     <>
       <div className="my-4 flex justify-between items-center mx-4 z-0">
+        {/* Left side - glass card back button */}
         <div
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(-1)} // ✅ navigate back
           className="flex items-center space-x-2 cursor-pointer rounded-xl px-3 py-2
                       bg-white/20 backdrop-blur-md border border-white/30 shadow-md
                       hover:bg-white/30 transition"
@@ -250,19 +161,25 @@ export const FlowDetails = () => {
           <span className="text-sm font-medium">Back</span>
         </div>
 
+        {/* Right side - graph title */}
         <h2 className="text-lg font-semibold">{flowData.title}</h2>
       </div>
       <div
-        ref={containerRef}
-        style={{
-          width: "100%",
-          height: "calc(100vh - 100px)",
-          border: "1px solid #ccc",
-          cursor: "grab",
-          overflow: "hidden",
-          backgroundColor: "#ffffff",
-        }}
-      />
+        className=""
+        style={{ minHeight: "calc(86.1vh - 80px)", overflow: "auto" }}
+      >
+        <div
+          id="drawioContainer"
+          ref={containerRef}
+          style={{
+            width: "100%",
+            height: "100vh",
+            border: "1px solid #ccc",
+            cursor: "grab",
+            overflow: "hidden",
+          }}
+        />
+      </div>
       {showSidebar && (
         <FloatSidebar
           open={showSidebar}
@@ -274,8 +191,8 @@ export const FlowDetails = () => {
           }))}
           idAttribute={idAttribute}
           flow_id={flowData.id}
-          loading={false}
-          selectedTitle="Form Assignment"
+          loading={false} // Add this prop!
+          selectedTitle="Form Assignment" // This is optional, but recommended
           onCheck={handleCheck}
         />
       )}

@@ -1,0 +1,17 @@
+/* Minimal common.css required by mxClient viewer
+   This file is intentionally small — it avoids 404/MIME errors when the viewer requests /css/common.css
+*/
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.mxGraphContainer {
+  width: 100%;
+  height: 100%;
+}
+
+/* viewer styles placeholder */
+.mxToolbar { display: none; }
