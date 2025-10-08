@@ -87,7 +87,7 @@ export function NavigationBar() {
             to="/"
             className="text-2xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
           >
-            MelvokFlow
+            Melvok
           </Link>
 
           <div className="flex items-center gap-4">
@@ -151,7 +151,7 @@ export function NavigationBar() {
                 </NavigationMenu>
 
                 {/* Theme Toggle */}
-                <DropdownMenu>
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon">
                       <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -170,7 +170,7 @@ export function NavigationBar() {
                       System
                     </DropdownMenuItem>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
 
                 {/* User Menu */}
                 <DropdownMenu>
@@ -270,7 +270,7 @@ export function NavigationBar() {
                 </NavigationMenu>
 
                 {/* Theme Toggle */}
-                <DropdownMenu>
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon">
                       <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -289,7 +289,7 @@ export function NavigationBar() {
                       System
                     </DropdownMenuItem>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
 
                 {/* Get Started Button */}
                 <Link to="/signup">

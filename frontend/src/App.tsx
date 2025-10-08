@@ -18,7 +18,7 @@ import { HelmetProvider } from "react-helmet-async";
 function App() {
   return (
     <HelmetProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <NotificationProvider>
           <Routes>
             {/* Public routes */}
