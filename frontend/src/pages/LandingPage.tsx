@@ -38,6 +38,9 @@ import {
   Check,
   X,
   Award,
+  MapPin,
+  Phone,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,6 +60,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import demoVideo from "@/assets/Melvok.webm";
 import { Helmet } from "react-helmet-async";
+import { Separator } from "@radix-ui/react-separator";
 
 export const LandingPage = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -604,7 +608,66 @@ export const LandingPage = () => {
             </div>
           </div>
         </section>
+        <section className="w-full py-10 flex flex-col items-center">
+          <div className="max-w-3xl w-full px-4">
+            <Card className="shadow-sm rounded-2xl">
+              <CardHeader>
+                <CardTitle className="text-center text-xl font-semibold">
+                  Third-Party Integrations
+                </CardTitle>
+              </CardHeader>
 
+              <Separator />
+
+              <CardContent className="space-y-6 mt-4">
+                <p className="text-sm text-muted-foreground text-center">
+                  Melvok seamlessly integrates with industry-leading tools to
+                  enhance user experience and workflow efficiency.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="border rounded-xl p-4 flex flex-col items-center text-center">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary">Diagram Tool</Badge>
+                    </div>
+                    <h3 className="font-medium">Draw.io Integration</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Create and edit flowcharts or diagrams directly within
+                      Melvok using Draw.io’s embedded editor.
+                    </p>
+                    <a
+                      href="https://www.draw.io/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-sm mt-3 hover:underline"
+                    >
+                      Learn more <ExternalLink size={14} />
+                    </a>
+                  </div>
+
+                  <div className="border rounded-xl p-4 flex flex-col items-center text-center">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="secondary">Survey Platform</Badge>
+                    </div>
+                    <h3 className="font-medium">SurveyJS Integration</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Design and analyze interactive surveys using the SurveyJS
+                      engine integrated into Melvok’s platform.
+                    </p>
+                    <a
+                      href="https://surveyjs.io/documentation"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-sm mt-3 hover:underline"
+                    >
+                      Learn more <ExternalLink size={14} />
+                    </a>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
         {/* Question Types */}
         <section className="py-32 bg-muted/30">
           <div className="container mx-auto px-4">
@@ -808,7 +871,7 @@ export const LandingPage = () => {
             </div>
           </div>
         </section>
-        <section className="py-32 relative overflow-hidden">
+        <section id="pricing" className="py-32 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-background" />
           <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob dark:opacity-30" />
           <div className="absolute top-40 right-10 w-72 h-72 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30" />
@@ -1152,6 +1215,160 @@ export const LandingPage = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+        {/* Contact Us Section */}
+        <section id="contact" className="py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-20">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-up backdrop-blur-sm">
+                <Mail className="w-4 h-4" />
+                Get in Touch
+              </div>
+              <h2 className="text-5xl md:text-6xl font-black mb-6 text-foreground animate-fade-in-up animation-delay-200">
+                Contact Us
+              </h2>
+              <p className="text-xl text-muted-foreground animate-fade-in-up animation-delay-400">
+                Have questions? We'd love to hear from you. Send us a message
+                and we'll respond as soon as possible.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+              {/* Contact Form */}
+              <div className="animate-fade-in-up animation-delay-600">
+                <Card className="p-8 border-2">
+                  <form className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-foreground">
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="John"
+                          className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-foreground">
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Doe"
+                          className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-foreground">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="john@example.com"
+                        className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-foreground">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="+1 (555) 000-0000"
+                        className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-foreground">
+                        Message
+                      </label>
+                      <textarea
+                        rows={5}
+                        placeholder="Tell us about your project..."
+                        className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors resize-none"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                    >
+                      Send Message
+                      <ArrowRight className="inline-block ml-2 w-5 h-5" />
+                    </button>
+                  </form>
+                </Card>
+              </div>
+
+              {/* Contact Information */}
+              <div className="space-y-8 animate-fade-in-up animation-delay-800">
+                <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-6 h-6 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">Email</h3>
+                      <p className="text-muted-foreground mb-2">
+                        Our friendly team is here to help.
+                      </p>
+                      <a
+                        href="mailto:hello@surveyplatform.com"
+                        className="text-primary font-semibold hover:underline"
+                      >
+                        hello@surveyplatform.com
+                      </a>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-6 h-6 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">Phone</h3>
+                      <p className="text-muted-foreground mb-2">
+                        Mon-Fri from 8am to 5pm.
+                      </p>
+                      <a
+                        href="tel:+15550000000"
+                        className="text-primary font-semibold hover:underline"
+                      >
+                        +1 (555) 000-0000
+                      </a>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-8 border-2 hover:border-primary/50 transition-colors">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-6 h-6 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">Office</h3>
+                      <p className="text-muted-foreground mb-2">
+                        Come say hello at our office HQ.
+                      </p>
+                      <p className="text-primary font-semibold">
+                        123 Business Street
+                        <br />
+                        San Francisco, CA 94107
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
             </div>
           </div>
         </section>

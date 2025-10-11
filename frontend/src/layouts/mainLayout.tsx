@@ -1,6 +1,7 @@
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { NavigationBar } from "./navigationBar";
+import Footer from "./footer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ const DefaultLayout: React.FC<LayoutProps> = ({ children }) => {
         <main className="w-full pt-20">
           <div className="">{children}</div>
         </main>
+        <Footer />
       </div>
     </div>
   );

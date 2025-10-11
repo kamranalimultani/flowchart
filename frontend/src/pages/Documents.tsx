@@ -313,49 +313,32 @@ export default function MelvokDocs() {
   return (
     <>
       <Helmet>
-        {/* Basic SEO */}
-        <title>Melvok Documentation | Flow-Based Survey Platform</title>
+        <title>Visual Flow Designer | Drag & Drop Survey Flows</title>
         <meta
           name="description"
-          content="Melvok is a visual flow-based survey platform that allows users to create interactive survey flows, reusable form templates, and manage survey responses efficiently."
+          content="Design custom survey workflows using an intuitive drag-and-drop flow designer. Assign forms, launch surveys at each node, and visualize your entire process graphically."
         />
         <meta
           name="keywords"
-          content="Melvok, survey platform, flow survey, form templates, visual flow, interactive surveys, analytics"
+          content="visual flow designer, survey flow builder, survey workflow, flowchart survey, node based survey, interactive survey logic, form on flow, drag-and-drop survey tool"
         />
-        <link rel="canonical" href="https://melvok.com/docs" />
-
-        {/* Open Graph / Facebook */}
+        <link rel="canonical" href="https://melvok.com/flow-designer" />
         <meta
           property="og:title"
-          content="Melvok Documentation | Flow-Based Survey Platform"
+          content="Design Survey Flows Visually - Melvok"
         />
         <meta
           property="og:description"
-          content="Explore Melvok Docs to learn how to create flows, assign forms, share surveys, and leverage analytics for better insights."
+          content="Create custom survey flows using our visual designer. Assign questions and forms at each node for powerful, dynamic surveys."
         />
         <meta
           property="og:image"
-          content="https://via.placeholder.com/800x450?text=Melvok+Documentation"
+          content="https://melvok.com/og-image-flow.jpg"
         />
-        <meta property="og:url" content="https://melvok.com/docs" />
-        <meta property="og:type" content="article" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Melvok Documentation | Flow-Based Survey Platform"
-        />
-        <meta
-          name="twitter:description"
-          content="Explore Melvok Docs to learn how to create flows, assign forms, share surveys, and leverage analytics for better insights."
-        />
-        <meta
-          name="twitter:image"
-          content="https://via.placeholder.com/800x450?text=Melvok+Documentation"
-        />
+        <meta property="og:url" content="https://melvok.com/flow-designer" />
+        <meta property="og:type" content="website" />
       </Helmet>
+
       <div className="flex h-screen bg-background">
         {/* Sidebar */}
         <aside

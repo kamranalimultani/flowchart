@@ -58,68 +58,29 @@ function Login() {
   return (
     <div className="min-h-screen w-full flex">
       <Helmet>
-        <title>
-          Login – MelvokFlow | Flowchart & Survey Builder for Automations
-        </title>
+        <title>AI-Powered Flow Surveys | Smarter Form Creation</title>
         <meta
           name="description"
-          content="Sign in to MelvokFlow — the visual flowchart and survey builder to create automated workflows, forms, and surveys without code. Secure, fast, and designed for teams."
+          content="Leverage artificial intelligence to design and analyze flow-based surveys. Get smart question suggestions, sentiment analysis, and instant feedback with Melvok's AI engine."
         />
         <meta
           name="keywords"
-          content="flowchart builder, survey maker, workflow automation, visual flow builder, no-code automation, form builder, MelvokFlow"
+          content="AI survey tool, smart survey builder, AI flow survey, survey question generator, sentiment analysis, AI feedback, AI forms, artificial intelligence survey"
         />
-        <link rel="canonical" href="https://melvokflow.com/login" />
-
-        {/* Open Graph / Facebook */}
-        <meta
-          property="og:title"
-          content="Login – MelvokFlow | Flowchart & Survey Builder"
-        />
+        <link rel="canonical" href="https://melvok.com/ai-survey" />
+        <meta property="og:title" content="AI-Powered Survey Flows - Melvok" />
         <meta
           property="og:description"
-          content="Sign in to MelvokFlow to create and manage visual workflows and surveys. Build automations, collect responses, and monitor analytics — no code required."
+          content="Boost survey response quality and analysis with Melvok's AI-based flow survey tools."
         />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://melvokflow.com/login" />
         <meta
           property="og:image"
-          content="https://melvokflow.com/og-image.png"
+          content="https://melvok.com/og-image-ai.jpg"
         />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Login – MelvokFlow | Flowchart & Survey Builder"
-        />
-        <meta
-          name="twitter:description"
-          content="Sign in to MelvokFlow to build visual workflows and surveys without writing code. Secure, collaborative, and enterprise-ready."
-        />
-        <meta
-          name="twitter:image"
-          content="https://melvokflow.com/og-image.png"
-        />
-
-        {/* Structured Data */}
-        <script type="application/ld+json">{`{
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "Login – MelvokFlow",
-          "url": "https://melvokflow.com/login",
-          "description": "Sign in to MelvokFlow — the visual flowchart and survey builder to create automated workflows, forms, and surveys without code.",
-          "publisher": {
-            "@type": "Organization",
-            "name": "MelvokFlow",
-            "url": "https://melvokflow.com"
-          },
-           "sameAs": [
-          "https://www.reddit.com/user/kamranalimultani/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button",
-          "https://www.instagran.com/melvok.official"
-        ]
-        }`}</script>
+        <meta property="og:url" content="https://melvok.com/ai-survey" />
+        <meta property="og:type" content="website" />
       </Helmet>
+
       {/* Left Side - Login Form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">

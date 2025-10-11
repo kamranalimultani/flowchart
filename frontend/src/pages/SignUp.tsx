@@ -17,6 +17,7 @@ import { LoaderIcon, ArrowRight } from "lucide-react";
 import bgImage from "@/assets/transparent-sg.png";
 import { postRequest, formatValidationErrors } from "@/utils/apiUtils";
 import { useNotification } from "@/context/NotificationContext";
+import { Helmet } from "react-helmet-async";
 
 interface RegisterResponse {
   success: boolean;
@@ -184,204 +185,237 @@ function SignUp() {
   };
 
   return (
-    <div className="min-h-screen w-full flex">
-      <div className="flex-1 flex items-center justify-center p-8 bg-background">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center space-y-2">
-            <Link to="/" className="inline-block">
-              <h1 className="text-4xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                MelvokFlow
-              </h1>
-            </Link>
-            <p className="text-muted-foreground text-sm">
-              Create your account to get started
-            </p>
-          </div>
+    <>
+      <Helmet>
+        <title>
+          Integrate Melvok with Your Workflow | Connect Survey Flows
+        </title>
+        <meta
+          name="description"
+          content="Integrate Melvok's flow-based surveys with tools like Draw.io and SurveyJS. Expand your workflow with APIs, CSV export, and embeddable forms."
+        />
+        <meta
+          name="keywords"
+          content="survey integrations, workflow integrations, Draw.io survey, SurveyJS form builder, API survey, CSV export, embed survey, connect flow survey, automation integrations"
+        />
+        <link rel="canonical" href="https://melvok.com/integrations" />
+        <meta
+          property="og:title"
+          content="Melvok Integrations - Connect Your Survey Flows"
+        />
+        <meta
+          property="og:description"
+          content="Easily integrate Melvok surveys with your favorite productivity and analytics tools."
+        />
+        <meta
+          property="og:image"
+          content="https://melvok.com/og-image-integrations.jpg"
+        />
+        <meta property="og:url" content="https://melvok.com/integrations" />
+        <meta property="og:type" content="website" />
+      </Helmet>
 
-          <Card className="border-2">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold">Sign up</CardTitle>
-              <CardDescription>
-                Start your journey with MelvokFlow
-              </CardDescription>
-            </CardHeader>
+      <div className="min-h-screen w-full flex">
+        <div className="flex-1 flex items-center justify-center p-8 bg-background">
+          <div className="w-full max-w-md space-y-8">
+            <div className="text-center space-y-2">
+              <Link to="/" className="inline-block">
+                <h1 className="text-4xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                  MelvokFlow
+                </h1>
+              </Link>
+              <p className="text-muted-foreground text-sm">
+                Create your account to get started
+              </p>
+            </div>
 
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    placeholder="John Doe"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`h-11 ${
-                      fieldErrors.name ? "border-red-500" : ""
-                    }`}
-                  />
-                  {fieldErrors.name && (
-                    <p className="text-sm text-red-600">{fieldErrors.name}</p>
-                  )}
-                </div>
+            <Card className="border-2">
+              <CardHeader className="space-y-1">
+                <CardTitle className="text-2xl font-bold">Sign up</CardTitle>
+                <CardDescription>
+                  Start your journey with MelvokFlow
+                </CardDescription>
+              </CardHeader>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email address</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`h-11 ${
-                      fieldErrors.email ? "border-red-500" : ""
-                    }`}
-                  />
-                  {fieldErrors.email && (
-                    <p className="text-sm text-red-600">{fieldErrors.email}</p>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="name">Full Name</Label>
                     <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={formData.password}
+                      id="name"
+                      name="name"
+                      placeholder="John Doe"
+                      value={formData.name}
                       onChange={handleChange}
                       className={`h-11 ${
-                        fieldErrors.password ? "border-red-500" : ""
+                        fieldErrors.name ? "border-red-500" : ""
                       }`}
                     />
-                    {fieldErrors.password && (
-                      <p className="text-sm text-red-600">
-                        {fieldErrors.password}
-                      </p>
+                    {fieldErrors.name && (
+                      <p className="text-sm text-red-600">{fieldErrors.name}</p>
                     )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <Label htmlFor="email">Email address</Label>
                     <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      placeholder="••••••••"
-                      value={formData.confirmPassword}
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={formData.email}
                       onChange={handleChange}
                       className={`h-11 ${
-                        fieldErrors.confirmPassword ? "border-red-500" : ""
+                        fieldErrors.email ? "border-red-500" : ""
                       }`}
                     />
-                    {fieldErrors.confirmPassword && (
+                    {fieldErrors.email && (
                       <p className="text-sm text-red-600">
-                        {fieldErrors.confirmPassword}
+                        {fieldErrors.email}
                       </p>
                     )}
                   </div>
-                </div>
 
-                <div className="pt-2 border-t">
-                  <Label>Company Details</Label>
-                  <div className="space-y-3 mt-2">
-                    <div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password</Label>
                       <Input
-                        name="company_name"
-                        placeholder="Company Name"
-                        value={formData.company_name}
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={formData.password}
                         onChange={handleChange}
-                        className={
-                          fieldErrors.company_name ? "border-red-500" : ""
-                        }
+                        className={`h-11 ${
+                          fieldErrors.password ? "border-red-500" : ""
+                        }`}
                       />
-                      {fieldErrors.company_name && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {fieldErrors.company_name}
+                      {fieldErrors.password && (
+                        <p className="text-sm text-red-600">
+                          {fieldErrors.password}
                         </p>
                       )}
                     </div>
-                    <Input
-                      name="industry"
-                      placeholder="Industry (optional)"
-                      value={formData.industry}
-                      onChange={handleChange}
-                    />
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword">Confirm Password</Label>
+                      <Input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        placeholder="••••••••"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        className={`h-11 ${
+                          fieldErrors.confirmPassword ? "border-red-500" : ""
+                        }`}
+                      />
+                      {fieldErrors.confirmPassword && (
+                        <p className="text-sm text-red-600">
+                          {fieldErrors.confirmPassword}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                <div className="pt-2 border-t">
-                  <Label>Choose Subscription Type</Label>
-                  <select
-                    name="subscription_type"
-                    value={formData.subscription_type}
-                    onChange={handleChange}
-                    className="w-full border rounded-md h-11 px-3 mt-2"
+                  <div className="pt-2 border-t">
+                    <Label>Company Details</Label>
+                    <div className="space-y-3 mt-2">
+                      <div>
+                        <Input
+                          name="company_name"
+                          placeholder="Company Name"
+                          value={formData.company_name}
+                          onChange={handleChange}
+                          className={
+                            fieldErrors.company_name ? "border-red-500" : ""
+                          }
+                        />
+                        {fieldErrors.company_name && (
+                          <p className="text-sm text-red-600 mt-1">
+                            {fieldErrors.company_name}
+                          </p>
+                        )}
+                      </div>
+                      <Input
+                        name="industry"
+                        placeholder="Industry (optional)"
+                        value={formData.industry}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t">
+                    <Label>Choose Subscription Type</Label>
+                    <select
+                      name="subscription_type"
+                      value={formData.subscription_type}
+                      onChange={handleChange}
+                      className="w-full border rounded-md h-11 px-3 mt-2"
+                    >
+                      <option value="free_trial">Free Trial</option>
+                      <option value="paid">Paid (via Lemon Squeezy)</option>
+                    </select>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full h-11 font-semibold"
+                    disabled={loading}
                   >
-                    <option value="free_trial">Free Trial</option>
-                    <option value="paid">Paid (via Lemon Squeezy)</option>
-                  </select>
+                    {loading ? (
+                      <>
+                        <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                        Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        Sign Up
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+
+              <CardFooter className="flex flex-col space-y-4">
+                <div className="text-sm text-center text-muted-foreground">
+                  Already have an account?{" "}
+                  <Link
+                    to="/login"
+                    className="font-semibold text-primary hover:underline"
+                  >
+                    Sign in
+                  </Link>
                 </div>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-11 font-semibold"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
-                      Creating Account...
-                    </>
-                  ) : (
-                    <>
-                      Sign Up
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-
-            <CardFooter className="flex flex-col space-y-4">
-              <div className="text-sm text-center text-muted-foreground">
-                Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="font-semibold text-primary hover:underline"
-                >
-                  Sign in
-                </Link>
-              </div>
-            </CardFooter>
-          </Card>
+        <div
+          className="hidden lg:flex flex-1 items-center justify-center p-12 relative bg-gray-100 overflow-hidden"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundPosition: "center",
+            backgroundRepeat: "repeat",
+          }}
+        >
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-xs"></div>
+          <div className="relative max-w-2xl space-y-8 text-center text-dark z-10">
+            <h2 className="text-5xl font-bold tracking-black text-dark">
+              Get started with Flow Survey!
+            </h2>
+            <p className="text-lg text-muted-dark">
+              Build, manage, and automate workflows for your entire company in
+              one place. <br />
+              <span className="text-sm font-black">Powered By Melvok.com</span>
+            </p>
+          </div>
         </div>
       </div>
-
-      <div
-        className="hidden lg:flex flex-1 items-center justify-center p-12 relative bg-gray-100 overflow-hidden"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-          backgroundPosition: "center",
-          backgroundRepeat: "repeat",
-        }}
-      >
-        <div className="absolute inset-0 bg-white/70 backdrop-blur-xs"></div>
-        <div className="relative max-w-2xl space-y-8 text-center text-muted z-10">
-          <h2 className="text-5xl font-bold tracking-tight text-muted">
-            Get started with Flow Survey!
-          </h2>
-          <p className="text-lg text-muted-muted">
-            Build, manage, and automate workflows for your entire company in one
-            place. <br />
-            <span className="text-sm font-black">Powered By Melvok.com</span>
-          </p>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
 

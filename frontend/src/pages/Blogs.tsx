@@ -129,16 +129,30 @@ export default function BlogsPage() {
   return (
     <>
       <Helmet>
-        <title>Melvok Flow Blogs | Visual Survey & Analytics Insights</title>
+        <title>Flow-Based Survey Solutions | Melvok Use Cases</title>
         <meta
           name="description"
-          content="Explore blogs about flow-based surveys, visual analytics, AI integrations, and data-driven insights — powered by Melvok Flow."
+          content="Discover how flow-based surveys power market research, customer feedback, onboarding, workflow automation, and more. Melvok adapts to any organizational process."
         />
         <meta
           name="keywords"
-          content="melvok, flow survey, visual forms, ai surveys, analytics"
+          content="survey use cases, flow survey solutions, market research survey, employee onboarding, feedback surveys, workflow automation, customizable surveys, process surveys, HR survey tool"
         />
-        <link rel="canonical" href="https://melvok.com/blogs" />
+        <link rel="canonical" href="https://melvok.com/use-cases" />
+        <meta
+          property="og:title"
+          content="Use Cases for Melvok Flow-Based Surveys"
+        />
+        <meta
+          property="og:description"
+          content="Explore powerful applications of Melvok in real business, research, and automation scenarios."
+        />
+        <meta
+          property="og:image"
+          content="https://melvok.com/og-image-usecases.jpg"
+        />
+        <meta property="og:url" content="https://melvok.com/use-cases" />
+        <meta property="og:type" content="website" />
       </Helmet>
 
       <section className="max-w-7xl mx-auto px-4 py-16">
