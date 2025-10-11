@@ -106,7 +106,7 @@ export function NavigationBar() {
                       </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <Link to="/flow">
+                      <Link to="/flows">
                         <NavigationMenuLink
                           className={navigationMenuTriggerStyle()}
                         >
@@ -256,6 +256,15 @@ export function NavigationBar() {
                           ))}
                         </ul>
                       </NavigationMenuContent>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <a href="/blogs">
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Blogs
+                        </NavigationMenuLink>
+                      </a>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                       <Link to="/login">

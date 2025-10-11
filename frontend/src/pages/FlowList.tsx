@@ -16,11 +16,21 @@ import {
 } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, Search, Trash2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Edit,
+  Eye,
+  Search,
+  Share,
+  Share2,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -64,7 +74,9 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const [editorWindow, setEditorWindow] = useState<Window | null>(null);
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [shareLink, setShareLink] = useState("");
+  const [copied, setCopied] = useState(false);
   const deleteFlow = async (id: number) => {
     try {
       await deleteRequest(`/api/flows/${id}`, true);
@@ -76,7 +88,15 @@ const FlowCard: React.FC<FlowCardProps> = ({
       showError("Failed to delete flow. Please try again." + "error:" + err);
     }
   };
-
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
   const updateFlowXml = async (id: number, xml: string) => {
     try {
       const response = await putRequest(`/api/flows/${id}`, { xml }, true);
@@ -146,7 +166,19 @@ const FlowCard: React.FC<FlowCardProps> = ({
       }
     }
   };
-
+  const handleShare = async (id: number) => {
+    try {
+      const res = await postRequest(`/api/flows/share/${id}`, {}, true);
+      const uuid = res.share_uuid;
+      const domain = window.location.origin;
+      const link = `${domain}/flow-shared?share_uuid=${uuid}`;
+      setShareLink(link);
+      setOpen(true);
+    } catch (err) {
+      console.error("Error deleting flow:", err);
+      showError("Failed to delete flow. Please try again." + "error:" + err);
+    }
+  };
   return (
     <>
       <>
@@ -169,9 +201,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/flow/${id}`, {
-                  state: { id, title, description, xml, node_data, file_name },
-                });
+                navigate(`/flow?file=${file_name}`);
               }}
               className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
             >
@@ -199,6 +229,15 @@ const FlowCard: React.FC<FlowCardProps> = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                if (id !== undefined) handleShare(id);
+              }}
+              className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
+            >
+              <Share2 className="w-5 h-5 text-gray-700 cursor-pointer" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
                 setShowDeleteModal(true);
               }}
               className="p-2 rounded-full bg-white shadow hover:bg-gray-100 transition"
@@ -207,7 +246,35 @@ const FlowCard: React.FC<FlowCardProps> = ({
             </button>
           </div>
         </Card>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Share this Flow</DialogTitle>
+            </DialogHeader>
 
+            <div className="flex items-center gap-2">
+              <Input value={shareLink} readOnly className="flex-1" />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleCopy}
+                className="shrink-0"
+              >
+                {copied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+
+            <DialogFooter>
+              <Button variant="default" onClick={() => setOpen(false)}>
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         {/* Delete Confirmation Modal */}
         <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
           <DialogContent className="max-w-sm">

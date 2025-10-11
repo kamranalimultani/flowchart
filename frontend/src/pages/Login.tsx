@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -56,6 +57,69 @@ function Login() {
 
   return (
     <div className="min-h-screen w-full flex">
+      <Helmet>
+        <title>
+          Login – MelvokFlow | Flowchart & Survey Builder for Automations
+        </title>
+        <meta
+          name="description"
+          content="Sign in to MelvokFlow — the visual flowchart and survey builder to create automated workflows, forms, and surveys without code. Secure, fast, and designed for teams."
+        />
+        <meta
+          name="keywords"
+          content="flowchart builder, survey maker, workflow automation, visual flow builder, no-code automation, form builder, MelvokFlow"
+        />
+        <link rel="canonical" href="https://melvokflow.com/login" />
+
+        {/* Open Graph / Facebook */}
+        <meta
+          property="og:title"
+          content="Login – MelvokFlow | Flowchart & Survey Builder"
+        />
+        <meta
+          property="og:description"
+          content="Sign in to MelvokFlow to create and manage visual workflows and surveys. Build automations, collect responses, and monitor analytics — no code required."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://melvokflow.com/login" />
+        <meta
+          property="og:image"
+          content="https://melvokflow.com/og-image.png"
+        />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Login – MelvokFlow | Flowchart & Survey Builder"
+        />
+        <meta
+          name="twitter:description"
+          content="Sign in to MelvokFlow to build visual workflows and surveys without writing code. Secure, collaborative, and enterprise-ready."
+        />
+        <meta
+          name="twitter:image"
+          content="https://melvokflow.com/og-image.png"
+        />
+
+        {/* Structured Data */}
+        <script type="application/ld+json">{`{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Login – MelvokFlow",
+          "url": "https://melvokflow.com/login",
+          "description": "Sign in to MelvokFlow — the visual flowchart and survey builder to create automated workflows, forms, and surveys without code.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "MelvokFlow",
+            "url": "https://melvokflow.com"
+          },
+           "sameAs": [
+          "https://www.reddit.com/user/kamranalimultani/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button",
+          "https://www.instagran.com/melvok.official"
+        ]
+        }`}</script>
+      </Helmet>
       {/* Left Side - Login Form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">

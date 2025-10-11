@@ -3,28 +3,24 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { getRequest, putRequest } from "@/utils/apiUtils";
+import { getRequest, postRequest, putRequest } from "@/utils/apiUtils";
 import { FloatSidebar } from "@/components/customComponents/FloatOverlay";
-import { extractGraphModel } from "@/utils/commonUtils";
 import { drawioConverterAsync } from "@/utils/test";
 
 export const FlowDetails = () => {
   const location = useLocation();
   const navigate = useNavigate(); // ✅ hook for navigation
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const flowData = location.state as {
-    id: number;
-    title: string;
-    description: string;
-    xml: string;
-    file_name: string;
-    node_data: any[];
-  };
+  const queryParams = new URLSearchParams(location.search);
+  const fileParam = queryParams.get("file");
+  const share_uuid = queryParams.get("share_uuid"); // --- IGNORE ---
   const [showSidebar, setShowSidebar] = useState(false);
   const [forms, setForms] = useState<any[]>([]);
   const [checkedForms, setCheckedForms] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const [isSharedView] = useState(!!share_uuid); // --- IGNORE ---
+  const [flowDetails, setFlowDetails] = useState<any>(null);
   const [idAttribute, setIdAttribute] = useState<string>("");
 
   const handleCheck = async (formId: string, checked: boolean) => {
@@ -54,26 +50,51 @@ export const FlowDetails = () => {
 
   const fetchTemplates = async () => {
     const res = await getRequest("/api/forms/all", true);
+
     setForms(res);
   };
-  const [flowDetails, setFlowDetails] = useState<any>(null);
+  const fetchSharedDetails = async () => {
+    try {
+      const res = await postRequest(
+        `/api/forms/shared?share_uuid=${share_uuid}`
+      );
+
+      if (!res.ok) {
+        // res.ok is false for status >= 400
+        console.warn("API returned error:", res);
+      }
+      setForms(res.forms);
+      if (typeof res.flow.node_data === "string") {
+        try {
+          res.flow.node_data = JSON.parse(res.flow.node_data);
+        } catch (e) {
+          res.flow.node_data = [];
+        }
+      }
+      console.log(res.flow);
+
+      setFlowDetails(res.flow);
+    } catch (err) {
+      // console.error("Fetch error:", err);
+    }
+  };
 
   const fetchFlowDetails = async () => {
+    if (!fileParam) {
+      return;
+    }
     try {
-      const res = await getRequest(`/api/flows/${flowData.file_name}`, true);
+      const res = await getRequest(`/api/flows/${fileParam}`, true);
       let flow = res.flow;
 
       // Ensure node_data is parsed
       if (typeof flow.node_data === "string") {
         try {
           flow.node_data = JSON.parse(flow.node_data);
-          console.log(" Parsed node_data: ", flow.node_data);
         } catch (e) {
-          console.error("Failed to parse node_data:", e);
           flow.node_data = [];
         }
       }
-
       setFlowDetails(flow);
     } catch (err) {
       console.error("Error fetching flow:", err);
@@ -81,9 +102,14 @@ export const FlowDetails = () => {
   };
 
   useEffect(() => {
-    fetchTemplates();
-    fetchFlowDetails(); // ✅ fetch fresh flow by file_name
+    if (isSharedView) {
+      const res = fetchSharedDetails();
+    } else {
+      fetchTemplates();
+      fetchFlowDetails(); // ✅ fetch fresh flow by file_name
+    }
   }, []);
+
   const extractAttributes = (namedNodeMap: NamedNodeMap) => {
     const attributesArray = [];
     for (let i = 0; i < namedNodeMap.length; i++) {
@@ -115,18 +141,15 @@ export const FlowDetails = () => {
       const cellValue = state.cell.value;
       if (cellValue) {
         shapeNode.style.cursor = "pointer";
-        console.log(cellValue);
         const attachClickable = (node: any) => {
           if (cellValue.attributes && cellValue.attributes.length > 0) {
             shapeNode.addEventListener(
               "click",
               () => {
                 const attributes = extractAttributes(cellValue.attributes);
-                console.log(attributes);
                 if (attributes && attributes.length > 0) {
                   setIdAttribute(attributes[1].value);
                   setShowSidebar(true);
-                  console.log("first");
                 }
               },
               false
@@ -145,7 +168,11 @@ export const FlowDetails = () => {
     const node = flowDetails.node_data.find(
       (n: any) => n.node_id === idAttribute
     );
-
+    if (!node) {
+      setCheckedForms({});
+      return;
+    }
+    console.log("node", node);
     // Build checked forms map
     const checkedMap: { [key: string]: boolean } = {};
     if (node && node.form_templates) {
@@ -153,7 +180,7 @@ export const FlowDetails = () => {
         checkedMap[formId] = true;
       });
     }
-
+    console.log("checkedForms");
     // Update checked forms
     setCheckedForms(checkedMap);
   }, [idAttribute, flowDetails]);
@@ -162,13 +189,15 @@ export const FlowDetails = () => {
     if (!flowDetails) return;
 
     const initGraph = async () => {
-      drawioConverterAsync(flowData.xml, "drawioContainer");
+      drawioConverterAsync(flowDetails.xml, "drawioContainer");
       setupClickableEvents();
     };
 
     initGraph();
-  }, [flowData.xml, flowDetails]);
-
+  }, [flowDetails]);
+  if (!flowDetails) {
+    return <div>Loading flow details...</div>;
+  }
   return (
     <>
       <div className="my-4 flex justify-between items-center mx-4 z-0">
@@ -184,7 +213,7 @@ export const FlowDetails = () => {
         </div>
 
         {/* Right side - graph title */}
-        <h2 className="text-lg font-semibold">{flowData.title}</h2>
+        <h2 className="text-lg font-semibold">{flowDetails.title}</h2>
       </div>
       <div
         className=""
@@ -213,17 +242,31 @@ export const FlowDetails = () => {
       </div>
       {showSidebar && (
         <FloatSidebar
+          forms={forms.filter((f) => {
+            const currentNode = flowDetails?.node_data?.find(
+              (n: any) => n.node_id === idAttribute
+            );
+            return currentNode?.form_templates?.includes(f.id);
+          })}
+          isSharedView={isSharedView}
           open={showSidebar}
           setOpen={setShowSidebar}
-          items={forms.map((f) => ({
-            id: f.id,
-            title: f.title,
-            checked: checkedForms[f.id],
-          }))}
+          items={forms
+            .filter((f) => {
+              const currentNode = flowDetails?.node_data?.find(
+                (n: any) => n.node_id === idAttribute
+              );
+              return currentNode?.form_templates?.includes(f.id);
+            })
+            .map((f) => ({
+              id: f.id,
+              title: f.title,
+              checked: checkedForms[f.id],
+            }))}
           idAttribute={idAttribute}
-          flow_id={flowData.id}
-          loading={false} // Add this prop!
-          selectedTitle="Form Assignment" // This is optional, but recommended
+          flow_id={flowDetails.id}
+          loading={false}
+          selectedTitle="Form Assignment"
           onCheck={handleCheck}
         />
       )}

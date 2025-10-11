@@ -14,7 +14,8 @@ class FlowController extends Controller
   public function store(Request $request)
   {
     $user = $request->user(); // 🆕 get authenticated user
-    if($user->subscription_type == "free_trial" && Flow::where("user_id", $user->id)->exists()) {}
+    if ($user->subscription_type == "free_trial" && Flow::where("user_id", $user->id)->exists()) {
+    }
     $request->validate([
       'title' => 'required|string|max:255',
       'type' => 'required|in:custom,upload',
@@ -186,7 +187,13 @@ XML;
     if ($flow->user_id !== $user->id) {
       return response()->json(['error' => 'Forbidden'], 403);
     }
+    $filePath = "flows/{$flow->file_name}";
+    $xmlContent = null;
 
+    if (Storage::disk('public')->exists($filePath)) {
+      $xmlContent = Storage::disk('public')->get($filePath);
+    }
+    $flow->xml = $xmlContent;
     return response()->json([
       'flow' => $flow
     ]);

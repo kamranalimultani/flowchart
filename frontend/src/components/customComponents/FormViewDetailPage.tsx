@@ -71,7 +71,7 @@ export const FormViewDetailPage: React.FC<Props> = ({
         };
 
         try {
-          await postRequest("/api/form-responses", payload, true);
+          await postRequest("/api/form-responses", payload, false);
         } catch (err) {
           console.log(err);
           alert("Failed to submit form.");

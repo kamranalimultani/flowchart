@@ -9,8 +9,10 @@ import { FormViewDetailPage } from "./FormViewDetailPage";
 
 interface Props {
   open: boolean;
+  isSharedView: boolean;
   setOpen: (open: boolean) => void;
   flow_id: number;
+  forms: any[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   items: any[];
   loading: boolean;
@@ -28,6 +30,8 @@ export const FloatSidebar = ({
   flow_id,
   selectedTitle,
   onCheck,
+  forms,
+  isSharedView,
 }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [search, setSearch] = useState("");
@@ -38,10 +42,14 @@ export const FloatSidebar = ({
   const filteredItems = items.filter((i) =>
     i.title?.toLowerCase().includes(search.toLowerCase())
   );
-  const viewTemplate = async (id: number) => {
-    const res = await getRequest(`/api/form-templates/${id}`, true);
-    setFormViewData(res);
-    setviewForm(true);
+  const viewTemplate = (id: number) => {
+    const selectedForm = forms.find((form: any) => form.id === id);
+    if (selectedForm) {
+      setFormViewData(selectedForm);
+      setviewForm(true);
+    } else {
+      console.warn(`Form with ID ${id} not found`);
+    }
   };
 
   return open ? (
@@ -103,7 +111,7 @@ export const FloatSidebar = ({
       </div>
 
       {!viewForm && (
-        <span className="text-lg font-semibold mb-2">List of Ledgers</span>
+        <span className="text-lg font-semibold mb-2">Form Templates</span>
       )}
 
       <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
@@ -125,11 +133,13 @@ export const FloatSidebar = ({
                   }
                 `}
               >
-                <Checkbox
-                  checked={item.checked}
-                  className="mr-2"
-                  onCheckedChange={(checked) => onCheck(item.id, !!checked)}
-                />
+                {!isSharedView && (
+                  <Checkbox
+                    checked={item.checked}
+                    className="mr-2"
+                    onCheckedChange={(checked) => onCheck(item.id, !!checked)}
+                  />
+                )}
                 <span className="flex-1">{item.title}</span>
                 {item.checked && (
                   <Button

@@ -14,6 +14,7 @@ import SignUp from "./pages/SignUp";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import { NotificationProvider } from "./context/NotificationContext";
 import { HelmetProvider } from "react-helmet-async";
+import BlogsPage from "./pages/Blogs";
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
               }
             />
             <Route
+              path="/blogs"
+              element={
+                <DefaultLayout>
+                  <BlogsPage />
+                </DefaultLayout>
+              }
+            />
+            <Route
               path="/documentation"
               element={
                 <DefaultLayout>
@@ -45,7 +54,7 @@ function App() {
 
             {/* Protected routes with PrivateRoute per route */}
             <Route
-              path="/flow"
+              path="/flows"
               element={
                 <PrivateRoute
                   bypass={false}
@@ -71,7 +80,15 @@ function App() {
               }
             />
             <Route
-              path="/flow/:id"
+              path="/flow-shared"
+              element={
+                <DefaultLayout>
+                  <FlowDetails />
+                </DefaultLayout>
+              }
+            />
+            <Route
+              path="/flow"
               element={
                 <PrivateRoute
                   bypass={false}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FlowController;
+use App\Http\Controllers\FlowSharedController;
 use App\Http\Controllers\FormResponseController;
 use App\Http\Controllers\FormTemplateController;
 use App\Http\Controllers\MockApiController;
@@ -25,10 +26,13 @@ Route::get('/test-api-connection', [AuthController::class, 'testApiConnection'])
 
 
 // form tempaltes
+Route::post('/forms/shared', [FormTemplateController::class, 'fetchFormsForShared']);
+Route::post('/form-responses', [FormResponseController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
+    Route::post('/flows/share/{flow}', [FlowSharedController::class, 'share']);
     Route::apiResource('/form-templates', FormTemplateController::class);
     Route::get('/forms/all', [FormTemplateController::class, 'fetchAll']);
 
@@ -39,6 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/flow/form-assign/{id}', [FlowController::class, 'assignForm']);
     Route::delete('/flows/{id}', [FlowController::class, 'destroy']);
     Route::get('/auth/me', [AuthController::class, 'me']);
-    Route::post('/form-responses', [FormResponseController::class, 'store']);
+
     Route::get('/form-responses/{flowId}/{formTemplateId}/{nodeId}', [FormResponseController::class, 'index']);
 });

@@ -27,6 +27,65 @@ class FormTemplateController extends Controller
 
         return response()->json($query->get());
     }
+    public function fetchFormsForShared(Request $request)
+    {
+        $shareUuid = $request->query('share_uuid');
+
+        if (!$shareUuid) {
+            return response()->json(['error' => 'share_uuid is required'], 500);
+        }
+
+        // Step 1: Find the shared flow by UUID
+        $sharedFlow = \App\Models\SharedFlow::where('share_uuid', $shareUuid)->first();
+
+        if (!$sharedFlow) {
+            return response()->json(['error' => 'Invalid share UUID'], 500);
+        }
+
+        // Step 2: Fetch the flow details
+        $flow = \App\Models\Flow::find($sharedFlow->flow_id);
+
+        if (!$flow) {
+            return response()->json(['error' => 'Flow not found'], 404);
+        }
+
+        // Step 3: Extract form_template IDs from node_data
+        $nodeData = json_decode($flow->node_data, true) ?? [];
+        $formTemplateIds = collect($nodeData)
+            ->pluck('form_templates')
+            ->flatten()
+            ->unique()
+            ->values()
+            ->all();
+
+        // Step 4: Fetch the corresponding form templates
+        $formTemplates = \App\Models\FormTemplate::whereIn('id', $formTemplateIds)
+            ->select(['id', 'title', 'form_data', 'created_at'])
+            ->get();
+        // Step 5: Load XML content (if exists)
+        $filePath = "flows/{$flow->file_name}";
+        $xmlContent = null;
+
+        if (\Storage::disk('public')->exists($filePath)) {
+            $xmlContent = \Storage::disk('public')->get($filePath);
+        }
+
+        // Step 5: Return combined data
+        return response()->json([
+            'flow' => [
+                'id' => $flow->id,
+                'title' => $flow->title,
+                'description' => $flow->description,
+                'node_data' => $flow->node_data,
+                'file_name' => $flow->file_name,
+                'created_at' => $flow->created_at,
+                'xml' => $xmlContent, // ✅ added XML content
+
+            ],
+            'forms' => $formTemplates,
+        ]);
+    }
+
     // POST /api/form-templates
     public function store(Request $request)
     {
