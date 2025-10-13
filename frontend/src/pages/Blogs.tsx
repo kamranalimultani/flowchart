@@ -138,7 +138,7 @@ export default function BlogsPage() {
           name="keywords"
           content="survey use cases, flow survey solutions, market research survey, employee onboarding, feedback surveys, workflow automation, customizable surveys, process surveys, HR survey tool"
         />
-        <link rel="canonical" href="https://melvok.com/use-cases" />
+        <link rel="canonical" href="https://melvok.com/blogs" />
         <meta
           property="og:title"
           content="Use Cases for Melvok Flow-Based Surveys"
@@ -147,11 +147,9 @@ export default function BlogsPage() {
           property="og:description"
           content="Explore powerful applications of Melvok in real business, research, and automation scenarios."
         />
-        <meta
-          property="og:image"
-          content="https://melvok.com/og-image-usecases.jpg"
-        />
-        <meta property="og:url" content="https://melvok.com/use-cases" />
+        <meta property="og:image" content="https://melvok.com/vite.svg" />
+
+        <meta property="og:url" content="https://melvok.com/blogs" />
         <meta property="og:type" content="website" />
       </Helmet>
 

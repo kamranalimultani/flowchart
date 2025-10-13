@@ -322,7 +322,7 @@ export default function MelvokDocs() {
           name="keywords"
           content="visual flow designer, survey flow builder, survey workflow, flowchart survey, node based survey, interactive survey logic, form on flow, drag-and-drop survey tool"
         />
-        <link rel="canonical" href="https://melvok.com/flow-designer" />
+        <link rel="canonical" href="https://melvok.com/documentation" />
         <meta
           property="og:title"
           content="Design Survey Flows Visually - Melvok"
@@ -331,11 +331,8 @@ export default function MelvokDocs() {
           property="og:description"
           content="Create custom survey flows using our visual designer. Assign questions and forms at each node for powerful, dynamic surveys."
         />
-        <meta
-          property="og:image"
-          content="https://melvok.com/og-image-flow.jpg"
-        />
-        <meta property="og:url" content="https://melvok.com/flow-designer" />
+        <meta property="og:image" content="https://melvok.com/vite.svg" />
+        <meta property="og:url" content="https://melvok.com/documentation" />
         <meta property="og:type" content="website" />
       </Helmet>
 

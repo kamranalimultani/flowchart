@@ -90,7 +90,7 @@ const Footer = () => {
 
           {/* Product Column */}
           <div>
-            <h3 className="font-bold text-foreground mb-4">Product</h3>
+            <h3 className="font-bold text-foreground mb-4">Topics</h3>
             <ul className="space-y-3">
               <li>
                 <a
@@ -145,11 +145,11 @@ const Footer = () => {
 
           {/* Company Column */}
           <div>
-            <h3 className="font-bold text-foreground mb-4">Company</h3>
+            <h3 className="font-bold text-foreground mb-4">Short Links</h3>
             <ul className="space-y-3">
               <li>
                 <a
-                  href="#"
+                  href="/about"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   About Us
@@ -165,7 +165,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/blogs"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Blog
@@ -196,7 +196,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="#"
+                  href="contact"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Help Center
@@ -204,7 +204,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/documentation"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Documentation
@@ -242,7 +242,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-muted-foreground text-sm">
-              © 2025 SurveyPro. All rights reserved.
+              © 2025 Melvok.com. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
               <a

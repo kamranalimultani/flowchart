@@ -107,7 +107,7 @@ function SignUp() {
     setLoading(true);
 
     try {
-      // Register user
+      // 1️⃣ Register user (create subscription if paid)
       const userResponse = await postRequest("/api/register", {
         name: formData.name,
         email: formData.email,
@@ -122,55 +122,68 @@ function SignUp() {
         return;
       }
 
-      showSuccess("Account created successfully!");
-
-      // Handle paid subscription
-      if (formData.subscription_type === "paid") {
-        try {
-          const checkoutResponse = await postRequest("/create-checkout", {
-            user_id: userResponse.user.id,
-          });
-
-          if (checkoutResponse.success && checkoutResponse.checkout_url) {
-            showSuccess("Redirecting to payment...");
-            setTimeout(() => {
-              window.location.href = checkoutResponse.checkout_url;
-            }, 1000);
-          } else {
-            showError("Failed to create checkout. Please contact support.");
-          }
-        } catch (checkoutError: any) {
-          if (checkoutError) {
-            showError(checkoutError.message);
-          } else {
-            showError("Payment setup failed. Please try again.");
-          }
-        }
-      } else {
-        // Free trial - redirect to login
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
+      // Free trial
+      if (formData.subscription_type === "free_trial") {
+        showSuccess("Account created successfully!");
+        setTimeout(() => navigate("/login"), 1500);
+        return;
       }
+
+      // 2️⃣ For Paid Subscription: Open Razorpay Checkout
+      const { razorpay_key, subscription_id, user_id } = userResponse;
+
+      if (!razorpay_key || !subscription_id) {
+        showError("Unable to initialize payment. Please try again.");
+        return;
+      }
+
+      const options = {
+        key: razorpay_key,
+        subscription_id: subscription_id,
+        name: "Melvok",
+        description: "Monthly Subscription",
+        handler: async function (response: any) {
+          try {
+            // 3️⃣ Verify payment on backend
+            const verifyRes = await postRequest("/api/payment/verify", {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_subscription_id: response.razorpay_subscription_id,
+              razorpay_signature: response.razorpay_signature,
+              user_id: user_id,
+            });
+
+            if (verifyRes.success) {
+              showSuccess("Payment successful! Your account is now active.");
+              setTimeout(() => navigate("/login"), 1500);
+            } else {
+              showError(verifyRes.message || "Payment verification failed.");
+            }
+          } catch (err: any) {
+            showError("Payment verification failed. Please contact support.");
+          }
+        },
+        theme: { color: "#3399cc" },
+        modal: {
+          ondismiss: function () {
+            showWarning("Payment cancelled. You can retry later.");
+          },
+        },
+      };
+
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.open();
     } catch (error: any) {
       if (error) {
-        // Handle specific error codes
         switch (error.errorCode) {
           case "EMAIL_EXISTS":
-            showError(
-              "An account with this email already exists. Please login instead."
-            );
+            showError("This email is already registered.");
             setFieldErrors({ email: "Email already registered" });
             break;
-
           case "NETWORK_ERROR":
-            showError("Network error. Please check your internet connection.");
+            showError("Network error. Please check your connection.");
             break;
-
           default:
-            showError(error.message);
-
-            // Handle validation errors with proper typing
+            showError(error.message || "Registration failed.");
             if (error.errors) {
               const newFieldErrors = formatValidationErrors(error.errors);
               setFieldErrors(newFieldErrors);
@@ -198,7 +211,7 @@ function SignUp() {
           name="keywords"
           content="survey integrations, workflow integrations, Draw.io survey, SurveyJS form builder, API survey, CSV export, embed survey, connect flow survey, automation integrations"
         />
-        <link rel="canonical" href="https://melvok.com/integrations" />
+        <link rel="canonical" href="https://melvok.com/signup" />
         <meta
           property="og:title"
           content="Melvok Integrations - Connect Your Survey Flows"
@@ -207,11 +220,9 @@ function SignUp() {
           property="og:description"
           content="Easily integrate Melvok surveys with your favorite productivity and analytics tools."
         />
-        <meta
-          property="og:image"
-          content="https://melvok.com/og-image-integrations.jpg"
-        />
-        <meta property="og:url" content="https://melvok.com/integrations" />
+        <meta property="og:image" content="https://melvok.com/vite.svg" />
+
+        <meta property="og:url" content="https://melvok.com/signup" />
         <meta property="og:type" content="website" />
       </Helmet>
 
@@ -355,7 +366,8 @@ function SignUp() {
                       className="w-full border rounded-md h-11 px-3 mt-2"
                     >
                       <option value="free_trial">Free Trial</option>
-                      <option value="paid">Paid (via Lemon Squeezy)</option>
+                      <option value="paid_999">Paid ₹999</option>
+                      <option value="paid_1999">Paid ₹1999</option>
                     </select>
                   </div>
 

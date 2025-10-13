@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "store";
 import { postRequest } from "@/utils/apiUtils";
 import { setUser } from "@/slice/userSlice";
+import { useNotification } from "@/context/NotificationContext";
 
 function Login() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch<AppDispatch>();
+  const { showSuccess, showError, showWarning } = useNotification();
 
   useEffect(() => {
     if (user) {
@@ -38,18 +40,34 @@ function Login() {
     setLoading(true);
 
     try {
-      const data = await postRequest("/api/login", {
-        email,
-        password,
-      });
+      const data = await postRequest("/api/login", { email, password }, false);
 
+      // ✅ No need for data.success check here
       const { token, user } = data;
+
+      if (!token || !user) {
+        throw new Error("Unexpected server response. Please try again.");
+      }
+
       localStorage.setItem("auth", JSON.stringify({ token, userId: user.id }));
       dispatch(setUser(user));
+      showSuccess("Logged in successfully");
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Login failed:", error);
-      alert("Login failed, please try again.");
+    } catch (error: any) {
+      let errorMessage = "Login failed. Please try again.";
+
+      if (error.response && error.response.data) {
+        const { data } = error.response;
+        errorMessage =
+          data.message ||
+          (data.errors
+            ? Object.values(data.errors).flat().join(", ")
+            : errorMessage);
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -67,17 +85,15 @@ function Login() {
           name="keywords"
           content="AI survey tool, smart survey builder, AI flow survey, survey question generator, sentiment analysis, AI feedback, AI forms, artificial intelligence survey"
         />
-        <link rel="canonical" href="https://melvok.com/ai-survey" />
+        <link rel="canonical" href="https://melvok.com/login" />
         <meta property="og:title" content="AI-Powered Survey Flows - Melvok" />
         <meta
           property="og:description"
           content="Boost survey response quality and analysis with Melvok's AI-based flow survey tools."
         />
-        <meta
-          property="og:image"
-          content="https://melvok.com/og-image-ai.jpg"
-        />
-        <meta property="og:url" content="https://melvok.com/ai-survey" />
+        <meta property="og:image" content="https://melvok.com/vite.svg" />
+
+        <meta property="og:url" content="https://melvok.com/login" />
         <meta property="og:type" content="website" />
       </Helmet>
 

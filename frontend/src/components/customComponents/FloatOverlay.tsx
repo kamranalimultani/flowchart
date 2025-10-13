@@ -55,12 +55,12 @@ export const FloatSidebar = ({
   return open ? (
     <div
       id="float-sidebar-modal"
-      className={`fixed top-8 right-8 z-50
+      className={` fixed top-8 right-8 z-50
         ${expanded ? "w-[92vw] md:w-[95vw]" : "w-[92vw] md:w-[440px]"}
         max-w-full h-[85vh] md:h-[95vh]
         backdrop-blur-lg bg-background/80 border border-border shadow-2xl rounded-xl
         transition-all duration-300 flex flex-col gap-4 p-4 overflow-y-auto`}
-      style={{ WebkitBackdropFilter: "blur(12px)" }}
+      style={{ WebkitBackdropFilter: "blur(12px)", zIndex: "9999 !important" }}
     >
       <div className="flex items-center justify-between gap-3 mb-2">
         <div className="flex items-center gap-2">

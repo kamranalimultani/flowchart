@@ -16,11 +16,17 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('status', ['inactive', 'active'])->default('inactive'); // active after login
-            $table->enum('subscription_type', ['free_trial', 'paid', 'none'])->default('none');
+            $table->enum('status', [
+                'inactive',
+                'active',
+                'pending_payment',
+                'payment_failed',
+                'cancelled'
+            ])->default('inactive')->comment('inactive=not verified, pending_payment=waiting for subscription payment');
+            $table->enum('subscription_type', ['free_trial', 'paid_999', 'paid_1999', 'none'])->default('none');
             $table->string('lemon_squeezy_customer_id')->nullable();
-            $table->string('subscription_id')->nullable();
-            $table->string('subscription_status')->nullable();
+            $table->string('subscription_id')->nullable(); // allow null for free trial users
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -33,15 +39,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->enum('plan', ['free_trial', 'basic', 'premium']);
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->string('razorpay_payment_id')->nullable();
-            $table->timestamps();
-        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

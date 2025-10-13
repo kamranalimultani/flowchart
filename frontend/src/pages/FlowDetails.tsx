@@ -50,7 +50,7 @@ export const FlowDetails = () => {
 
   const fetchTemplates = async () => {
     const res = await getRequest("/api/forms/all", true);
-
+    console.log("resssss", res);
     setForms(res);
   };
   const fetchSharedDetails = async () => {
@@ -71,7 +71,6 @@ export const FlowDetails = () => {
           res.flow.node_data = [];
         }
       }
-      console.log(res.flow);
 
       setFlowDetails(res.flow);
     } catch (err) {
@@ -95,6 +94,7 @@ export const FlowDetails = () => {
           flow.node_data = [];
         }
       }
+      console.log(flow);
       setFlowDetails(flow);
     } catch (err) {
       console.error("Error fetching flow:", err);
@@ -103,7 +103,7 @@ export const FlowDetails = () => {
 
   useEffect(() => {
     if (isSharedView) {
-      const res = fetchSharedDetails();
+      fetchSharedDetails();
     } else {
       fetchTemplates();
       fetchFlowDetails(); // ✅ fetch fresh flow by file_name
@@ -172,7 +172,6 @@ export const FlowDetails = () => {
       setCheckedForms({});
       return;
     }
-    console.log("node", node);
     // Build checked forms map
     const checkedMap: { [key: string]: boolean } = {};
     if (node && node.form_templates) {
@@ -180,7 +179,6 @@ export const FlowDetails = () => {
         checkedMap[formId] = true;
       });
     }
-    console.log("checkedForms");
     // Update checked forms
     setCheckedForms(checkedMap);
   }, [idAttribute, flowDetails]);
@@ -198,41 +196,82 @@ export const FlowDetails = () => {
   if (!flowDetails) {
     return <div>Loading flow details...</div>;
   }
+  const handleZoomIn = () => {
+    const graphViewer = (window as any).newGraphViewer;
+    if (graphViewer?.graph) {
+      graphViewer.graph.zoomIn();
+    }
+  };
+
+  const handleZoomOut = () => {
+    const graphViewer = (window as any).newGraphViewer;
+    if (graphViewer?.graph) {
+      graphViewer.graph.zoomOut();
+    }
+  };
+
   return (
     <>
       <div className="my-4 flex justify-between items-center mx-4 z-0">
         {/* Left side - glass card back button */}
-        <div
-          onClick={() => navigate(-1)} // ✅ navigate back
-          className="flex items-center space-x-2 cursor-pointer rounded-xl px-3 py-2
-                      bg-white/20 backdrop-blur-md border border-white/30 shadow-md
-                      hover:bg-white/30 transition"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span className="text-sm font-medium">Back</span>
+
+        <div className="flex items-center space-x-4">
+          {/* Back Button */}
+          <div
+            onClick={() => navigate(-1)}
+            className="flex items-center cursor-pointer rounded-xl px-4 py-3 bg-white/20 backdrop-blur-md border border-white/30 shadow-md hover:bg-white/30 transition"
+            style={{ minHeight: "48px" }}
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="ml-2 text-sm font-medium">Back</span>
+          </div>
+
+          {/* Zoom Controls */}
+          <div className="flex flex-row items-center space-x-2 z-50">
+            <button
+              style={{ minHeight: "48px" }}
+              onClick={handleZoomIn}
+              className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-md rounded-full w-12 h-4 flex items-center justify-center hover:bg-gray-100"
+              aria-label="Zoom In"
+            >
+              +
+            </button>
+            <button
+              style={{ minHeight: "48px" }}
+              onClick={handleZoomOut}
+              className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-md rounded-full w-12 h-4 flex items-center justify-center hover:bg-gray-100"
+              aria-label="Zoom Out"
+            >
+              –
+            </button>
+          </div>
         </div>
 
         {/* Right side - graph title */}
         <h2 className="text-lg font-semibold">{flowDetails.title}</h2>
       </div>
+      {/* Custom Zoom Controls */}
+
       <div
         className=""
         style={{
-          height: "100% !important",
+          height: "100vh !important",
           width: "100% !important",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          zIndex: 1,
         }}
       >
         <div
           id="drawioContainer"
           ref={containerRef}
           style={{
+            cursor: "default !important",
             width: "100vw !important",
-            height: "auto !important",
-            border: "1px solid #ccc",
-            cursor: "grab",
+            height: "100% !important",
+            // border: "1px solid #ccc",
+            // cursor: "grab",
             overflow: "scroll",
             display: "flex",
             justifyContent: "center",
@@ -241,34 +280,35 @@ export const FlowDetails = () => {
         />
       </div>
       {showSidebar && (
-        <FloatSidebar
-          forms={forms.filter((f) => {
-            const currentNode = flowDetails?.node_data?.find(
-              (n: any) => n.node_id === idAttribute
-            );
-            return currentNode?.form_templates?.includes(f.id);
-          })}
-          isSharedView={isSharedView}
-          open={showSidebar}
-          setOpen={setShowSidebar}
-          items={forms
-            .filter((f) => {
-              const currentNode = flowDetails?.node_data?.find(
-                (n: any) => n.node_id === idAttribute
-              );
-              return currentNode?.form_templates?.includes(f.id);
-            })
-            .map((f) => ({
+        <div style={{ zIndex: 9999 }}>
+          <FloatSidebar
+            forms={
+              isSharedView
+                ? // 🔹 Shared view → show only assigned forms
+                  forms.filter((f) => {
+                    const currentNode = flowDetails?.node_data?.find(
+                      (n: any) => n.node_id === idAttribute
+                    );
+                    return currentNode?.form_templates?.includes(f.id);
+                  })
+                : // 🔹 Manager view → show all forms
+                  forms
+            }
+            isSharedView={isSharedView}
+            open={showSidebar}
+            setOpen={setShowSidebar}
+            items={forms.map((f) => ({
               id: f.id,
               title: f.title,
-              checked: checkedForms[f.id],
+              checked: !!checkedForms[f.id], // ✅ checked if assigned to this node
             }))}
-          idAttribute={idAttribute}
-          flow_id={flowDetails.id}
-          loading={false}
-          selectedTitle="Form Assignment"
-          onCheck={handleCheck}
-        />
+            idAttribute={idAttribute}
+            flow_id={flowDetails.id}
+            loading={false}
+            selectedTitle="Form Assignment"
+            onCheck={handleCheck}
+          />
+        </div>
       )}
     </>
   );

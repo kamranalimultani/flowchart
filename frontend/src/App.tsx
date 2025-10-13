@@ -15,6 +15,9 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import { NotificationProvider } from "./context/NotificationContext";
 import { HelmetProvider } from "react-helmet-async";
 import BlogsPage from "./pages/Blogs";
+import { Policies } from "./pages/policies";
+import AboutUs from "./pages/About";
+import "./App.css";
 
 function App() {
   return (
@@ -32,6 +35,22 @@ function App() {
               element={
                 <DefaultLayout>
                   <LandingPage />
+                </DefaultLayout>
+              }
+            />
+            <Route
+              path="/policies"
+              element={
+                <DefaultLayout>
+                  <Policies />
+                </DefaultLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <DefaultLayout>
+                  <AboutUs />
                 </DefaultLayout>
               }
             />

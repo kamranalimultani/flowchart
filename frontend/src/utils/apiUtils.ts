@@ -64,8 +64,8 @@ const request = async <T = any>(
 ): Promise<T> => {
   try {
     const headers: Record<string, string> = {
-      // "Content-Type": "application/json",
-      // Accept: "application/json",
+      "Content-Type": "application/json",
+      Accept: "application/json",
     };
 
     if (useAuth) {

@@ -382,12 +382,11 @@ export const LandingPage = () => {
           property="og:description"
           content="Design smart, visual, and interactive surveys using Melvok — the next-generation flow-based form builder for teams."
         />
-        <meta property="og:image" content="https://melvok.com/og-image.jpg" />
+        <meta property="og:image" content="https://melvok.com/vite.svg" />
         <meta property="og:url" content="https://melvok.com" />
         <meta property="og:type" content="website" />
 
         {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
           content="Melvok — Visual Flow-Based Survey Platform"
@@ -396,26 +395,9 @@ export const LandingPage = () => {
           name="twitter:description"
           content="Build and share visual surveys with Melvok — 100+ question types, templates, and team management."
         />
-        <meta name="twitter:image" content="https://melvok.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://melvok.com/vite.svg" />
       </Helmet>
       <div className="min-h-screen bg-background">
-        {/* <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="rounded-2xl shadow-lg p-6 max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-semibold text-center">
-              🚀 We’re Invite-Only
-            </DialogTitle>
-            <DialogDescription className="text-center mt-2 leading-relaxed">
-              We’re currently operating on an invite-only basis. If you’d like
-              to get a demo or early access, please reach out to us.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="flex justify-center mt-4">
-            <Button onClick={handleContactClick}>Contact Us</Button>
-          </div>
-        </DialogContent>
-      </Dialog> */}
         {/* Hero Section with Video Background */}
         <section
           id="hero"
@@ -449,10 +431,11 @@ export const LandingPage = () => {
                 AI-Powered Survey Platform
               </Badge>
 
+              {/* ✅ Primary H1 Heading for SEO */}
               <h1 className="text-5xl md:text-7xl font-black leading-tight">
                 Create, Share & Analyze
                 <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Beautiful Surveys
+                  Beautiful Surveys with Melvok
                 </span>
               </h1>
 

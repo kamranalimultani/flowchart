@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/payment/verify', [AuthController::class, 'verifyPayment']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/mock/create', [MockApiController::class, 'create']);
 Route::get('/mock/{slug}', [MockApiController::class, 'fetch']);
