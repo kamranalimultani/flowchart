@@ -20,10 +20,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'company_id',
+        'subscription_id',
         'name',
         'email',
         'password',
         'status',
+        'role',
         'subscription_type',
     ];
 
@@ -38,9 +41,8 @@ class User extends Authenticatable
     ];
     public function company()
     {
-        return $this->hasOne(Company::class);
+        return $this->belongsTo(Company::class);
     }
-
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);

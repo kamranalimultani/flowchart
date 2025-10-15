@@ -18,6 +18,8 @@ import BlogsPage from "./pages/Blogs";
 import { Policies } from "./pages/policies";
 import AboutUs from "./pages/About";
 import "./App.css";
+import { Users } from "./pages/Users";
+import DemoVideo from "./pages/DemoVideo";
 
 function App() {
   return (
@@ -55,6 +57,14 @@ function App() {
               }
             />
             <Route
+              path="/demo"
+              element={
+                <DefaultLayout>
+                  <DemoVideo />
+                </DefaultLayout>
+              }
+            />
+            <Route
               path="/blogs"
               element={
                 <DefaultLayout>
@@ -80,6 +90,19 @@ function App() {
                   element={
                     <DefaultLayout>
                       <FlowList />
+                    </DefaultLayout>
+                  }
+                />
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <PrivateRoute
+                  bypass={false}
+                  element={
+                    <DefaultLayout>
+                      <Users />
                     </DefaultLayout>
                   }
                 />

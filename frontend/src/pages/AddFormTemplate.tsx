@@ -79,8 +79,8 @@ const AddFormTemplate: React.FC = () => {
 
       if (!data.title) {
         setLoading(false);
-        toast.error("Please add ledger title before Create Ledger.", {
-          description: "Add Ledger Title",
+        toast.error("Please add ledger title before Create Template.", {
+          description: "Add Template Title",
         });
         return;
       }
@@ -136,12 +136,12 @@ const AddFormTemplate: React.FC = () => {
             <MoveLeft className="h-6 w-6" />
           </button>
           <h1 className="text-xl font-semibold">
-            {location?.state?.form ? "Update" : "Add New"} Ledger Template
+            {location?.state?.form ? "Update" : "Add New"} Template Template
           </h1>
         </div>
         <Button onClick={handleSave} disabled={loading}>
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {location?.state?.form ? "Update Ledger" : "Save Ledger"}
+          {location?.state?.form ? "Update Template" : "Save Template"}
         </Button>
       </div>
 

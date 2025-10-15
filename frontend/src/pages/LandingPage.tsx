@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Bell,
   CircleUser,
@@ -69,7 +69,7 @@ export const LandingPage = () => {
   const [hoveredUseCase, setHoveredUseCase] = useState<any>(null);
   const [hoveredAI, setHoveredAI] = useState<any>(null);
   const [open, setOpen] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const timer = setTimeout(() => {
       setOpen(true);
@@ -453,6 +453,7 @@ export const LandingPage = () => {
                   </Button>
                 </Link>
                 <Button
+                  onClick={() => navigate("/demo")}
                   size="lg"
                   variant="outline"
                   className="text-lg px-8 py-6 group"

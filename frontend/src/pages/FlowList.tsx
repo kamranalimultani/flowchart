@@ -182,7 +182,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
   return (
     <>
       <>
-        <Card className="relative group w-80 h-60 shadow-md hover:shadow-lg transition-all rounded-xl flex flex-col overflow-hidden">
+        <Card className="relative group w-full aspect-[4/3] shadow-md hover:shadow-lg transition-all rounded-xl flex flex-col overflow-hidden">
           {/* Preview - positioned absolutely to fill the card */}
           <div className="absolute inset-0 w-full h-full">
             <FlowPreview xml={xml} containerId={`preview-${id}`} />
@@ -370,9 +370,9 @@ export const FlowList: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center py-8 px-4 w-full gap-8">
+    <div className="flex flex-col items-center  px-4 w-full gap-8 my-4">
       {/* Header */}
-      <div className="items-center flex justify-between gap-2 w-full max-w-7xl mb-6">
+      <div className="items-center flex justify-between gap-2 w-full mb-6">
         <h1 className="text-2xl font-bold">Flow Template List</h1>
         <div className="flex items-center gap-3">
           <Input className="w-64" placeholder="Search flows..." />
@@ -384,7 +384,7 @@ export const FlowList: React.FC = () => {
       </div>
 
       {/* Flow Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-7xl">
+      <div className="grid gap-6 w-full sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 auto-rows-fr">
         {flows.map((flow) => (
           <FlowCard key={flow.id} {...flow} refreshFlows={fetchFlows} />
         ))}

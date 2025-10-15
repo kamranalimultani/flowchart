@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\adminMiddleware;
 use App\Http\Middleware\CheckFlowLimit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(HandleCors::class);
         $middleware->alias([
             'check.flow.limit' => CheckFlowLimit::class,
+            'check.admin.user' => adminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -59,6 +59,7 @@ export function NavigationBar() {
       docs.map((doc) => ({ ...doc, category }))
     );
   }, []);
+  const { user } = useSelector((state: RootState) => state.user);
   React.useEffect(() => {
     // Check localStorage for auth token
     const authData = localStorage.getItem("auth");
@@ -123,6 +124,17 @@ export function NavigationBar() {
                         </NavigationMenuLink>
                       </Link>
                     </NavigationMenuItem>
+                    {isLoggedIn && user !== null && user.role == "admin" && (
+                      <NavigationMenuItem>
+                        <Link to="/users">
+                          <NavigationMenuLink
+                            className={navigationMenuTriggerStyle()}
+                          >
+                            Users{" "}
+                          </NavigationMenuLink>
+                        </Link>
+                      </NavigationMenuItem>
+                    )}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger>
                         Documentation
@@ -192,10 +204,7 @@ export function NavigationBar() {
                       <Bell className="mr-2 h-4 w-4" />
                       Notifications
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      <Utensils className="mr-2 h-4 w-4" />
-                      Break
-                    </DropdownMenuItem>
+
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="cursor-pointer text-red-600"

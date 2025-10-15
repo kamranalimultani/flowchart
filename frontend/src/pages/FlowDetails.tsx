@@ -19,6 +19,7 @@ export const FlowDetails = () => {
   const [checkedForms, setCheckedForms] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const [loading, setLoading] = useState(false);
   const [isSharedView] = useState(!!share_uuid); // --- IGNORE ---
   const [flowDetails, setFlowDetails] = useState<any>(null);
   const [idAttribute, setIdAttribute] = useState<string>("");
@@ -209,7 +210,7 @@ export const FlowDetails = () => {
       graphViewer.graph.zoomOut();
     }
   };
-
+  
   return (
     <>
       <div className="my-4 flex justify-between items-center mx-4 z-0">

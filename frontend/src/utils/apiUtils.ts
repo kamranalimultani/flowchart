@@ -1,7 +1,7 @@
 // src/utils/apiUtils.ts
 import axios, { AxiosError, type AxiosResponse } from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+export const BASE_URL = import.meta.env.VITE_API_URL;
 
 // Type definitions
 interface ApiSuccessResponse<T = any> {

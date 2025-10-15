@@ -5,7 +5,7 @@ import cardImage from "../assets/banner.png";
 const blogs = [
   {
     title: "What is a Flow-Based Survey and Why It’s the Future",
-    desc: "Discover how Melvok Flow Surveys turn static forms into engaging visual experiences for users and teams.",
+    desc: "Discover how Melvok Surveys turn static forms into engaging visual experiences for users and teams.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?workflow",
   },
@@ -17,19 +17,19 @@ const blogs = [
   },
   {
     title: "Boost Team Collaboration with Interactive Flow Surveys",
-    desc: "See how teams can build, share, and analyze surveys visually using Melvok Flow.",
+    desc: "See how teams can build, share, and analyze surveys visually using Melvok.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?teamwork",
   },
   {
     title: "10 Reasons to Switch from Traditional Forms to Melvok",
-    desc: "Traditional forms are outdated. Discover why Melvok Flow is the modern alternative.",
+    desc: "Traditional forms are outdated. Discover why Melvok is the modern alternative.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?technology",
   },
   {
     title: "Connecting Surveys with Analytics Dashboards",
-    desc: "Bridge the gap between survey data and insights — all within Melvok Flow.",
+    desc: "Bridge the gap between survey data and insights — all within Melvok.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?analytics",
   },
@@ -41,13 +41,13 @@ const blogs = [
   },
   {
     title: "From Forms to Flows: The UX Revolution",
-    desc: "Why user experience matters in surveys — and how Melvok Flow makes it delightful.",
+    desc: "Why user experience matters in surveys — and how Melvok makes it delightful.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?ux",
   },
   {
     title: "Integrate AI with Your Surveys",
-    desc: "Use Melvok Flow’s AI integration to auto-summarize responses and predict trends.",
+    desc: "Use Melvok’s AI integration to auto-summarize responses and predict trends.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?ai",
   },
@@ -59,19 +59,19 @@ const blogs = [
   },
   {
     title: "No-Code Survey Builder for Everyone",
-    desc: "Melvok Flow lets anyone build powerful surveys with zero code.",
+    desc: "Melvok lets anyone build powerful surveys with zero code.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?nocode",
   },
   {
-    title: "Melvok Flow for Enterprises: Scale with Confidence",
+    title: "Melvok for Enterprises: Scale with Confidence",
     desc: "Built to handle teams, permissions, and analytics at enterprise scale.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?enterprise",
   },
   {
     title: "Export Survey Data to Excel, PDF, or API",
-    desc: "Flexible export options let you work your way with Melvok Flow.",
+    desc: "Flexible export options let you work your way with Melvok.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?export",
   },
@@ -82,7 +82,7 @@ const blogs = [
     image: "https://source.unsplash.com/featured/?accuracy",
   },
   {
-    title: "Connect Your CRM with Melvok Flow Surveys",
+    title: "Connect Your CRM with Melvok Surveys",
     desc: "Seamlessly integrate with popular CRMs for automated response tracking.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?crm",
@@ -100,14 +100,14 @@ const blogs = [
     image: "https://source.unsplash.com/featured/?feedback",
   },
   {
-    title: "Melvok Flow for Education and Research",
+    title: "Melvok for Education and Research",
     desc: "Perfect for teachers, universities, and research teams.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?education",
   },
   {
     title: "How to Embed Flow Surveys in Websites",
-    desc: "Add interactive Melvok Flow surveys directly to your website or dashboard.",
+    desc: "Add interactive Melvok surveys directly to your website or dashboard.",
     date: "Oct 2025",
     image: "https://source.unsplash.com/featured/?embed",
   },
@@ -141,7 +141,7 @@ export default function BlogsPage() {
         <link rel="canonical" href="https://melvok.com/blogs" />
         <meta
           property="og:title"
-          content="Use Cases for Melvok Flow-Based Surveys"
+          content="Use Cases for Melvok-Based Surveys"
         />
         <meta
           property="og:description"
@@ -154,9 +154,7 @@ export default function BlogsPage() {
       </Helmet>
 
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold text-center mb-8">
-          Melvok Flow Blogs
-        </h1>
+        <h1 className="text-4xl font-bold text-center mb-8">Melvok Blogs</h1>
         <p className="text-center text-gray-500 mb-12">
           Insights, guides, and stories about the future of visual surveys &
           analytics.

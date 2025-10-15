@@ -46,4 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
 
     Route::get('/form-responses/{flowId}/{formTemplateId}/{nodeId}', [FormResponseController::class, 'index']);
+
+    Route::get('/company/users', [AuthController::class, 'companyUsers'])->middleware('check.admin.user');
+    Route::post('/users', [AuthController::class, 'store'])->middleware('check.admin.user');
+    Route::put('/users/{id}', [AuthController::class, 'update'])->middleware('check.admin.user');
+    Route::get('/form-responses/download', [FormResponseController::class, 'downloadCsv'])->middleware('check.admin.user');
+
 });

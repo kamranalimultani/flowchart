@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Eye } from "lucide-react"; // Or any icon set
+import { Download, Eye } from "lucide-react"; // Or any icon set
 import { X, ArrowLeft, Maximize2 } from "lucide-react"; // Example buttons
-import { getRequest } from "@/utils/apiUtils";
+import { BASE_URL, getRequest, getToken } from "@/utils/apiUtils";
 import { FormViewDetailPage } from "./FormViewDetailPage";
+import { useSelector } from "react-redux";
+import type { RootState } from "store";
 
 interface Props {
   open: boolean;
@@ -37,7 +39,9 @@ export const FloatSidebar = ({
   const [search, setSearch] = useState("");
   const [formViewData, setFormViewData] = useState<any>(null);
   const [viewForm, setviewForm] = useState<boolean>(false);
-
+  const [csvLoading, setCsvLoading] = useState(false);
+  const { user } = useSelector((state: RootState) => state.user);
+  if (!user) return "Loading....";
   // Filter items by search
   const filteredItems = items.filter((i) =>
     i.title?.toLowerCase().includes(search.toLowerCase())
@@ -49,6 +53,40 @@ export const FloatSidebar = ({
       setviewForm(true);
     } else {
       console.warn(`Form with ID ${id} not found`);
+    }
+  };
+  const handleDownload = async () => {
+    setCsvLoading(true);
+    const token = getToken();
+    try {
+      // Make a direct fetch call, not your JSON utility
+      const url = `${BASE_URL}/api/form-responses/download?flow_id=${flow_id}&node_id=${idAttribute}`;
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // if your middleware requires auth
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download CSV");
+      }
+
+      const blob = await response.blob();
+      const downloadLink = document.createElement("a");
+      const fileName = `form_responses_flow${flow_id}_node${idAttribute}.csv`;
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = fileName;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+      URL.revokeObjectURL(downloadLink.href);
+    } catch (err) {
+      console.error(err);
+      alert("Error downloading CSV");
+    } finally {
+      setCsvLoading(false);
     }
   };
 
@@ -142,20 +180,32 @@ export const FloatSidebar = ({
                 )}
                 <span className="flex-1">{item.title}</span>
                 {item.checked && (
-                  <Button
-                    size="icon"
-                    onClick={() => viewTemplate(item.id)}
-                    variant="ghost"
-                    className="rounded-full"
-                  >
-                    <Eye size={20} />
-                  </Button>
+                  <>
+                    <Button
+                      size="icon"
+                      onClick={() => viewTemplate(item.id)}
+                      variant="ghost"
+                      className="rounded-full"
+                    >
+                      <Eye size={20} />
+                    </Button>
+                    {user.role === "admin" && (
+                      <Button
+                        size="icon"
+                        onClick={() => handleDownload()}
+                        variant="ghost"
+                        className="rounded-full"
+                      >
+                        <Download size={20} />
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
             ))
           ) : (
             <div className="flex items-center justify-center h-32">
-              <span>No Ledgers found</span>
+              <span>No Form Templates found</span>
             </div>
           )
         ) : (
