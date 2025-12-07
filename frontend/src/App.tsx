@@ -23,155 +23,153 @@ import DemoVideo from "./pages/DemoVideo";
 
 function App() {
   return (
-    <HelmetProvider>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-        <NotificationProvider>
-          <Routes>
-            {/* Public routes */}
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <NotificationProvider>
+        <Routes>
+          {/* Public routes */}
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<SignUp />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
 
-            <Route
-              path="/"
-              element={
-                <DefaultLayout>
-                  <LandingPage />
-                </DefaultLayout>
-              }
-            />
-            <Route
-              path="/policies"
-              element={
-                <DefaultLayout>
-                  <Policies />
-                </DefaultLayout>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <DefaultLayout>
-                  <AboutUs />
-                </DefaultLayout>
-              }
-            />
-            <Route
-              path="/demo"
-              element={
-                <DefaultLayout>
-                  <DemoVideo />
-                </DefaultLayout>
-              }
-            />
-            <Route
-              path="/blogs"
-              element={
-                <DefaultLayout>
-                  <BlogsPage />
-                </DefaultLayout>
-              }
-            />
-            <Route
-              path="/documentation"
-              element={
-                <DefaultLayout>
-                  <Documentation />
-                </DefaultLayout>
-              }
-            />
+          <Route
+            path="/"
+            element={
+              <DefaultLayout>
+                <LandingPage />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/policies"
+            element={
+              <DefaultLayout>
+                <Policies />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <DefaultLayout>
+                <AboutUs />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/demo"
+            element={
+              <DefaultLayout>
+                <DemoVideo />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/blogs"
+            element={
+              <DefaultLayout>
+                <BlogsPage />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/documentation"
+            element={
+              <DefaultLayout>
+                <Documentation />
+              </DefaultLayout>
+            }
+          />
 
-            {/* Protected routes with PrivateRoute per route */}
-            <Route
-              path="/flows"
-              element={
-                <PrivateRoute
-                  bypass={false}
-                  element={
-                    <DefaultLayout>
-                      <FlowList />
-                    </DefaultLayout>
-                  }
-                />
-              }
-            />
-            <Route
-              path="/users"
-              element={
-                <PrivateRoute
-                  bypass={false}
-                  element={
-                    <DefaultLayout>
-                      <Users />
-                    </DefaultLayout>
-                  }
-                />
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateRoute
-                  bypass={false}
-                  element={
-                    <DefaultLayout>
-                      <Dashboard />
-                    </DefaultLayout>
-                  }
-                />
-              }
-            />
-            <Route
-              path="/flow-shared"
-              element={
-                <DefaultLayout>
-                  <FlowDetails />
-                </DefaultLayout>
-              }
-            />
-            <Route
-              path="/flow"
-              element={
-                <PrivateRoute
-                  bypass={false}
-                  element={
-                    <DefaultLayout>
-                      <FlowDetails />
-                    </DefaultLayout>
-                  }
-                />
-              }
-            />
-            <Route
-              path="/forms-templates"
-              element={
-                <PrivateRoute
-                  bypass={false}
-                  element={
-                    <DefaultLayout>
-                      <FormTemplates />
-                    </DefaultLayout>
-                  }
-                />
-              }
-            />
-            <Route
-              path="/add-form-template"
-              element={
-                <PrivateRoute
-                  bypass={false}
-                  element={
-                    <DefaultLayout>
-                      <AddFormTemplate />
-                    </DefaultLayout>
-                  }
-                />
-              }
-            />
-          </Routes>
-        </NotificationProvider>
-      </ThemeProvider>
-    </HelmetProvider>
+          {/* Protected routes with PrivateRoute per route */}
+          <Route
+            path="/flows"
+            element={
+              <PrivateRoute
+                bypass={false}
+                element={
+                  <DefaultLayout>
+                    <FlowList />
+                  </DefaultLayout>
+                }
+              />
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <PrivateRoute
+                bypass={false}
+                element={
+                  <DefaultLayout>
+                    <Users />
+                  </DefaultLayout>
+                }
+              />
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute
+                bypass={false}
+                element={
+                  <DefaultLayout>
+                    <Dashboard />
+                  </DefaultLayout>
+                }
+              />
+            }
+          />
+          <Route
+            path="/flow-shared"
+            element={
+              <DefaultLayout>
+                <FlowDetails />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/flow"
+            element={
+              <PrivateRoute
+                bypass={false}
+                element={
+                  <DefaultLayout>
+                    <FlowDetails />
+                  </DefaultLayout>
+                }
+              />
+            }
+          />
+          <Route
+            path="/forms-templates"
+            element={
+              <PrivateRoute
+                bypass={false}
+                element={
+                  <DefaultLayout>
+                    <FormTemplates />
+                  </DefaultLayout>
+                }
+              />
+            }
+          />
+          <Route
+            path="/add-form-template"
+            element={
+              <PrivateRoute
+                bypass={false}
+                element={
+                  <DefaultLayout>
+                    <AddFormTemplate />
+                  </DefaultLayout>
+                }
+              />
+            }
+          />
+        </Routes>
+      </NotificationProvider>
+    </ThemeProvider>
   );
 }
 

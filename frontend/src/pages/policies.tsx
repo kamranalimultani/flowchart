@@ -1,6 +1,17 @@
+import { Helmet } from "react-helmet-async";
+
 export const Policies = () => {
   return (
     <section id="contact" className="mb-20 scroll-mt-20">
+      <Helmet>
+        <title>Privacy Policy & Terms | Melvok</title>
+        <meta
+          name="description"
+          content="Read Melvok’s privacy policy, terms of use, and data protection practices. We value your privacy and transparency in how we handle your data."
+        />
+        <link rel="canonical" href="https://melvok.com/policies" />
+      </Helmet>
+
       <div className="rounded-2xl bg-white p-8 shadow">
         <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
         <p className="text-slate-700 mb-4">
