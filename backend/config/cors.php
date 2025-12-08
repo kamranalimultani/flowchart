@@ -22,6 +22,10 @@ return [
     'allowed_origins' => [
         'http://localhost:5173', // Vite frontend
         'http://127.0.0.1:5173',
+        'http://localhost:3000', // Next.js default
+        'http://127.0.0.1:3000',
+        'http://localhost:3002', // Next.js current
+        'http://127.0.0.1:3002',
     ],
 
     'allowed_origins_patterns' => [],
