@@ -15,8 +15,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "New Frontend",
-  description: "Migrated Next.js frontend",
+  title: {
+    default: "Melvok | Visual Flowchart Survey Builder & Interactive Decision Trees",
+    template: "%s | Melvok",
+  },
+  description:
+    "Create complex logic flows, interactive decision trees, and advanced surveys with Melvok's visual builder. The enterprise standard for flowchart-based data collection.",
+  keywords: [
+    "flowchart surveys",
+    "visual form builder",
+    "decision tree software",
+    "interactive surveys",
+    "logic forms",
+    "survey flows",
+    "data collection tool",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://melvok.com",
+    title: "Melvok | Visual Flowchart Survey Builder",
+    description: "Build complex logic flows and interactive decision trees visually.",
+    siteName: "Melvok",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Melvok | Visual Flowchart Survey Builder",
+    description: "Build complex logic flows and interactive decision trees visually.",
+  },
 };
 
 export default function RootLayout({

@@ -121,7 +121,7 @@ export default function LandingPage() {
   const features = [
     {
       icon: <Workflow className="w-8 h-8" />,
-      title: "Visual Flow Builder",
+      title: "Drag-and-Drop Flow Builder",
       description:
         "Create complex survey flows with an intuitive drag-and-drop interface. Design conditional logic, branching paths, and dynamic routing based on user responses.",
     },
@@ -411,16 +411,16 @@ export default function LandingPage() {
 
               {/* ✅ Primary H1 Heading for SEO */}
               <h1 className="text-5xl md:text-7xl font-black leading-tight">
-                Create, Share & Analyze
+                Build Powerful Flowchart Surveys &
                 <span className="block bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Beautiful Surveys with Melvok
+                  Interactive Decision Trees
                 </span>
               </h1>
 
               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-                The most powerful form builder and survey platform with advanced
-                analytics, AI insights, and enterprise-grade features. Transform
-                how you collect and understand data.
+                The enterprise-grade visual form builder. Create complex logic flows
+                and branching surveys without coding. Transform how you collect and
+                understand data.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
