@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\FlowController;
 use App\Http\Controllers\FlowSharedController;
 use App\Http\Controllers\FormResponseController;
@@ -52,4 +53,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/users/{id}', [AuthController::class, 'update'])->middleware('check.admin.user');
     Route::get('/form-responses/download', [FormResponseController::class, 'downloadCsv'])->middleware('check.admin.user');
 
+});
+
+// Public Blog Routes
+Route::get('/blogs', [BlogController::class, 'index']);
+Route::get('/blogs/{slug}', [BlogController::class, 'show']);
+
+// Super Admin Blog Routes
+Route::middleware(['auth:sanctum', 'check.superadmin'])->group(function () {
+    Route::get('/admin/blogs', [BlogController::class, 'adminIndex']);
+    Route::get('/admin/blogs/{id}', [BlogController::class, 'adminShow']);
+    Route::post('/blogs', [BlogController::class, 'store']);
+    Route::put('/blogs/{id}', [BlogController::class, 'update']);
+    Route::delete('/blogs/{id}', [BlogController::class, 'destroy']);
 });

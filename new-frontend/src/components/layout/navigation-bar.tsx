@@ -50,6 +50,10 @@ const docsCategories = {
     // additional categories...
 };
 
+import { getRequest } from "@/utils/apiUtils";
+import { setUser } from "@/slice/userSlice";
+import { User } from "@/types/types";
+
 export function NavigationBar() {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -63,20 +67,37 @@ export function NavigationBar() {
     const { user } = useSelector((state: RootState) => state.user);
 
     React.useEffect(() => {
-        // Check localStorage for auth token
-        const authData = localStorage.getItem("auth");
-        if (authData) {
-            try {
-                const { token } = JSON.parse(authData);
-                setIsLoggedIn(!!token);
-            } catch (error) {
-                console.error("Error parsing auth data:", error);
+        const checkAuth = async () => {
+            const authData = localStorage.getItem("auth");
+            if (authData) {
+                try {
+                    const { token } = JSON.parse(authData);
+                    if (token) {
+                        setIsLoggedIn(true);
+                        // If user is not in Redux (e.g. refresh), fetch it
+                        if (!user) {
+                            try {
+                                const userData = await getRequest<User>("/api/auth/me", true);
+                                dispatch(setUser(userData));
+                            } catch (error) {
+                                console.error("Failed to fetch user:", error);
+                                // Optional: handle logout if token invalid
+                            }
+                        }
+                    } else {
+                        setIsLoggedIn(false);
+                    }
+                } catch (error) {
+                    console.error("Error parsing auth data:", error);
+                    setIsLoggedIn(false);
+                }
+            } else {
                 setIsLoggedIn(false);
             }
-        } else {
-            setIsLoggedIn(false);
-        }
-    }, [user]); // Added user dependency to re-check if user state changes
+        };
+
+        checkAuth();
+    }, [user, dispatch]);
 
     return (
         <nav
@@ -130,6 +151,22 @@ export function NavigationBar() {
                                                 </NavigationMenuLink>
                                             </NavigationMenuItem>
                                         )}
+                                        {isLoggedIn && user && (user.role?.toLowerCase() === "superadmin" || user.role === "admin") && (
+                                            <NavigationMenuItem>
+                                                <NavigationMenuLink asChild>
+                                                    <Link href="/admin/blogs" className={navigationMenuTriggerStyle()}>
+                                                        Manage Blogs
+                                                    </Link>
+                                                </NavigationMenuLink>
+                                            </NavigationMenuItem>
+                                        )}
+                                        <NavigationMenuItem>
+                                            <NavigationMenuLink asChild>
+                                                <Link href="/blogs" className={navigationMenuTriggerStyle()}>
+                                                    Blogs
+                                                </Link>
+                                            </NavigationMenuLink>
+                                        </NavigationMenuItem>
                                         <NavigationMenuItem>
                                             <NavigationMenuTrigger>
                                                 Documentation

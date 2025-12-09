@@ -1,179 +1,127 @@
 "use client";
 
-import { Calendar, ArrowRight } from "lucide-react";
-import cardImage from "@/assets/banner.png";
-import Image from "next/image";
-import Link from "next/link"; // For "Read More" links if they were functional
+import { useEffect, useState, Suspense } from "react";
+import { getBlogs } from "@/services/blogService";
+import { Blog, PaginatedResponse } from "@/types/blog";
+import { BlogCard } from "@/components/blog/BlogCard";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { Plus } from "lucide-react";
 
-const blogs = [
-    {
-        title: "What is a Flow-Based Survey and Why It’s the Future",
-        desc: "Discover how Melvok Surveys turn static forms into engaging visual experiences for users and team.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?workflow",
-    },
-    {
-        title: "Visual Data Collection: The Power of Connected Flows",
-        desc: "Learn how visual workflows help you understand and analyze responses better.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?data",
-    },
-    {
-        title: "Boost Team Collaboration with Interactive Flow Surveys",
-        desc: "See how teams can build, share, and analyze surveys visually using Melvok.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?teamwork",
-    },
-    {
-        title: "10 Reasons to Switch from Traditional Forms to Melvok",
-        desc: "Traditional forms are outdated. Discover why Melvok is the modern alternative.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?technology",
-    },
-    {
-        title: "Connecting Surveys with Analytics Dashboards",
-        desc: "Bridge the gap between survey data and insights — all within Melvok.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?analytics",
-    },
-    {
-        title: "How Melvok Simplifies Data-Driven Decision Making",
-        desc: "Turn raw survey responses into actionable insights with Melvok’s smart flow engine.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?decision",
-    },
-    {
-        title: "From Forms to Flows: The UX Revolution",
-        desc: "Why user experience matters in surveys — and how Melvok makes it delightful.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?ux",
-    },
-    {
-        title: "Integrate AI with Your Surveys",
-        desc: "Use Melvok’s AI integration to auto-summarize responses and predict trends.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?ai",
-    },
-    {
-        title: "Gamify Your Surveys for Better Engagement",
-        desc: "Engage respondents like never before using interactive flows and progress-based visuals.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?gamification",
-    },
-    {
-        title: "No-Code Survey Builder for Everyone",
-        desc: "Melvok lets anyone build powerful surveys with zero code.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?nocode",
-    },
-    {
-        title: "Melvok for Enterprises: Scale with Confidence",
-        desc: "Built to handle teams, permissions, and analytics at enterprise scale.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?enterprise",
-    },
-    {
-        title: "Export Survey Data to Excel, PDF, or API",
-        desc: "Flexible export options let you work your way with Melvok.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?export",
-    },
-    {
-        title: "How Visual Surveys Improve Response Accuracy",
-        desc: "Visual flow surveys lead to better understanding and more accurate data.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?accuracy",
-    },
-    {
-        title: "Connect Your CRM with Melvok Surveys",
-        desc: "Seamlessly integrate with popular CRMs for automated response tracking.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?crm",
-    },
-    {
-        title: "Understand User Journeys with Flow Maps",
-        desc: "Visualize every step users take during a survey — from start to finish.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?journey",
-    },
-    {
-        title: "Improve Feedback Loops with Flow Insights",
-        desc: "Instant feedback visualization helps you act fast and smarter.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?feedback",
-    },
-    {
-        title: "Melvok for Education and Research",
-        desc: "Perfect for teachers, universities, and research teams.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?education",
-    },
-    {
-        title: "How to Embed Flow Surveys in Websites",
-        desc: "Add interactive Melvok surveys directly to your website or dashboard.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?embed",
-    },
-    {
-        title: "Designing Surveys That Feel Human",
-        desc: "Human-centered survey design is key to higher completion rates.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?design",
-    },
-    {
-        title: "The Future of Flow-Based Analytics",
-        desc: "See what’s next for Melvok and the world of visual data collection.",
-        date: "Oct 2025",
-        image: "https://source.unsplash.com/featured/?future",
-    },
-];
+function BlogsContent() {
+    const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [pagination, setPagination] = useState<PaginatedResponse<Blog> | null>(null);
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const { user } = useSelector((state: RootState) => state.user);
+
+    const page = Number(searchParams.get("page")) || 1;
+    const search = searchParams.get("search") || "";
+    const [searchTerm, setSearchTerm] = useState(search);
+
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            setLoading(true);
+            try {
+                const response = await getBlogs(page, search);
+                setBlogs(response.data);
+                setPagination(response);
+            } catch (error) {
+                console.error("Failed to fetch blogs", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBlogs();
+    }, [page, search]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        router.push(`/blogs?page=1&search=${encodeURIComponent(searchTerm)}`);
+    };
+
+    const handlePageChange = (newPage: number) => {
+        router.push(`/blogs?page=${newPage}&search=${encodeURIComponent(search)}`);
+    };
+
+    return (
+        <section className="container mx-auto py-16 px-4">
+            <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Blogs & News            </h1>
+
+            {user && (user.role?.toLowerCase() === "superadmin" || user.role === "admin") && (
+                <div className="flex justify-end mb-6">
+                    <Button onClick={() => router.push("/admin/blogs/create")}>
+                        <Plus className="mr-2 h-4 w-4" /> Add Blog
+                    </Button>
+                </div>
+            )}
+
+            <div className="flex justify-center mb-10">
+                <form onSubmit={handleSearch} className="flex w-full max-w-lg items-center space-x-2">
+                    <Input
+                        type="text"
+                        placeholder="Search blogs..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <Button type="submit">Search</Button>
+                </form>
+            </div>
+
+            {loading ? (
+                <div className="flex justify-center py-20">
+                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                </div>
+            ) : (
+                <>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {blogs.map((blog) => (
+                            <BlogCard key={blog.id} blog={blog} />
+                        ))}
+                    </div>
+
+                    {blogs.length === 0 && (
+                        <p className="text-center text-muted-foreground py-20">No blogs found.</p>
+                    )}
+
+                    {pagination && pagination.last_page > 1 && (
+                        <div className="flex justify-center mt-12 space-x-2">
+                            <Button
+                                variant="outline"
+                                disabled={pagination.current_page === 1}
+                                onClick={() => handlePageChange(pagination.current_page - 1)}
+                            >
+                                Previous
+                            </Button>
+                            <span className="flex items-center px-4 text-sm font-medium">
+                                Page {pagination.current_page} of {pagination.last_page}
+                            </span>
+                            <Button
+                                variant="outline"
+                                disabled={pagination.current_page === pagination.last_page}
+                                onClick={() => handlePageChange(pagination.current_page + 1)}
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    )}
+                </>
+            )}
+        </section>
+    );
+}
 
 export default function BlogsPage() {
     return (
-        <section className="max-w-7xl mx-auto px-4 py-16">
-            <h1 className="text-4xl font-bold text-center mb-8">Melvok Blogs</h1>
-            <p className="text-center text-muted-foreground mb-12">
-                Insights, guides, and stories about the future of visual surveys &
-                analytics.
-            </p>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {blogs.map((blog, index) => (
-                    <div
-                        key={index}
-                        className="rounded-2xl border border-border shadow-sm hover:shadow-md transition overflow-hidden bg-card"
-                    >
-                        {/* Using Next.js Image for banner, but for external splashes layout fill or fixed width/height needed */}
-                        {/* Since cardImage is local, we use Image directly. For blog.image (external), we use img or configure domains. */}
-                        <div className="h-48 w-full relative overflow-hidden">
-                            <Image
-                                src={cardImage}
-                                alt={blog.title}
-                                className="object-cover w-full h-full"
-                                width={500}
-                                height={300}
-                            />
-                        </div>
-                        {/* Note: The original code used cardImage for ALL blogs despite the array having 'image' property. 
-                I've kept cardImage as in original code logic: src={cardImage}. 
-                If the intention was to use blog.image, it should be changed. 
-                I'll keep fidelity to original: src={cardImage} which was: import cardImage... src={cardImage} */}
-
-                        <div className="p-5">
-                            <div className="flex items-center text-muted-foreground text-sm mb-2">
-                                <Calendar className="w-4 h-4 mr-1" />
-                                {blog.date}
-                            </div>
-                            <h2 className="text-lg font-semibold mb-2">{blog.title}</h2>
-                            <p className="text-muted-foreground text-sm mb-4">{blog.desc}</p>
-                            <button className="flex items-center text-foreground font-medium hover:underline">
-                                Read More
-                                <ArrowRight className="w-4 h-4 ml-1" />
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </section>
+        <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="h-10 w-10 animate-spin" /></div>}>
+            <BlogsContent />
+        </Suspense>
     );
 }
