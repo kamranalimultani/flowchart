@@ -11,7 +11,7 @@ type Blog = {
 async function getBlogs(): Promise<Blog[]> {
     try {
         // Build constraint: Use localhost directly if env is missing during build
-        const url = `${API_URL}/api/blogs`;
+        const url = `${API_URL}/api/blogs?per_page=1000`;
         console.log(`Sitemap Fetching: ${url}`);
 
         const res = await fetch(url, {

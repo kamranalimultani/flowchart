@@ -18,7 +18,8 @@ class BlogController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        return response()->json($query->orderBy('created_at', 'desc')->paginate(10));
+        $perPage = $request->input('per_page', 10);
+        return response()->json($query->orderBy('created_at', 'desc')->paginate($perPage));
     }
 
     // Public: Show single blog

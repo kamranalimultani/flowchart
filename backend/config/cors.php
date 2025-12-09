@@ -20,6 +20,10 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
+        '*',
+        'melvok.com',
+        'https://melvok.com',
+        'www.melvok.com',
         'http://localhost:5173', // Vite frontend
         'http://127.0.0.1:5173',
         'http://localhost:3000', // Next.js default
