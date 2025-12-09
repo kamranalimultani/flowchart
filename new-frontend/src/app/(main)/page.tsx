@@ -62,6 +62,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@radix-ui/react-separator";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import ContactForm from "@/components/landing/ContactForm";
 
 // Note: demoVideo import might need adjustment if it's not in public or assets works differently
 // For now, assume assets alias works or move file. 
@@ -78,6 +80,7 @@ export default function LandingPage() {
   const [hoveredUseCase, setHoveredUseCase] = useState<any>(null);
   const [hoveredAI, setHoveredAI] = useState<any>(null);
   const [open, setOpen] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -922,71 +925,17 @@ export default function LandingPage() {
               {/* Contact Form */}
               <div className="animate-fade-in-up animation-delay-600">
                 <Card className="p-8 border-2">
-                  <form className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-semibold text-foreground">
-                          First Name
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="John"
-                          className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-semibold text-foreground">
-                          Last Name
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Doe"
-                          className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-foreground">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        placeholder="john@example.com"
-                        className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-foreground">
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+1 (555) 000-0000"
-                        className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-foreground">
-                        Message
-                      </label>
-                      <textarea
-                        rows={5}
-                        placeholder="Tell us about your project..."
-                        className="w-full px-4 py-3 rounded-lg border-2 border-border bg-background focus:border-primary focus:outline-none transition-colors resize-none"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
-                    >
-                      Send Message
-                      <ArrowRight className="inline-block ml-2 w-5 h-5" />
-                    </button>
-                  </form>
+                  <GoogleReCaptchaProvider
+                    reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                    scriptProps={{
+                      async: false,
+                      defer: false,
+                      appendTo: "head",
+                      nonce: undefined,
+                    }}
+                  >
+                    <ContactForm />
+                  </GoogleReCaptchaProvider>
                 </Card>
               </div>
 
@@ -1003,10 +952,10 @@ export default function LandingPage() {
                         Our friendly team is here to help.
                       </p>
                       <a
-                        href="mailto:hello@surveyplatform.com"
+                        href="mailto:info@melvok.com"
                         className="text-primary font-semibold hover:underline"
                       >
-                        hello@surveyplatform.com
+                        info@melvok.com
                       </a>
                     </div>
                   </div>
@@ -1023,10 +972,10 @@ export default function LandingPage() {
                         Mon-Fri from 8am to 5pm.
                       </p>
                       <a
-                        href="tel:+15550000000"
+                        href="tel:+919389618797"
                         className="text-primary font-semibold hover:underline"
                       >
-                        +1 (555) 000-0000
+                        +91 93896 18797
                       </a>
                     </div>
                   </div>
@@ -1043,9 +992,9 @@ export default function LandingPage() {
                         Come say hello at our office HQ.
                       </p>
                       <p className="text-primary font-semibold">
-                        123 Business Street
+                        Dubai Silicon Oasis, DDP, Building A2
                         <br />
-                        San Francisco, CA 94107
+                        Dubai, United Arab Emirates
                       </p>
                     </div>
                   </div>

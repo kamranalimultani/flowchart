@@ -25,6 +25,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/create-checkout', [AuthController::class, 'createCheckout']);
 Route::post('/lemon-squeezy/webhook', [AuthController::class, 'webhook']);
 Route::get('/test-api-connection', [AuthController::class, 'testApiConnection']);
+Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'send']);
 
 
 // form tempaltes

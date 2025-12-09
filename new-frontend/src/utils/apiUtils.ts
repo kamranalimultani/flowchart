@@ -96,6 +96,11 @@ const request = async <T = any>(
         const response: AxiosResponse<T> = await axios(config);
         return response.data;
     } catch (error) {
+        // If it's already an ApiError (e.g. from auth check), just rethrow it
+        if (error instanceof ApiError) {
+            throw error;
+        }
+
         // Handle Axios errors
         if (axios.isAxiosError(error)) {
             const axiosError = error as AxiosError<ApiErrorResponse>;
@@ -104,6 +109,12 @@ const request = async <T = any>(
                 // Server responded with error status
                 const errorData = axiosError.response.data;
                 const statusCode = axiosError.response.status;
+
+                console.error("API Error Response:", {
+                    status: statusCode,
+                    data: errorData,
+                    headers: axiosError.response.headers
+                });
 
                 throw new ApiError(
                     errorData?.message || getDefaultErrorMessage(statusCode),
@@ -130,6 +141,7 @@ const request = async <T = any>(
         }
 
         // Non-Axios error
+        console.error("Non-Axios API Error:", error);
         throw new ApiError(
             error instanceof Error ? error.message : "An unexpected error occurred",
             0,
