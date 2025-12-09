@@ -10,15 +10,23 @@ type Blog = {
 
 async function getBlogs(): Promise<Blog[]> {
     try {
-        const res = await fetch(`${API_URL}/api/blogs`, { next: { revalidate: 60 } });
+        // Build constraint: Use localhost directly if env is missing during build
+        const url = `${API_URL}/api/blogs`;
+        console.log(`Sitemap Fetching: ${url}`);
+
+        const res = await fetch(url, {
+            next: { revalidate: 60 },
+            cache: 'no-store'
+        });
+
         if (!res.ok) {
-            throw new Error('Failed to fetch blogs');
+            console.error(`Sitemap Fetch Failed: ${res.status} ${res.statusText}`);
+            return [];
         }
         const json = await res.json();
-        // Handle both paginated and non-paginated responses
         return Array.isArray(json) ? json : (json.data || []);
     } catch (error) {
-        console.error("Sitemap: Failed to fetch blogs", error);
+        console.error("Sitemap: Failed to fetch blogs. Ensure Backend is running.", error);
         return [];
     }
 }
