@@ -23,11 +23,44 @@ class DashboardController extends Controller
         // =======================
         // 📊 Summary Metrics
         // =======================
-        $totalUsers = User::count(); // or ->where('subscription_type', '!=', 'none')
+        $role = strtolower($user->role ?? 'user');
+        
+        $stats = [
+            'totalUsers' => 0,
+            'totalAdmins' => 0,          // For Superadmin (Companies)
+            'totalTeamMembers' => 0,     // For Admin (Company Users)
+            'subscriptionStats' => [],   // For Superadmin
+        ];
+
+        // 👑 SUPERADMIN: Global Stats
+        if ($role === 'superadmin') {
+            $stats['totalUsers'] = User::count();
+            $stats['totalAdmins'] = User::where('role', 'admin')->count(); // Total Companies
+            
+            // Subscription Logic (Example)
+            $stats['subscriptionStats'] = [
+                'free' => User::where('subscription_type', 'free')->orWhereNull('subscription_type')->count(),
+                'paid' => User::where('subscription_type', '!=', 'free')->whereNotNull('subscription_type')->count(),
+                // 'trials' => User::whereNotNull('trial_ends_at')->where('trial_ends_at', '>', now())->count(),
+            ];
+        } 
+        // 🏢 ADMIN: Company Stats
+        elseif ($role === 'admin') {
+            // Count users in the same company (excluding self if desired, but usually total team size)
+            if ($user->company_id) {
+                $stats['totalTeamMembers'] = User::where('company_id', $user->company_id)->count();
+            } else {
+                // If no company assigned, maybe just count self or 0
+                $stats['totalTeamMembers'] = 1; 
+            }
+        }
+        // 👤 USER: Personal Stats (Defaults)
+        
+        // General Stats (Everyone sees their own usage)
         $totalFlows = Flow::where('user_id', $user->id)->count();
         $totalTemplates = FormTemplate::where('user_id', $user->id)->count();
         $totalSharedFlows = Flow::where('user_id', $user->id)
-            ->whereNotNull('description') // simulate "shared"
+            ->whereNotNull('description')
             ->count();
         $totalSubmissions = FormResponse::where('user_id', $user->id)->count();
         $flowsCreated = Flow::where('user_id', $user->id)
@@ -102,8 +135,9 @@ class DashboardController extends Controller
         // =======================
         // 🎯 Response
         // =======================
-        return response()->json([
-            'users' => $totalUsers,
+        return response()->json(array_merge([
+            'users' => $role === 'superadmin' ? $stats['totalUsers'] : ($role === 'admin' ? $stats['totalTeamMembers'] : 0),
+            'roleData' => $stats, // Send full stats for frontend flexibility
             'flows' => $totalFlows,
             'templates' => $totalTemplates,
             'sharedFlows' => $totalSharedFlows,
@@ -112,7 +146,7 @@ class DashboardController extends Controller
             'barData' => $barData,
             'lineData' => $lineData,
             'pieData' => $templateUsage,
-        ]);
+        ], $stats));
     }
 }
 

@@ -16,10 +16,13 @@ import {
     Tooltip,
 } from "recharts";
 import { useTheme } from "@/components/theme-provider";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function Dashboard() {
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const { user } = useSelector((state: RootState) => state.user);
     const { theme } = useTheme();
 
     // Dynamic colors based on theme
@@ -62,12 +65,50 @@ export default function Dashboard() {
     return (
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {/* Metric Cards */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Total Users</CardTitle>
-                </CardHeader>
-                <CardContent className="text-3xl font-bold">{users}</CardContent>
-            </Card>
+            {/* Role-Based Metric Cards */}
+            {user?.role?.toLowerCase() === "superadmin" && (
+                <>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Total Users</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-3xl font-bold">{users}</CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Total Companies</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-3xl font-bold">{data?.roleData?.totalAdmins || 0}</CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Free Users</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-3xl font-bold text-green-600">
+                            {data?.roleData?.subscriptionStats?.free || 0}
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Paid Users</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-3xl font-bold text-purple-600">
+                            {data?.roleData?.subscriptionStats?.paid || 0}
+                        </CardContent>
+                    </Card>
+                </>
+            )}
+
+            {user?.role === "admin" && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Team Members</CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-3xl font-bold">
+                        {data?.roleData?.totalTeamMembers || 0}
+                    </CardContent>
+                </Card>
+            )}
 
             <Card>
                 <CardHeader>
@@ -123,20 +164,22 @@ export default function Dashboard() {
                 </CardContent>
             </Card>
 
-            <Card className="col-span-2">
-                <CardHeader>
-                    <CardTitle>User Growth This Month</CardTitle>
-                </CardHeader>
-                <CardContent style={{ height: 200 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={lineData}>
-                            <Line type="monotone" dataKey="users" stroke="#10b981" />
-                            <Tooltip />
-                            <Legend />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </CardContent>
-            </Card>
+            {user?.role?.toLowerCase() === "superadmin" && (
+                <Card className="col-span-2">
+                    <CardHeader>
+                        <CardTitle>User Growth This Month</CardTitle>
+                    </CardHeader>
+                    <CardContent style={{ height: 200 }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={lineData}>
+                                <Line type="monotone" dataKey="users" stroke="#10b981" />
+                                <Tooltip />
+                                <Legend />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </CardContent>
+                </Card>
+            )}
 
             <Card className="col-span-1">
                 <CardHeader>
