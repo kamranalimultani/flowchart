@@ -21,11 +21,22 @@ export default function AdminBlogsPage() {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    const fetchBlogs = async () => {
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        last_page: 1,
+        total: 0,
+    });
+
+    const fetchBlogs = async (page = 1) => {
         setLoading(true);
         try {
-            const response = await getAdminBlogs();
+            const response = await getAdminBlogs(page);
             setBlogs(response.data);
+            setPagination({
+                current_page: response.current_page,
+                last_page: response.last_page,
+                total: response.total,
+            });
         } catch (error: any) {
             console.error("Failed to fetch blogs", error);
             if (error?.statusCode === 403) {
@@ -41,12 +52,19 @@ export default function AdminBlogsPage() {
         fetchBlogs();
     }, []);
 
+    const handlePageChange = (newPage: number) => {
+        if (newPage >= 1 && newPage <= pagination.last_page) {
+            fetchBlogs(newPage);
+        }
+    };
+
     const handleDelete = async (id: number) => {
         if (confirm("Are you sure you want to delete this blog?")) {
             try {
                 await deleteBlog(id);
                 toast.success("Blog deleted successfully");
-                setBlogs(blogs.filter(b => b.id !== id));
+                // Refresh current page
+                fetchBlogs(pagination.current_page);
             } catch (error) {
                 toast.error("Failed to delete blog");
             }
@@ -68,59 +86,86 @@ export default function AdminBlogsPage() {
             {loading ? (
                 <div className="flex justify-center py-20"><Loader2 className="animate-spin h-8 w-8 text-primary" /></div>
             ) : (
-                <div className="rounded-md border bg-card">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[400px]">Title</TableHead>
-                                <TableHead>Author</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Created At</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {blogs.length === 0 ? (
+                <div className="space-y-4">
+                    <div className="rounded-md border bg-card">
+                        <Table>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
-                                        No blogs found. Create one to get started.
-                                    </TableCell>
+                                    <TableHead className="w-[400px]">Title</TableHead>
+                                    <TableHead>Author</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Created At</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
-                            ) : (
-                                blogs.map((blog) => (
-                                    <TableRow key={blog.id}>
-                                        <TableCell className="font-medium">{blog.title}</TableCell>
-                                        <TableCell>{blog.author?.name || "Unknown"}</TableCell>
-                                        <TableCell>
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${blog.is_published ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'}`}>
-                                                {blog.is_published ? "Published" : "Draft"}
-                                            </span>
-                                        </TableCell>
-                                        <TableCell>{new Date(blog.created_at).toLocaleDateString()}</TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={() => router.push(`/admin/blogs/${blog.id}/edit`)}
-                                                >
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/20"
-                                                    onClick={() => handleDelete(blog.id)}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
+                            </TableHeader>
+                            <TableBody>
+                                {blogs.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
+                                            No blogs found. Create one to get started.
                                         </TableCell>
                                     </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
+                                ) : (
+                                    blogs.map((blog) => (
+                                        <TableRow key={blog.id}>
+                                            <TableCell className="font-medium">{blog.title}</TableCell>
+                                            <TableCell>{blog.author?.name || "Unknown"}</TableCell>
+                                            <TableCell>
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${blog.is_published ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'}`}>
+                                                    {blog.is_published ? "Published" : "Draft"}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>{new Date(blog.created_at).toLocaleDateString()}</TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => router.push(`/admin/blogs/${blog.id}/edit`)}
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/20"
+                                                        onClick={() => handleDelete(blog.id)}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    {/* Pagination Controls */}
+                    {pagination.last_page > 1 && (
+                        <div className="flex items-center justify-end space-x-2 py-4">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handlePageChange(pagination.current_page - 1)}
+                                disabled={pagination.current_page <= 1}
+                            >
+                                Previous
+                            </Button>
+                            <div className="text-sm text-muted-foreground">
+                                Page {pagination.current_page} of {pagination.last_page}
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handlePageChange(pagination.current_page + 1)}
+                                disabled={pagination.current_page >= pagination.last_page}
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
