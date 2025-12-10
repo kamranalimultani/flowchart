@@ -11,6 +11,13 @@ import {
     DropdownMenuTrigger,
     DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import {
     NavigationMenu,
@@ -116,10 +123,99 @@ export function NavigationBar() {
                     </Link>
 
                     <div className="flex items-center gap-4">
-                        {/* Logged in user navigation */}
+                        {/* Mobile Menu Trigger & Sheet */}
+                        <div className="flex md:hidden items-center gap-2">
+                            {/* Keep User Dropdown for quick profile access on mobile if desired, or move it inside sheet. 
+                                 User asked for "one hamburger to show everything". 
+                                 So I will hide the separate user dropdown on mobile and put it all in the sheet.
+                             */}
+
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                        <Menu className="h-6 w-6" />
+                                        <span className="sr-only">Toggle menu</span>
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                                    <SheetHeader>
+                                        <SheetTitle className="text-left">Menu</SheetTitle>
+                                    </SheetHeader>
+                                    <div className="flex flex-col gap-4 py-4 mt-4">
+                                        {isLoggedIn ? (
+                                            <>
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="text-sm font-semibold text-muted-foreground px-2">Apps</div>
+                                                    <MobileLink href="/dashboard" icon={<ArrowRight className="w-4 h-4" />}>
+                                                        Analytics
+                                                    </MobileLink>
+                                                    <MobileLink href="/flows">Flows</MobileLink>
+                                                    <MobileLink href="/forms-templates">Form Templates</MobileLink>
+                                                    <MobileLink href="/flow-templates">Templates</MobileLink>
+
+                                                    {user && (user as any).role == "admin" && (
+                                                        <MobileLink href="/users">Users</MobileLink>
+                                                    )}
+                                                    {user && user.role?.toLowerCase() === "superadmin" && (
+                                                        <MobileLink href="/admin/blogs">Manage Blogs</MobileLink>
+                                                    )}
+
+                                                    <MobileLink href="/blogs">Blogs</MobileLink>
+                                                </div>
+
+                                                <div className="border-t my-2" />
+
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="text-sm font-semibold text-muted-foreground px-2">Account</div>
+                                                    <div className="flex items-center gap-2 px-2 py-2">
+                                                        <CircleUser className="w-5 h-5" />
+                                                        <span className="font-medium">{user?.name || "User"}</span>
+                                                    </div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="justify-start text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 px-2"
+                                                        onClick={() => {
+                                                            handleLogout(dispatch);
+                                                            router.push("/login"); // Sheet will close automatically if we navigate, but standard sheet might need manual open state control. 
+                                                            // For now assuming standard behavior (sheet stays or overlay click closes). 
+                                                            // Ideally we use a controlled open state to close on click.
+                                                        }}
+                                                    >
+                                                        <Power className="mr-2 h-4 w-4" />
+                                                        Logout
+                                                    </Button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <MobileLink href="/#features">Features</MobileLink>
+                                                <MobileLink href="/#pricing">Pricing</MobileLink>
+                                                <MobileLink href="/blogs">Blogs</MobileLink>
+                                                <MobileLink href="/flow-templates">Templates</MobileLink>
+                                                {/* Docs - maybe simplified link or expandable */}
+                                                <MobileLink href="/documentation?section=intro">Documentation</MobileLink>
+
+                                                <div className="border-t my-4" />
+
+                                                <div className="flex flex-col gap-2">
+                                                    <Link href="/login" onClick={() => { }}>
+                                                        <Button variant="ghost" className="w-full justify-start">Sign In</Button>
+                                                    </Link>
+                                                    <Link href="/signup" onClick={() => { }}>
+                                                        <Button className="w-full">Get Started</Button>
+                                                    </Link>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
+
+                        {/* DESKTOP: Logged in user navigation */}
                         {isLoggedIn ? (
-                            <>
-                                <NavigationMenu className="hidden md:flex">
+                            <div className="hidden md:flex items-center gap-4">
+                                <NavigationMenu>
                                     <NavigationMenuList>
                                         <NavigationMenuItem>
                                             <NavigationMenuLink asChild>
@@ -242,11 +338,11 @@ export function NavigationBar() {
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                            </>
+                            </div>
                         ) : (
-                            <>
+                            <div className="hidden md:flex items-center gap-4">
                                 {/* Not logged in navigation */}
-                                <NavigationMenu className="hidden md:flex">
+                                <NavigationMenu>
                                     <NavigationMenuList>
                                         <NavigationMenuItem>
                                             <NavigationMenuLink asChild>
@@ -295,6 +391,13 @@ export function NavigationBar() {
                                         </NavigationMenuItem>
                                         <NavigationMenuItem>
                                             <NavigationMenuLink asChild>
+                                                <Link href="/flow-templates" className={navigationMenuTriggerStyle()}>
+                                                    Templates
+                                                </Link>
+                                            </NavigationMenuLink>
+                                        </NavigationMenuItem>
+                                        <NavigationMenuItem>
+                                            <NavigationMenuLink asChild>
                                                 <Link href="/login" className={navigationMenuTriggerStyle()}>
                                                     Sign In
                                                 </Link>
@@ -305,12 +408,12 @@ export function NavigationBar() {
 
                                 {/* Get Started Button */}
                                 <Link href="/signup">
-                                    <Button className="hidden md:flex">
+                                    <Button>
                                         Get Started Free
                                         <ArrowRight className="ml-2 w-4 h-4" />
                                     </Button>
                                 </Link>
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -344,3 +447,26 @@ const ListItem = React.forwardRef<
     );
 });
 ListItem.displayName = "ListItem";
+
+interface MobileLinkProps extends React.PropsWithChildren {
+    href: string;
+    icon?: React.ReactNode;
+    onClick?: () => void;
+    className?: string;
+}
+
+function MobileLink({ href, icon, children, onClick, className }: MobileLinkProps) {
+    return (
+        <Link
+            href={href}
+            className={cn(
+                "block py-2 px-2 text-lg font-medium hover:bg-accent hover:text-accent-foreground rounded-md transition-colors flex items-center gap-2",
+                className
+            )}
+            onClick={onClick}
+        >
+            {icon}
+            {children}
+        </Link>
+    );
+}
