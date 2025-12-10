@@ -69,6 +69,10 @@ const request = async <T = any>(
             Accept: "application/json",
         };
 
+        if (data instanceof FormData) {
+            delete headers["Content-Type"];
+        }
+
         if (useAuth) {
             const token = getToken();
             if (!token) {

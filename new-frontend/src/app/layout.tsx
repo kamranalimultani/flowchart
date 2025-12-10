@@ -56,6 +56,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script src="https://cloud.umami.is/script.js" data-website-id="91d96cd7-1760-46b3-9ef7-c347ca11aa88"></Script>
         <Script src="/viewer.min.js" strategy="afterInteractive" />
         <Script src="https://checkout.razorpay.com/v1/checkout.js" />
         <Providers>{children}</Providers>

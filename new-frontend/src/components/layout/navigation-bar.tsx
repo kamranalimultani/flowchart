@@ -142,6 +142,13 @@ export function NavigationBar() {
                                                 </Link>
                                             </NavigationMenuLink>
                                         </NavigationMenuItem>
+                                        <NavigationMenuItem>
+                                            <NavigationMenuLink asChild>
+                                                <Link href="/flow-templates" className={navigationMenuTriggerStyle()}>
+                                                    Templates
+                                                </Link>
+                                            </NavigationMenuLink>
+                                        </NavigationMenuItem>
                                         {isLoggedIn && user !== null && (user as any).role == "admin" && (
                                             <NavigationMenuItem>
                                                 <NavigationMenuLink asChild>
@@ -151,7 +158,7 @@ export function NavigationBar() {
                                                 </NavigationMenuLink>
                                             </NavigationMenuItem>
                                         )}
-                                        {isLoggedIn && user && (user.role?.toLowerCase() === "superadmin" || user.role === "admin") && (
+                                        {isLoggedIn && user && user.role?.toLowerCase() === "superadmin" && (
                                             <NavigationMenuItem>
                                                 <NavigationMenuLink asChild>
                                                     <Link href="/admin/blogs" className={navigationMenuTriggerStyle()}>
@@ -160,6 +167,13 @@ export function NavigationBar() {
                                                 </NavigationMenuLink>
                                             </NavigationMenuItem>
                                         )}
+                                        <NavigationMenuItem>
+                                            <NavigationMenuLink asChild>
+                                                <Link href="/flow-templates" className={navigationMenuTriggerStyle()}>
+                                                    Templates
+                                                </Link>
+                                            </NavigationMenuLink>
+                                        </NavigationMenuItem>
                                         <NavigationMenuItem>
                                             <NavigationMenuLink asChild>
                                                 <Link href="/blogs" className={navigationMenuTriggerStyle()}>

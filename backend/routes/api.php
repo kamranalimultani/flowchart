@@ -60,11 +60,22 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blogs/{slug}', [BlogController::class, 'show']);
 
+// Public Flow Templates Routes
+Route::get('/flow-templates', [\App\Http\Controllers\FlowTemplateController::class, 'index']);
+Route::get('/flow-templates/{slug}', [\App\Http\Controllers\FlowTemplateController::class, 'showBySlug']);
+Route::get('/flow-templates/{id}', [\App\Http\Controllers\FlowTemplateController::class, 'show']);
+
 // Super Admin Blog Routes
 Route::middleware(['auth:sanctum', 'check.superadmin'])->group(function () {
     Route::get('/admin/blogs', [BlogController::class, 'adminIndex']);
     Route::get('/admin/blogs/{id}', [BlogController::class, 'adminShow']);
     Route::post('/blogs', [BlogController::class, 'store']);
     Route::put('/blogs/{id}', [BlogController::class, 'update']);
+    Route::put('/blogs/{id}', [BlogController::class, 'update']);
     Route::delete('/blogs/{id}', [BlogController::class, 'destroy']);
+
+    // Flow Templates Management
+    Route::post('/flow-templates', [\App\Http\Controllers\FlowTemplateController::class, 'store']);
+    Route::post('/flow-templates/{id}', [\App\Http\Controllers\FlowTemplateController::class, 'update']); // Using POST for file uploads
+    Route::delete('/flow-templates/{id}', [\App\Http\Controllers\FlowTemplateController::class, 'destroy']);
 });
