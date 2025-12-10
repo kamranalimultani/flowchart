@@ -114,21 +114,21 @@ export function FlowTemplatesView() {
     };
 
     return (
-        <div className="container mx-auto p-6 space-y-6">
+        <div className="container mx-auto p-4 md:p-6 space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <h1 className="text-3xl font-bold tracking-tight">Flow Templates</h1>
+                <h1 className="text-3xl font-bold tracking-tight self-start md:self-auto">Flow Templates</h1>
                 <div className="flex items-center gap-2 w-full md:w-auto">
-                    <div className="relative w-full md:w-64">
+                    <div className="relative flex-1 md:w-64 md:flex-none">
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search templates..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pl-8"
+                            className="pl-8 w-full"
                         />
                     </div>
                     {isSuperAdmin && (
-                        <Button onClick={handleCreate}>
+                        <Button onClick={handleCreate} className="whitespace-nowrap">
                             <Plus className="mr-2 h-4 w-4" /> Add New
                         </Button>
                     )}
@@ -140,7 +140,7 @@ export function FlowTemplatesView() {
                     <Loader2 className="h-8 w-8 animate-spin" />
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
                     {templates.map((template) => (
                         <FlowTemplateCard
                             key={template.id}
@@ -153,8 +153,19 @@ export function FlowTemplatesView() {
                         />
                     ))}
                     {templates.length === 0 && (
-                        <div className="col-span-full text-center text-muted-foreground py-10">
-                            No templates found.
+                        <div className="col-span-full flex flex-col items-center justify-center p-12 text-center border-2 border-dashed rounded-xl bg-card/50">
+                            <div className="bg-muted/50 p-4 rounded-full mb-4">
+                                <Search className="w-8 h-8 text-muted-foreground" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-1">No templates found</h3>
+                            <p className="text-muted-foreground text-sm max-w-sm">
+                                {search ? "Try adjusting your search terms." : "Get started by creating your first flow template."}
+                            </p>
+                            {isSuperAdmin && !search && (
+                                <Button onClick={handleCreate} className="mt-6" variant="outline">
+                                    <Plus className="mr-2 h-4 w-4" /> Create Template
+                                </Button>
+                            )}
                         </div>
                     )}
                 </div>

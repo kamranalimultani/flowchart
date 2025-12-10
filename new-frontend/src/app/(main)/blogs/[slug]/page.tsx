@@ -7,8 +7,38 @@ import { BlogCard } from "@/components/blog/BlogCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
-export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+type Props = {
+    params: { slug: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const { slug } = await params;
+    try {
+        const data = await getBlog(slug);
+        if (!data) {
+            return {
+                title: "Blog Not Found",
+            };
+        }
+        return {
+            title: data.blog.title,
+            description: data.blog.excerpt || data.blog.content.substring(0, 150) + "...",
+            openGraph: {
+                title: data.blog.title,
+                description: data.blog.excerpt || data.blog.content.substring(0, 150) + "...",
+                images: data.blog.image ? [data.blog.image] : [],
+            },
+        };
+    } catch (error) {
+        return {
+            title: "Blog Error",
+        };
+    }
+}
+
+export default async function BlogDetailPage({ params }: Props) {
     const { slug } = await params;
     let data: BlogDetailResponse | null = null;
 

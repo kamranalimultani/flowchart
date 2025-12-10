@@ -62,8 +62,8 @@ Route::get('/blogs/{slug}', [BlogController::class, 'show']);
 
 // Public Flow Templates Routes
 Route::get('/flow-templates', [\App\Http\Controllers\FlowTemplateController::class, 'index']);
+Route::get('/flow-templates/{id}', [\App\Http\Controllers\FlowTemplateController::class, 'show'])->where('id', '[0-9]+');
 Route::get('/flow-templates/{slug}', [\App\Http\Controllers\FlowTemplateController::class, 'showBySlug']);
-Route::get('/flow-templates/{id}', [\App\Http\Controllers\FlowTemplateController::class, 'show']);
 
 // Super Admin Blog Routes
 Route::middleware(['auth:sanctum', 'check.superadmin'])->group(function () {

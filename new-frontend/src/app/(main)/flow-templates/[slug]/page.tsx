@@ -24,7 +24,9 @@ interface PageProps {
 
 // Generate Metadata
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const template = await getTemplate(params.slug);
+    const { slug } = await params;
+    const template = await getTemplate(slug);
+
     if (!template) return { title: "Template Not Found" };
 
     return {
@@ -40,7 +42,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // Page Component
 export default async function FlowTemplatePage({ params }: PageProps) {
-    const template = await getTemplate(params.slug);
+    const { slug } = await params;
+    const template = await getTemplate(slug);
 
     if (!template) {
         notFound();
