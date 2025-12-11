@@ -3,8 +3,11 @@
 import { postRequest } from "@/utils/apiUtils";
 import React, { useEffect, useState } from "react";
 import { Model } from "survey-core";
-import { Survey } from "survey-react-ui"; // ✅ Import Survey renderer
-// import "survey-core/defaultV2.min.css"; // ✅ Core styles (can be swapped with theme CSS if needed)
+import dynamic from "next/dynamic";
+// Dynamically import Survey component to avoid SSR issues
+const Survey = dynamic(() => import("survey-react-ui").then(mod => mod.Survey), { ssr: false });
+// Import Survey core CSS client‑side only
+import "survey-core/survey-core.css"; // Core styles for proper UI rendering
 
 interface Props {
   formData: any;
