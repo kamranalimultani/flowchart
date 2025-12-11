@@ -56,9 +56,19 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Script src="https://cloud.umami.is/script.js" data-website-id="91d96cd7-1760-46b3-9ef7-c347ca11aa88"></Script>
+        <Script src="https://cloud.umami.is/script.js" data-website-id="91d96cd7-1760-46b3-9ef7-c347ca11aa88" />
         <Script src="/viewer.min.js" strategy="afterInteractive" />
         <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        {/* Google Analytics */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-WYQ1XX1ZR6" strategy="afterInteractive" />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-WYQ1XX1ZR6');
+          `}
+        </Script>
         <Providers>{children}</Providers>
       </body>
     </html>
