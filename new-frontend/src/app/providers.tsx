@@ -10,7 +10,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <Provider store={store}>
             <HelmetProvider>
-                <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+                <ThemeProvider storageKey="vite-ui-theme">
                     <NotificationProvider>
                         {children}
                     </NotificationProvider>

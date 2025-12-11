@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light"; // Only light theme supported
+type Theme = "light" | "dark"; // Support both types but enforce light theme
 
 type ThemeProviderProps = {
     children: React.ReactNode;
