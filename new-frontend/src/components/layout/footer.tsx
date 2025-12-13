@@ -14,7 +14,7 @@ const Footer = () => {
                             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
                                 <Sparkles className="w-6 h-6 text-primary-foreground" />
                             </div>
-                            <span className="text-2xl font-black">Melvok</span>
+                            <span className="text-2xl font-black">Flow Survey</span>
                         </div>
                         <p className="text-muted-foreground mb-6 max-w-sm">
                             The most powerful form builder and survey platform with advanced
@@ -71,7 +71,7 @@ const Footer = () => {
 
                             {/* Email */}
                             <a
-                                href="mailto:info@melvok.com"
+                                href="mailto:info@flowchartsurvey.online"
                                 className="w-10 h-10 rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-300 hover:scale-110"
                             >
                                 <svg
@@ -244,7 +244,7 @@ const Footer = () => {
                 <div className="pt-8 border-t border-border">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-muted-foreground text-sm">
-                            © 2025 Melvok.com. All rights reserved.
+                            © 2025 Flow Survey. All rights reserved.
                         </p>
                         <div className="flex gap-6 text-sm">
                             <Link

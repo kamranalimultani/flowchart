@@ -145,7 +145,7 @@ export default function SignUp() {
             const options = {
                 key: razorpay_key,
                 subscription_id: subscription_id,
-                name: "Melvok",
+                name: "Flow Survey",
                 description: "Monthly Subscription",
                 handler: async function (response: any) {
                     try {
@@ -207,7 +207,7 @@ export default function SignUp() {
                     <div className="text-center space-y-2">
                         <Link href="/" className="inline-block">
                             <h1 className="text-4xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                                MelvokFlow
+                                Flow Survey
                             </h1>
                         </Link>
                         <p className="text-muted-foreground text-sm">
@@ -219,7 +219,7 @@ export default function SignUp() {
                         <CardHeader className="space-y-1">
                             <CardTitle className="text-2xl font-bold">Sign up</CardTitle>
                             <CardDescription>
-                                Start your journey with MelvokFlow
+                                Start your journey with Flow Survey
                             </CardDescription>
                         </CardHeader>
 
@@ -393,7 +393,7 @@ export default function SignUp() {
                     <p className="text-lg text-muted-dark">
                         Build, manage, and automate workflows for your entire company in
                         one place. <br />
-                        <span className="text-sm font-black">Powered By Melvok.com</span>
+                        <span className="text-sm font-black">Powered By Flow Survey</span>
                     </p>
                 </div>
             </div>

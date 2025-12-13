@@ -19,14 +19,14 @@ export default function Policies() {
                     <div>
                         <h4 className="font-semibold">Email</h4>
                         <p className="text-muted-foreground">
-                            <a className="text-primary hover:underline" href="mailto:info@melvok.com">
-                                info@melvok.com
+                            <a className="text-primary hover:underline" href="mailto:info@flowchartsurvey.online">
+                                info@flowchartsurvey.online
                             </a>
                         </p>
 
                         <h4 className="font-semibold mt-4">Address</h4>
                         <p className="text-muted-foreground">
-                            Melvok (registered office)
+                            Flow Survey (registered office)
                             <br />
                             [Insert physical address here]
                         </p>

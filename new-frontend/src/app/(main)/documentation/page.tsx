@@ -16,7 +16,7 @@ type DocSection = {
 
 const docsCategories: Record<string, DocSection[]> = {
     "Getting Started": [
-        { id: "intro", title: "Introduction to Melvok" },
+        { id: "intro", title: "Introduction to Flow Survey" },
         { id: "auth", title: "Authentication & Plans" },
     ],
     "Core Features": [
@@ -37,14 +37,14 @@ const docsCategories: Record<string, DocSection[]> = {
 
 const docsContent: Record<string, { title: string; content: string }> = {
     intro: {
-        title: "Welcome to Melvok Documentation",
-        content: `Melvok is a flow survey company that empowers users to create interactive flow diagrams (“flows”) and conduct surveys via custom forms integrated at various steps.
+        title: "Welcome to Flow Survey Documentation",
+        content: `Flow Survey is a flow survey company that empowers users to create interactive flow diagrams (“flows”) and conduct surveys via custom forms integrated at various steps.
 
-## What is Melvok?
+## What is Flow Survey?
 
-Melvok lets you build surveys as visual flowcharts. Each node in your flow can represent a form, a decision point, or an informational step. This gives survey creators powerful flexibility and respondents a more engaging experience.
+Flow Survey lets you build surveys as visual flowcharts. Each node in your flow can represent a form, a decision point, or an informational step. This gives survey creators powerful flexibility and respondents a more engaging experience.
 
-![Dummy Image: Melvok Platform Overview](https://via.placeholder.com/800x450?text=Melvok+Platform+Overview)
+![Dummy Image: Flow Survey Platform Overview](https://via.placeholder.com/800x450?text=Flow+Survey+Platform+Overview)
 
 ## Key Features
 
@@ -59,7 +59,7 @@ Continue to the next section to learn about signing up and plans.`,
     // ... other content same as original ...
     auth: {
         title: "Authentication & Plans",
-        content: `Melvok offers two signup options:
+        content: `Flow Survey offers two signup options:
 
 ## Free Tier
 
@@ -77,19 +77,19 @@ Continue to the next section to learn about signing up and plans.`,
 
 ![Dummy Image: Plans Comparison](https://via.placeholder.com/800x450?text=Plans+Comparison)
 
-Sign up at melvok.com by providing your email and choosing a plan. You can upgrade anytime from account settings.`,
+Sign up at flowchartsurvey.online by providing your email and choosing a plan. You can upgrade anytime from account settings.`,
     },
 
     "form-builder": {
-        title: "Creating Form Templates in Melvok",
-        content: `Melvok’s form template builder provides a visual, drag-and-drop interface to create survey forms that integrate with your flows.
+        title: "Creating Form Templates in Flow Survey",
+        content: `Flow Survey’s form template builder provides a visual, drag-and-drop interface to create survey forms that integrate with your flows.
 
 ## How to Create a Form Template
 
 1. Navigate to **Form Templates** in your dashboard.
 2. Click **Create New Template**.
 3. Enter a name and description.
-4. Use Melvok’s form elements to design your survey using:
+4. Use Flow Survey’s form elements to design your survey using:
    - Text input (single-line)
    - Text area (multi-line)
    - Number, Date pickers
@@ -114,7 +114,7 @@ Sign up at melvok.com by providing your email and choosing a plan. You can upgra
 ## Two Ways to Create Flows
 
 1. **Quick Create:**  
-   Enter a flow name and description, and Melvok generates a default welcome flow chart with main nodes (welcome, start, example form, thank you).
+   Enter a flow name and description, and Flow Survey generates a default welcome flow chart with main nodes (welcome, start, example form, thank you).
 
 2. **Import DrawIO:**  
    Upload DrawIO or .xml diagram files to create complex flows from existing designs.
@@ -223,7 +223,7 @@ This streamlined interface removes assignment controls to ensure a focused surve
 
     "best-practices": {
         title: "Best Practices",
-        content: `To get the most from Melvok:
+        content: `To get the most from Flow Survey:
 
 - Use descriptive names for flows and form templates.
 - Keep forms concise and logically grouped.
@@ -349,7 +349,7 @@ function MelvokDocsContent() {
                 <div className="p-6 h-full overflow-y-auto">
                     <div className="flex items-center gap-3 mb-8">
                         <BookOpen className="w-8 h-8" />
-                        <h1 className="text-2xl font-bold">Melvok Docs</h1>
+                        <h1 className="text-2xl font-bold">Flow Survey Docs</h1>
                     </div>
 
                     <div className="relative mb-6">
@@ -441,7 +441,7 @@ function MelvokDocsContent() {
                     </article>
 
                     <footer className="mt-8 text-center text-sm text-muted-foreground">
-                        <p>© 2024 Melvok. All rights reserved.</p>
+                        <p>© 2024 Flow Survey. All rights reserved.</p>
                     </footer>
                 </div>
             </main>

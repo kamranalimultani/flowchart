@@ -36,12 +36,12 @@ export default function AboutPage() {
                 <div className="container mx-auto px-4">
                     {/* Intro / Hero */}
                     <section className="max-w-3xl mx-auto text-center space-y-6">
-                        <Badge className="mx-auto">About Melvok</Badge>
+                        <Badge className="mx-auto">About Flow Survey</Badge>
                         <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">
                             We turn questions into insight
                         </h1>
                         <p className="max-w-2xl mx-auto text-lg leading-relaxed">
-                            Melvok is a modern survey and analytics platform designed to
+                            Flow Survey is a modern survey and analytics platform designed to
                             empower creators, teams, and enterprises. Our mission is simple:
                             make it easy to collect feedback, understand it deeply, and act on
                             it confidently.
@@ -66,7 +66,7 @@ export default function AboutPage() {
                             </CardHeader>
                             <CardContent>
                                 <p className="text-base leading-relaxed">
-                                    At Melvok, we believe feedback is a superpower. We build tools
+                                    At Flow Survey, we believe feedback is a superpower. We build tools
                                     that transform how you ask questions, analyze answers, and act
                                     on results — all while preserving simplicity, security, and
                                     transparency.
@@ -104,9 +104,9 @@ export default function AboutPage() {
 
                     <Separator className="my-12" />
 
-                    {/* Why Melvok */}
+                    {/* Why Flow Survey */}
                     <section className="max-w-3xl mx-auto text-center space-y-6">
-                        <h2 className="text-3xl md:text-4xl font-bold">Why Melvok?</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold">Why Flow Survey?</h2>
                         <p className="text-lg leading-relaxed">
                             Flexible & visual survey builder • Built-in analytics & exports •
                             AI-powered insights • Enterprise-grade security • Seamless

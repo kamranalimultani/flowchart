@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Melvok | Visual Flowchart Survey Builder & Interactive Decision Trees",
-    template: "%s | Melvok",
+    default: "Flow Survey | Visual Flowchart Survey Builder & Interactive Decision Trees",
+    template: "%s | Flow Survey",
   },
   description:
-    "Create complex logic flows, interactive decision trees, and advanced surveys with Melvok's visual builder. The enterprise standard for flowchart-based data collection.",
+    "Create complex logic flows, interactive decision trees, and advanced surveys with Flow Survey's visual builder. The enterprise standard for flowchart-based data collection.",
   keywords: [
     "flowchart surveys",
     "visual form builder",
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://melvok.com",
-    title: "Melvok | Visual Flowchart Survey Builder",
+    url: "https://flowchartsurvey.online",
+    title: "Flow Survey | Visual Flowchart Survey Builder",
     description: "Build complex logic flows and interactive decision trees visually.",
-    siteName: "Melvok",
+    siteName: "Flow Survey",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Melvok | Visual Flowchart Survey Builder",
+    title: "Flow Survey | Visual Flowchart Survey Builder",
     description: "Build complex logic flows and interactive decision trees visually.",
   },
 };

@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!template) return { title: "Template Not Found" };
 
     return {
-        title: `${template.title} | Melvok Templates`,
+        title: `${template.title} | Flow Survey Templates`,
         description: template.description,
         openGraph: {
             title: template.title,

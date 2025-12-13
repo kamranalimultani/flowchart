@@ -85,8 +85,9 @@ export default function Login() {
                     {/* Logo and Header */}
                     <div className="text-center space-y-2">
                         <Link href="/" className="inline-block">
+                            <span className="text-sm font-black">Powered By Flow Survey</span>
                             <h1 className="text-4xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                                MelvokFlow
+                                Flow Survey
                             </h1>
                         </Link>
                         <p className="text-muted-foreground text-sm">

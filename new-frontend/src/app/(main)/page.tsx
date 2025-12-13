@@ -583,7 +583,7 @@ export default function LandingPage() {
 
               <CardContent className="space-y-6 mt-4">
                 <p className="text-sm text-muted-foreground text-center">
-                  Melvok seamlessly integrates with industry-leading tools to
+                  Flow Survey seamlessly integrates with industry-leading tools to
                   enhance user experience and workflow efficiency.
                 </p>
 
@@ -595,7 +595,7 @@ export default function LandingPage() {
                     <h3 className="font-medium">Draw.io Integration</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       Create and edit flowcharts or diagrams directly within
-                      Melvok using Draw.io’s embedded editor.
+                      Flow Survey using Draw.io’s embedded editor.
                     </p>
                     <a
                       href="https://www.draw.io/"
@@ -614,7 +614,7 @@ export default function LandingPage() {
                     <h3 className="font-medium">SurveyJS Integration</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       Design and analyze interactive surveys using the SurveyJS
-                      engine integrated into Melvok’s platform.
+                      engine integrated into Flow Survey’s platform.
                     </p>
                     <a
                       href="https://surveyjs.io/documentation"
@@ -952,10 +952,10 @@ export default function LandingPage() {
                         Our friendly team is here to help.
                       </p>
                       <a
-                        href="mailto:info@melvok.com"
+                        href="mailto:info@flowchartsurvey.online"
                         className="text-primary font-semibold hover:underline"
                       >
-                        info@melvok.com
+                        info@flowchartsurvey.online
                       </a>
                     </div>
                   </div>

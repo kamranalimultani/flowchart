@@ -20,10 +20,10 @@ export default function DemoVideo() {
                 <Card className="shadow-sm border">
                     <CardHeader className="text-center">
                         <CardTitle className="text-3xl font-semibold">
-                            Melvok Product Demo
+                            Flow Survey Product Demo
                         </CardTitle>
                         <CardDescription>
-                            A short walkthrough of how Melvok streamlines your workflow.
+                            A short walkthrough of how Flow Survey streamlines your workflow.
                         </CardDescription>
                     </CardHeader>
 
@@ -33,7 +33,7 @@ export default function DemoVideo() {
                             <iframe
                                 className="absolute inset-0 w-full h-full"
                                 src="https://www.youtube.com/embed/_-0uPip_70w?si=i-YN1ApSxZXXLm8m"
-                                title="Melvok Demo Video"
+                                title="Flow Survey Demo Video"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowFullScreen
                             ></iframe>
@@ -41,7 +41,7 @@ export default function DemoVideo() {
 
                         <p className="text-center text-sm text-muted-foreground">
                             In this demo, you’ll learn how to create flows, automate
-                            surveys, and integrate Melvok with your existing systems.
+                            surveys, and integrate Flow Survey with your existing systems.
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
@@ -64,7 +64,7 @@ export default function DemoVideo() {
                 </Card>
 
                 <div className="mt-10 text-center text-xs text-muted-foreground">
-                    © {new Date().getFullYear()} Melvok. All rights reserved.
+                    © {new Date().getFullYear()} Flow Survey. All rights reserved.
                 </div>
             </div>
         </div>

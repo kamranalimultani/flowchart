@@ -43,7 +43,7 @@ function PaymentSuccessContent() {
                 <CardContent className="space-y-4">
                     <div className="bg-muted p-4 rounded-lg space-y-2">
                         <p className="text-sm text-muted-foreground">
-                            Thank you for subscribing to MelvokFlow. Your account is now
+                            Thank you for subscribing to Flow Survey. Your account is now
                             active and you can start using all premium features.
                         </p>
                     </div>

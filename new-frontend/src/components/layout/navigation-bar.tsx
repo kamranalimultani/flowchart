@@ -46,7 +46,7 @@ import type { RootState } from "@/store";
 
 const docsCategories = {
     "Getting Started": [
-        { id: "intro", title: "Introduction to Melvok" },
+        { id: "intro", title: "Introduction to Flow Survey" },
         { id: "auth", title: "Authentication & Plans" },
     ],
     "Core Features": [
@@ -119,7 +119,7 @@ export function NavigationBar() {
                         href="/"
                         className="text-2xl font-black bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
                     >
-                        Melvok
+                        Flow Survey
                     </Link>
 
                     <div className="flex items-center gap-4">
